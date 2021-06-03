@@ -10,5 +10,5 @@ function Landing(navigation) {
         </View>
     );
 }
-
+//This comment was made by Grove gang
 export default Landing;
