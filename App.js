@@ -5,8 +5,12 @@ import { View, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import LandingScreen from './components/auth/Landing'
-import RegisterScreen from "./components/auth/Register";
+// Allows us to use redux
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/reducers'
+import thunk from 'redux-thunk' // allows us to dispatch
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 import firebase from "firebase";
 
@@ -25,6 +29,11 @@ const firebaseConfig = {
 if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
 }
+
+import LandingScreen from './components/auth/Landing';
+import RegisterScreen from './components/auth/Register';
+import LoginScreen from './components/auth/Login';
+import MainScreen from './components/Main'
 
 const Stack = createStackNavigator();
 export const App = () => {
@@ -58,15 +67,17 @@ export const App = () => {
                 <Stack.Navigator initialRouteName='Landing'>
                     <Stack.Screen name="Landing" component={LandingScreen} options={{headerShown: false}}/>
                     <Stack.Screen name="Register" component={RegisterScreen}/>
+                    <Stack.Screen name="Login" component={LoginScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );
     }
 
     return (
-        <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text>User is logged in</Text>
-        </View>
+        // Provider allows us to access redux
+        <Provider store={store}>
+            <MainScreen/>
+        </Provider>
     )
 
 }
