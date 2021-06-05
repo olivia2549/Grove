@@ -22,12 +22,16 @@ export const Login = () => {
         <View>
             <TextInput
                 placeholder="email"
-                onChangeText={(email) => setState({email})}
+                onChangeText={(email) => setState({
+                    ...state,   // preserve old state
+                    email: email})}
             />
             <TextInput
                 placeholder="password"
                 secureTextEntry={true}
-                onChangeText={(password) => setState({password})}
+                onChangeText={(password) => setState({
+                    ...state,
+                    password: password})}
             />
             <Button title="Sign Up" onPress={() => onSignUp()}/>
         </View>

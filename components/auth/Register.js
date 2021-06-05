@@ -26,16 +26,22 @@ export const Register = () => {
         <View>
             <TextInput
                 placeholder="name"
-                onChangeText={(name) => setState({name})}
+                onChangeText={(name) => setState({
+                    ...state,
+                    name: name})}
             />
             <TextInput
                 placeholder="email"
-                onChangeText={(email) => setState({email})}
+                onChangeText={(email) => setState({
+                    ...state,
+                    email: email})}
             />
             <TextInput
                 placeholder="password"
                 secureTextEntry={true}
-                onChangeText={(password) => setState({password})}
+                onChangeText={(password) => setState({
+                    ...state,
+                    password: password})}
             />
             <Button title="Sign Up" onPress={() => onSignUp()}/>
             </View>
