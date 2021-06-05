@@ -1,50 +1,51 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { View, Button, TextInput } from 'react-native'
 import firebase from "firebase";
 
-export class Register extends Component {
-    constructor(props) {    // Good practice for new components to always create a constructor and call super(props)
-        super(props);
+export const Register = () => {
+    // The information we need for user registration
+    const [state, setState] = useState({
+        email: "",
+        password: "",
+        name: ""
+    })
 
-        // The information we need for user registration
-        this.state = {
-            email: "",
-            password: "",
-            name: ""
-        }
-
-        this.onSignUp = this.onSignUp.bind(this);
-    }
-
-    onSignUp() {
-        const { email, password, name } = this.state;
-        firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
-            console.log(result)
+    const onSignUp = () => {
+        firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
+            .then((result) => {
+                firebase.firestore().collection("users")
+                    .doc(firebase.auth().currentUser.uid)
+                    .set(state.name, state.email)    // saves the data to firebase
+                console.log(result)
         }).catch((error) => {
             console.log(error)
         })
     }
 
-    render() {
-        return (
-            <View>
-                <TextInput
-                    placeholder="name"
-                    onChangeText={(name) => this.setState({name})}
-                />
-                <TextInput
-                    placeholder="email"
-                    onChangeText={(email) => this.setState({email})}
-                />
-                <TextInput
-                    placeholder="password"
-                    secureTextEntry={true}
-                    onChangeText={(password) => this.setState({password})}
-                />
-                <Button title="Sign Up" onPress={() => this.onSignUp()}/>
+    return (
+        <View>
+            <TextInput
+                placeholder="name"
+                onChangeText={(name) => setState({
+                    ...state,
+                    name: name})}
+            />
+            <TextInput
+                placeholder="email"
+                onChangeText={(email) => setState({
+                    ...state,
+                    email: email})}
+            />
+            <TextInput
+                placeholder="password"
+                secureTextEntry={true}
+                onChangeText={(password) => setState({
+                    ...state,
+                    password: password})}
+            />
+            <Button title="Sign Up" onPress={() => onSignUp()}/>
             </View>
-        );
-    };
+    );
 };
 
 export default Register;
