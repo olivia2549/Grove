@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { View, Text } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -26,13 +27,48 @@ if (firebase.apps.length === 0) {
 }
 
 const Stack = createStackNavigator();
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Landing'>
-        <Stack.Screen name="Landing" component={LandingScreen} options={{headerShown: false}}/>
-          <Stack.Screen name="Register" component={RegisterScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export const App = () => {
+    let [loggedIn, setLoggedIn] = useState(false);
+    let [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {    // user not logged in
+                setLoggedIn(false);
+                setIsLoaded(true);
+            }
+            else {
+                setLoggedIn(true);
+                setIsLoaded(true);
+            }
+        })
+    })
+
+    if (!isLoaded) {
+        return (
+            <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text>Loading...</Text>
+            </View>
+        )
+    }
+
+    if (!loggedIn) {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName='Landing'>
+                    <Stack.Screen name="Landing" component={LandingScreen} options={{headerShown: false}}/>
+                    <Stack.Screen name="Register" component={RegisterScreen}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        );
+    }
+
+    return (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+            <Text>User is logged in</Text>
+        </View>
+    )
+
 }
+
+export default App;
