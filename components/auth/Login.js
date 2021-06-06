@@ -4,11 +4,11 @@ import { View, Button, TextInput } from "react-native"
 import firebase from "firebase";
 
 export const Login = () => {
-        // The information we need for user registration
-        const [state, setState] = useState({
-            email: "",
-            password: "",
-        })
+    // The information we need for user registration
+    const [state, setState] = useState({
+        email: "",
+        password: "",
+    })
 
     const onSignUp = () => {
         firebase.auth()

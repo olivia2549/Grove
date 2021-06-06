@@ -10,16 +10,17 @@ export const Register = () => {
         name: ""
     })
 
+    // saves the data to firebase
     const onSignUp = () => {
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((result) => {
                 firebase.firestore().collection("users")
                     .doc(firebase.auth().currentUser.uid)
-                    .set(state.name, state.email)    // saves the data to firebase
-                console.log(result)
-        }).catch((error) => {
-            console.log(error)
-        })
+                    .set({
+                        name: state.name,
+                        email: state.email
+                    })
+        }).catch((error) => {console.log(error)})
     }
 
     return (
