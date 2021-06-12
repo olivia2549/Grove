@@ -1,8 +1,9 @@
 import { combineReducers } from "redux";    // this combines the files in the reducers folder
-import { user } from "./user"
+import { userReducer } from "./user"
 
-const Reducers = combineReducers({
-    userState: user
-})
+// Combines all our reducers to one store state
+const allReducers = combineReducers({
+    currentUser: userReducer,
+});
 
-export default Reducers;
+export default allReducers;

@@ -1,16 +1,21 @@
+// Aka index.js -- compiles all the dependencies; it's basically the configuration/settings file
+
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native'
+import { View, Text } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Allows us to use redux
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './redux/reducers'
-import thunk from 'redux-thunk' // allows us to dispatch
-const store = createStore(rootReducer, applyMiddleware(thunk))
+import { createStore, compose, applyMiddleware } from 'redux';
+import allReducers from './redux/reducers';
+import thunk from 'redux-thunk'; // allows us to dispatch
+const composedEnhancer = compose(applyMiddleware(thunk),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 
@@ -33,7 +38,7 @@ if (firebase.apps.length === 0) {
 import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
-import MainScreen from './components/Main'
+import MainScreen from './Main'
 
 const Stack = createStackNavigator();
 export const App = () => {
@@ -74,7 +79,7 @@ export const App = () => {
     }
 
     return (
-        // Provider allows us to access redux
+        // Provider allows us to access the redux store data in our app
         <Provider store={store}>
             <MainScreen/>
         </Provider>
