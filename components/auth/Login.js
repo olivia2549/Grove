@@ -1,23 +1,31 @@
-import React, {useState, useEffect} from "react";
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * Login.js
+ * This page is where the user navigates to log in
+ */
 
-import { View, Button, TextInput } from 'react-native'
+import React, {useState, useEffect} from "react";
+import { View, Button, TextInput } from "react-native"
+
 import firebase from "firebase";
 
 export const Login = () => {
-        // The information we need for user registration
-        const [state, setState] = useState({
-            email: "",
-            password: "",
-        })
+    // The information we need for user registration
+    const [state, setState] = useState({
+        email: "",
+        password: "",
+    })
 
+    // Use firebase to sign in an existing user
     const onSignUp = () => {
-        firebase.auth().signInWithEmailAndPassword(state.email, state.password).then((result) => {
-            console.log(result)
-        }).catch((error) => {
-            console.log(error)
-        })
+        firebase.auth()
+            .signInWithEmailAndPassword(state.email, state.password)
+            .then((result) => {console.log(result)})
+            .catch((error) => {console.log(error)})
     }
 
+    // Displays to the screen
     return (
         <View>
             <TextInput

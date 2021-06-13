@@ -1,12 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ * App.js
+ * Aka index.js -- compiles all the dependencies; it's basically the configuration/settings file
+ */
+
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native'
+import { View, Text } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import LandingScreen from './components/auth/Landing'
-import RegisterScreen from "./components/auth/Register";
+// Allows us to use redux
+import { Provider } from 'react-redux'
+import { createStore, compose, applyMiddleware } from 'redux';
+import allReducers from './redux/reducers';
+import thunk from 'redux-thunk'; // allows us to dispatch
+const composedEnhancer = compose(applyMiddleware(thunk),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 
@@ -25,6 +37,11 @@ const firebaseConfig = {
 if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
 }
+
+import LandingScreen from './components/auth/Landing';
+import RegisterScreen from './components/auth/Register';
+import LoginScreen from './components/auth/Login';
+import MainScreen from './components/Main'
 
 const Stack = createStackNavigator();
 export const App = () => {
@@ -58,15 +75,17 @@ export const App = () => {
                 <Stack.Navigator initialRouteName='Landing'>
                     <Stack.Screen name="Landing" component={LandingScreen} options={{headerShown: false}}/>
                     <Stack.Screen name="Register" component={RegisterScreen}/>
+                    <Stack.Screen name="Login" component={LoginScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );
     }
 
     return (
-        <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text>User is logged in</Text>
-        </View>
+        // Provider allows us to access the redux store data in our app
+        <Provider store={store}>
+            <MainScreen/>
+        </Provider>
     )
 
 }
