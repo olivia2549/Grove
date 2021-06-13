@@ -1,3 +1,10 @@
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * Register.js
+ * This page is where the user navigates to create a new account
+ */
+
 import React, { useState } from 'react';
 import { View, Button, TextInput } from 'react-native'
 import firebase from "firebase";
@@ -10,7 +17,7 @@ export const Register = () => {
         name: ""
     })
 
-    // saves the data to firebase
+    // Saves the new user information to firebase
     const onSignUp = () => {
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((result) => {
@@ -23,6 +30,7 @@ export const Register = () => {
         }).catch((error) => {console.log(error)})
     }
 
+    // Displays to the screen
     return (
         <View>
             <TextInput
@@ -39,7 +47,7 @@ export const Register = () => {
             />
             <TextInput
                 placeholder="password"
-                secureTextEntry={true}
+                secureTextEntry={true}  // type in dots instead of text
                 onChangeText={(password) => setState({
                     ...state,
                     password: password})}

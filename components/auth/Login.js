@@ -1,3 +1,10 @@
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * Login.js
+ * This page is where the user navigates to log in
+ */
+
 import React, {useState, useEffect} from "react";
 import { View, Button, TextInput } from "react-native"
 
@@ -10,6 +17,7 @@ export const Login = () => {
         password: "",
     })
 
+    // Use firebase to sign in an existing user
     const onSignUp = () => {
         firebase.auth()
             .signInWithEmailAndPassword(state.email, state.password)
@@ -17,6 +25,7 @@ export const Login = () => {
             .catch((error) => {console.log(error)})
     }
 
+    // Displays to the screen
     return (
         <View>
             <TextInput

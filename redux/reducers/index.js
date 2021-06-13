@@ -1,7 +1,18 @@
-import { combineReducers } from "redux";    // this combines the files in the reducers folder
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * Reducers/index.js
+ * The main reducers file; combines all the reducers to one store state
+ */
+
+import { combineReducers } from "redux";
 import { userReducer } from "./user"
 
-// Combines all our reducers to one store state
+/**
+ * allReducers
+ *
+ * Combines all the files in the reducers folder
+ */
 const allReducers = combineReducers({
     currentUser: userReducer,
 });

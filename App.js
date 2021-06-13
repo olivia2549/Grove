@@ -1,6 +1,9 @@
-// Aka index.js -- compiles all the dependencies; it's basically the configuration/settings file
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ * App.js
+ * Aka index.js -- compiles all the dependencies; it's basically the configuration/settings file
+ */
 
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 
@@ -38,7 +41,7 @@ if (firebase.apps.length === 0) {
 import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
-import MainScreen from './Main'
+import MainScreen from './components/Main'
 
 const Stack = createStackNavigator();
 export const App = () => {
