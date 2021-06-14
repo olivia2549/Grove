@@ -41,7 +41,7 @@ export const Login = () => {
                     ...state,
                     password: password})}
             />
-            <Button title="Sign Up" onPress={() => onSignUp()}/>
+            <Button title="Sign In" onPress={() => onSignUp()}/>
         </View>
     );
 };
