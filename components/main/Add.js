@@ -6,12 +6,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { Button, Image, Text, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export const Add = () => {
     const [hasGalleryPermission, setHasGalleryPermission] = useState(false);
     const [image, setImage] = useState(null);
+    const navigation = useNavigation();
 
     useEffect(() => {
         (async () => {
@@ -43,6 +45,9 @@ export const Add = () => {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button title="Pick Image from Camera Roll" onPress={pickImage} />
+
+            {/*// Navigate to 'Save' component, passing the image as a prop */}
+            <Button title="Save" onPress={() => navigation.navigate('Save', {image})}/>
             {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
         </View>
     );
