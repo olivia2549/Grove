@@ -6,6 +6,7 @@
  */
 
 import React, {useState} from "react";
+import { useNavigation } from '@react-navigation/native';
 import { View, TextInput, Image, Button } from "react-native";
 
 import firebase from "firebase";
@@ -13,7 +14,20 @@ require("firebase/firestore");
 require("firebase/firebase-storage");
 
 export const Save = (props) => {
+    const navigation = useNavigation();
     const [caption, setCaption] = useState("");
+
+    const savePostData = (downloadURL) => {
+        firebase.firestore()
+            .collection("posts")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userPosts")
+            .add({  // add a new doc aka post to firebase
+                downloadURL: downloadURL,
+                caption: caption,
+                creation: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { navigation.popToTop() })    // returns to the main page, clearing navigation stack
+    }
 
     const saveImage = async () => {
         const uri = props.route.params.image;
@@ -24,7 +38,7 @@ export const Save = (props) => {
 
         const task = firebase.storage().ref().child(childPath).put(blob);
 
-        // Can track how many bytes have uploaded to firebase, one snapshot at a time
+        // Shows to console how many bytes have uploaded to firebase, one snapshot at a time
         const taskProgress = (snapshot) => {
             console.log(`transferred: ${snapshot.bytesTransferred}`);
         }
@@ -36,7 +50,9 @@ export const Save = (props) => {
 
         // When download completes, it gets URL that's accessible for other app users to see post
         const taskCompleted = () => {
-            task.snapshot.ref.getDownloadURL().then(snapshot => {console.log(snapshot)});
+            task.snapshot.ref.getDownloadURL().then(snapshot => {
+                savePostData(snapshot);
+            });
         }
 
         // When state changes, call all the task functions defined above

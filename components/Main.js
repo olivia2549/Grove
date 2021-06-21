@@ -7,7 +7,7 @@
 
 import React, { useEffect } from "react";
 
-import { fetchUser } from "../redux/actions";
+import {fetchUser, fetchUserPosts} from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -34,6 +34,7 @@ export const Main = () => {
     // Fetch the user from firebase when the page mounts
     useEffect(() => {
         dispatch(fetchUser());
+        dispatch(fetchUserPosts());
     }, []);
 
     // Displays to the screen

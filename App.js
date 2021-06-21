@@ -19,7 +19,7 @@ import thunk from 'redux-thunk'; // allows us to dispatch
 const composedEnhancer = compose(applyMiddleware(thunk),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-export const store = createStore(allReducers, applyMiddleware(thunk));
+export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 
