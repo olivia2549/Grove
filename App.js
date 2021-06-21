@@ -19,7 +19,7 @@ import thunk from 'redux-thunk'; // allows us to dispatch
 const composedEnhancer = compose(applyMiddleware(thunk),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-export const store = createStore(allReducers, composedEnhancer);
+export const store = createStore(allReducers, applyMiddleware(thunk));
 
 import firebase from "firebase";
 
@@ -90,7 +90,7 @@ export const App = () => {
         <Provider store={store}>
             <NavigationContainer>
                 <Stack.Navigator initialRouteName='Main'>
-                    <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}}/>
+                    <Stack.Screen name="Main" component={MainScreen}/>
                     <Stack.Screen name="Add" component={AddScreen}/>
                     <Stack.Screen name="Save" component={SaveScreen}/>
                 </Stack.Navigator>

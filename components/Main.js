@@ -17,6 +17,7 @@ const Tab = createMaterialBottomTabNavigator();
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
+import SearchScreen from './main/Search'
 
 /**
  * EmptyScreen
@@ -46,6 +47,13 @@ export const Main = () => {
                         <MaterialCommunityIcons name="home" color={color} size={26}/>
                         )
                 }}
+            />
+            <Tab.Screen name="Search" component={SearchScreen}
+                        options={{
+                            tabBarIcon: ({color, size}) => (
+                                <MaterialCommunityIcons name="magnify" color={color} size={26}/>
+                            )
+                        }}
             />
             <Tab.Screen
                 name="AddContainer" component={EmptyScreen}

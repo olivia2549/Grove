@@ -11,7 +11,7 @@ import { View, Text } from "react-native";
 export const Feed = () => {
     return (
         <View>
-            <Text></Text>
+            <Text>Feed</Text>
         </View>
     );
 }
