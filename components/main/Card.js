@@ -1,11 +1,14 @@
 // this is the card component for the posts in the feed
 
-import react from 'react';
+import React from 'react';
+import {View, Text, TextInput} from "react-native";
 
-const Card = (props) => {
+export const Card = (props) => {
     return (
-        <div>
-            This is a card
-        </div>
+        <View>
+            <Text>This is a card</Text>
+        </View>
     )
 }
+
+export default Card;
