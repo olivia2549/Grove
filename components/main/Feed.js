@@ -8,8 +8,7 @@
 import React, {useState} from "react";
 import { View, Text } from "react-native";
 
-import firebase from 'firebase';
-const db = firebase.firestore();
+import firebase from "firebase";
 
 import { Card } from './Card';
 
@@ -19,7 +18,7 @@ import { Card } from './Card';
 const Feed = () => {
     let [posts, setPosts] = useState([]);
 
-    db.collection('posts').onSnapshot(snapshot => {
+    firebase.firestore().collection('posts').onSnapshot(snapshot => {
         let changes = snapshot.docChanges();    // grabs changes
         changes.forEach(change => {
             let temp = posts;
