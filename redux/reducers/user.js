@@ -1,8 +1,8 @@
 /**
  * Copyright Grove, @2021 - All rights reserved
  *
- * Reducers/index.js
- * The main reducers file; combines all the reducers to one store state
+ * Reducers/user.js
+ * User reducer; stores state about the user
  */
 
 const initialState = {
@@ -31,6 +31,9 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 posts: action.posts
             }
+        case 'CLEAR_DATA':
+            return initialState;
+
         default:
             return state;
     }

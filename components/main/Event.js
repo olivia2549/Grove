@@ -1,7 +1,7 @@
 /**
  * Copyright Grove, @2021 - All rights reserved
  *
- * Add.js
+ * AddEventName.js
  * Allows user to make a new post
  */
 

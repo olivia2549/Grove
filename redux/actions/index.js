@@ -5,12 +5,25 @@
  * Defines redux actions
  */
 
-import {USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE} from "../constants/index";
+
+import {EVENT_NAME_STATE_CHANGE, EVENT_DESCRIPTION_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE, CLEAR_DATA} from "../constants/index";
+
 import firebase from "firebase";
 
 // fetch user
 // save user
 // save posts
+
+/**
+ * clearData
+ *
+ * Deletes everything from redux store
+ */
+export const clearData = () => {
+    return ((dispatch) => {
+        dispatch({type: CLEAR_DATA})
+    })
+}
 
 /**
  * fetchUser
@@ -57,9 +70,20 @@ export const fetchUserPosts = () => {
                     const id = doc.id;
                     return { id, ...data }  // the object to place in the posts array
                 });
-                console.log(postsArr);
                 dispatch({type: USER_POSTS_STATE_CHANGE, posts: postsArr});
             })
             .catch((error) => {console.log(error)})
+    })
+}
+
+export const addEventName = (evName) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_NAME_STATE_CHANGE, eventName: evName});
+    })
+}
+
+export const addEventDescription = (evDescription) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_DESCRIPTION_STATE_CHANGE, eventDescription: evDescription});
     })
 }
