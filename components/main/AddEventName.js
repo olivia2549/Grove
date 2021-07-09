@@ -21,17 +21,15 @@ const Stack = createStackNavigator();
 export const AddEventName = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const [state, setState] = useState({
-        eventName: ""
-    });
+    const [eventName, setEventName] = useState("");
 
     const onChange = (ev) => {
-        setState({
-            ...state,
-            eventName: ev.target.value
-        });
-        dispatch(addEventName(state.eventName));
+        setEventName(ev.target.value);
     }
+
+    useEffect(() => {
+        dispatch(addEventName(eventName));
+    })
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -42,7 +40,7 @@ export const AddEventName = () => {
                 name="eventName"
                 onChange={onChange}
                 placeholder="Event Name..."
-                value={state.eventName}
+                value={eventName}
             />
 
             <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription")}}/>
