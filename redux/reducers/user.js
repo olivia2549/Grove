@@ -31,6 +31,9 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 posts: action.posts
             }
+        case 'CLEAR_DATA':
+            return initialState;
+
         default:
             return state;
     }

@@ -7,7 +7,7 @@
 
 import React, { useEffect } from "react";
 
-import {fetchUser, fetchUserPosts} from "../redux/actions";
+import {fetchUser, fetchUserPosts, clearData} from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 import firebase from "firebase";
