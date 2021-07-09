@@ -19,7 +19,8 @@ import thunk from 'redux-thunk'; // allows us to dispatch
 const composedEnhancer = compose(applyMiddleware(thunk),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-export const store = createStore(allReducers, applyMiddleware(thunk));
+// export const store = createStore(allReducers, applyMiddleware(thunk));
+export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 
@@ -43,7 +44,8 @@ import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
-import AddScreen from './components/main/Add';
+import AddEventName from './components/main/AddEventName';
+import AddEventDescription from './components/main/AddEventDescription';
 
 const Stack = createStackNavigator();
 
@@ -90,7 +92,8 @@ export const App = () => {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName='Main'>
                     <Stack.Screen name="Main" component={MainScreen}/>
-                    <Stack.Screen name="Add" component={AddScreen}/>
+                    <Stack.Screen name="AddEventName" component={AddEventName}/>
+                    <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
