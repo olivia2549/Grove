@@ -6,13 +6,14 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Image, FlatList } from "react-native";
+import {StyleSheet, View, Text, Image, FlatList, Button} from "react-native";
 import { Container } from "../styling";
 
 import { useSelector } from "react-redux";
 
 import firebase from "firebase";
 import {USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE} from "../../redux/constants";
+import {clearData} from "../../redux/actions";
 require ('firebase/firestore');
 
 const styles = StyleSheet.create({
@@ -36,6 +37,11 @@ export const Profile = (props) => {
     const [user, setUser] = useState(null);
     const currentUser = useSelector((state) => state.currentUser);
     const currentUserPosts = useSelector(state => state.currentUser.posts);
+
+    const signOut = () => {
+        firebase.auth().signOut();
+        dispatch(clearData());
+    };
 
     // Load user, and if different than current user, fetch from database
     useEffect(() => {
@@ -89,6 +95,8 @@ export const Profile = (props) => {
 
     return (
         <Container>
+            <Button title="Sign Out" onPress={signOut}/>
+
             <View style={styles.containerInfo}>
                 <Text>{user.name}</Text>
                 <Text>{user.email}</Text>

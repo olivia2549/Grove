@@ -96,9 +96,9 @@ export const Card = (props) => {
                     <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
                 </View>
                 <View style={styles.tagsContainer}>
-                    {(props.tag1 != null) && <Tag tag={props.tag1}/>}
-                    {(props.tag2 != null) && <Tag tag={props.tag2}/>}
-                    {(props.tag3 != null) && <Tag tag={props.tag3}/>}
+                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
                 </View>
             </View>
         </View>

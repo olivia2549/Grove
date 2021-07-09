@@ -21,10 +21,10 @@ import {useDispatch} from "react-redux";
 const Feed = () => {
     const dispatch = useDispatch();
 
-    let [posts, setPosts] = useState([]);
+    // const [posts, setPosts] = useState([]);
 
     // firebase.firestore().collection('posts').onSnapshot(snapshot => {
-    //     let changes = snapshot.docChanges();    // grabs changes
+    //     let changes = snapshot.docChanges();
     //     changes.forEach(change => {
     //         let temp = posts;
     //         if (change.type === 'added') {
@@ -35,47 +35,56 @@ const Feed = () => {
     //         }
     //     })
     // })
-
+    //
     // useEffect(() => {
     //     console.log(posts);
     // })
 
-    const signOut = () => {
-        firebase.auth().signOut();
-        dispatch(clearData());
-    };
+    const POSTS = [
+        {
+            eventName: "Club Spikeball",
+            eventDay: "Wed, Aug 7",
+            eventTime: "4:00pm-6:00pm",
+            peopleGoing: 23,
+            tags: ["Free food","Sports","Anyone Welcome"]
+        },
+        {
+            eventName: "Interfaith Council Dialogue Dinner",
+            eventDay: "Today, Aug 5",
+            eventTime: "4:00pm-6:00pm",
+            peopleGoing: 33,
+            tags: ["Free food","Clubs","Anyone Welcome"]
+        },
+        {
+            eventName: "Change++ Speaker Event",
+            eventDay: "Tomorrow, Aug 6",
+            eventTime: "4:00pm-6:00pm",
+            peopleGoing: 50,
+            tags: ["Coding Clubs","Invite Only"]
+        },
+        {
+            eventName: "Change++ Speaker Event",
+            eventDay: "Tomorrow, Aug 6",
+            eventTime: "4:00pm-6:00pm",
+            peopleGoing: 50,
+            tags: ["Coding Clubs","Invite Only"]
+        }
+    ]
 
     return (
         <Container>
-            {/*<FlatList>*/}
-                <Card
-                    eventName="Club Spikeball"
-                    eventDay="Wed, Aug 7"
-                    eventTime="4:00pm-6:00pm"
-                    peopleGoing="23"
-                    tag1="Free food"
-                    tag2="Sports"
-                    tag3="Anyone Welcome"
-                />
-                <Card
-                    eventName="Interfaith Council Dialogue Dinner"
-                    eventDay="Today, Aug 5"
-                    eventTime="4:00pm-6:00pm"
-                    peopleGoing="33"
-                    tag1="Free Food"
-                    tag2="Religious Clubs"
-                    tag3="Anyone Welcome"
-                />
-            <Button title="Sign Out" onPress={signOut}/>
-            <Card
-                    eventName="Change++ Speaker Event"
-                    eventDay="Tomorrow, Aug 6"
-                    eventTime="4:00pm-6:00pm"
-                    peopleGoing="50"
-                    tag1="Coding Clubs"
-                    tag2="Invite Only"
-                />
-            {/*</FlatList>*/}
+            <FlatList
+                data={POSTS}
+                renderItem={({ item }) => (
+                    <Card
+                        eventName={item.eventName}
+                        eventDay={item.eventDay}
+                        eventTime={item.eventTime}
+                        peopleGoing={item.peopleGoing}
+                        tags={item.tags}
+                    />
+                )}
+            />
         </Container>
     );
 }
