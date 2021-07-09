@@ -5,8 +5,9 @@
  * This page is the first to show up before the user logs in
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import { View, Button } from "react-native"
+import firebase from "firebase";
 
 // 'navigation' gives us access to the route from App.js
 export const Landing = ({navigation}) => {

@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Image, FlatList } from "react-native";
+import { Container } from "../styling";
 
 import { useSelector } from "react-redux";
 
@@ -15,10 +16,6 @@ import {USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE} from "../../redux/constants"
 require ('firebase/firestore');
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: 40
-    },
     containerInfo: {
         margin: 20,
     },
@@ -91,7 +88,7 @@ export const Profile = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <Container>
             <View style={styles.containerInfo}>
                 <Text>{user.name}</Text>
                 <Text>{user.email}</Text>
@@ -108,7 +105,7 @@ export const Profile = (props) => {
                     )}
                 />
             </View>
-        </View>
+        </Container>
     );
 }
 
