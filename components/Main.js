@@ -7,14 +7,15 @@
 
 import React, { useEffect } from "react";
 
-import {fetchUser, fetchUserPosts} from "../redux/actions";
+import {fetchUser, fetchUserPosts, clearData} from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
+import firebase from "firebase";
+
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-
 const Tab = createMaterialBottomTabNavigator();
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import SearchScreen from './main/Search'
@@ -49,19 +50,18 @@ export const Main = () => {
                 }}
             />
             <Tab.Screen name="Search" component={SearchScreen}
-                        options={{
-                            tabBarIcon: ({color, size}) => (
-                                <MaterialCommunityIcons name="magnify" color={color} size={26}/>
-                            )
-                        }}
+                options={{
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="magnify" color={color} size={26}/>
+                        )
+                }}
             />
-            <Tab.Screen
-                name="AddContainer" component={EmptyScreen}
+            <Tab.Screen name="AddContainer" component={EmptyScreen}
                 listeners={({ navigation }) => ({   // Listens for a tab press
                     tabPress: ev => {
                         ev.preventDefault();    // Allows us to override what happens when tab clicked
-                        // Routes to the Add stack screen in App.js, which comes from Add.js component
-                        navigation.navigate("Add");
+                        // Routes to the Add stack screen in App.js, which comes from AddEventName.js component
+                        navigation.navigate("AddEventName");
                     }
                 })}
                 options={{
@@ -71,6 +71,13 @@ export const Main = () => {
                 }}
             />
             <Tab.Screen name="Profile" component={ProfileScreen}
+                listeners={({ navigation }) => ({   // Listens for a tab press
+                    tabPress: ev => {
+                        ev.preventDefault();    // Allows us to override what happens when tab clicked
+                        // Routes to the Add stack screen in App.js, which comes from AddEventName.js component
+                        navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid});
+                    }
+                })}
                 options={{
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons name="account-circle" color={color} size={26}/>

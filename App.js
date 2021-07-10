@@ -6,9 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
-
-import { NavigationContainer } from '@react-navigation/native';
+import {View, Text, StyleSheet} from 'react-native';
+import { NavigationContainer, Link } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Allows us to use redux
@@ -20,6 +19,7 @@ const composedEnhancer = compose(applyMiddleware(thunk),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 export const store = createStore(allReducers, applyMiddleware(thunk));
+// export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 
@@ -43,8 +43,8 @@ import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
-import AddScreen from './components/main/Add';
-import SaveScreen from './components/main/Save';
+import AddEventName from './components/main/AddEventName';
+import AddEventDescription from './components/main/AddEventDescription';
 
 const Stack = createStackNavigator();
 
@@ -89,15 +89,27 @@ export const App = () => {
         // Provider allows us to access the redux store data in our app
         <Provider store={store}>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName='Main'>
+                <Stack.Navigator initialRouteName='Main' screenOptions={{
+                    headerStyle: {height: 100, backgroundColor: "#fff", shadowColor: "transparent"},
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (
+                        <Text style={{color: "#000", fontSize: 48, marginLeft: 15}}>Grove</Text>
+                    )
+                }}>
                     <Stack.Screen name="Main" component={MainScreen}/>
-                    <Stack.Screen name="Add" component={AddScreen}/>
-                    <Stack.Screen name="Save" component={SaveScreen}/>
+                    <Stack.Screen name="AddEventName" component={AddEventName}/>
+                    <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
     )
 
 }
+
+const styles = StyleSheet.create({
+    headerTitle: {
+        display: "none"
+    }
+})
 
 export default App;

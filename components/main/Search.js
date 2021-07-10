@@ -6,12 +6,14 @@
  */
 
 import React, { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, TextInput, FlatList } from "react-native";
 
 import firebase from "firebase";
 require('firebase/firestore');
 
 export const Search = () => {
+    const navigation = useNavigation();
     const [users, setUsers] = useState([]);
 
     /**
@@ -44,7 +46,7 @@ export const Search = () => {
                 horizontal={false}
                 data={users}
                 renderItem={({item}) => (   // Allows you to render a text item for each user
-                    <Text>{item.name}</Text>
+                    <Text onPress={() => {navigation.navigate("Profile", {uid: item.id})}}>{item.name}</Text>
                 )}
             />
         </View>

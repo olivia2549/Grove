@@ -7,6 +7,7 @@
 
 import { combineReducers } from "redux";
 import { userReducer } from "./user"
+import { eventReducer } from "./event";
 
 /**
  * allReducers
@@ -15,6 +16,7 @@ import { userReducer } from "./user"
  */
 const allReducers = combineReducers({
     currentUser: userReducer,
+    event: eventReducer
 });
 
 export default allReducers;
