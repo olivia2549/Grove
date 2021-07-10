@@ -12,6 +12,12 @@ import { Container } from "../styling";
 
 const getWeekDay = (dateObject) => {
     const dayNumber = dateObject.getDay();
+    if (dateObject.getDate() === new Date().getDate() &&
+        dateObject.getMonth() === new Date().getMonth &&
+        dateObject.getFullYear() === new Date().getFullYear()) {
+        return "Today";
+    }
+
     switch (dayNumber) {
         case 0:
             return "Sunday";
@@ -59,8 +65,8 @@ const getMonthName = (dateObject) => {
             return "December"
     }
 }
-
-const parseDate = (dateObject) => {
+  
+  const parseDate = (dateObject) => {
     return ({
         date: dateObject.getDate(),
         month: getMonthName(dateObject),
@@ -69,13 +75,20 @@ const parseDate = (dateObject) => {
         hour: dateObject.getHours(),
         minute: dateObject.getMinutes(),
         seconds: dateObject.getSeconds(),
+        ampmTime: dateObject.toLocaleString('en-US',
+            { hour: 'numeric', minute: 'numeric', hour12: true }),
     })
+}
 
 export const Card = (props) => {
+    const post = props.content;
+    const start = parseDate(post.starttime);
+    const end = parseDate(post.endtime);
+
     const Tag = (props) => {
         return (
             <View style={styles.tags}>
-                <Text>{props.tag}</Text>
+                <Text>{post.tag}</Text>
             </View>
         )
     }
@@ -83,20 +96,20 @@ export const Card = (props) => {
     return (
         <View style={styles.card}>
             <View style={styles.eventDetails}>
-                <Text style={styles.eventName}>{props.eventName}</Text>
+                <Text style={styles.eventName}>{post.eventName}</Text>
                 <View style={styles.eventDate}>
-                    <Text style={styles.eventDay}>{props.eventDay}</Text>
-                    <Text style={styles.eventTime}>{props.eventTime}</Text>
+                    <Text style={styles.eventDay}>{start.day}</Text>
+                    <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>
                 </View>
             </View>
             <View style={styles.peopleGoingAndTagsContainer}>
                 <View style={styles.peopleGoingContainer}>
-                    <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+                    <Text style={styles.peopleGoing}>{post.attendee.length} people going</Text>
                 </View>
                 <View style={styles.tagsContainer}>
-                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+                    {(post.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                    {(post.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                    {(post.tags[2] != null) && <Tag tag={props.tags[2]}/>}
                 </View>
             </View>
         </View>
