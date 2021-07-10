@@ -75,6 +75,12 @@ const styles = StyleSheet.create({
 
 const getWeekDay = (dateObject) => {
     const dayNumber = dateObject.getDay();
+    if (dateObject.getDate() === new Date().getDate() &&
+        dateObject.getMonth() === new Date().getMonth &&
+        dateObject.getFullYear() === new Date().getFullYear()) {
+        return "Today";
+    }
+
     switch (dayNumber) {
         case 0:
             return "Sunday";
@@ -132,7 +138,8 @@ const parseDate = (dateObject) => {
         hour: dateObject.getHours(),
         minute: dateObject.getMinutes(),
         seconds: dateObject.getSeconds(),
-        ampmTime: dateObject.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
+        ampmTime: dateObject.toLocaleString('en-US',
+            { hour: 'numeric', minute: 'numeric', hour12: true }),
     })
 }
 
