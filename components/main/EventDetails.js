@@ -37,13 +37,21 @@ const styles = StyleSheet.create({
 export const EventDetails = ({navigation, route}) => {
 
     // get the parameters
+    const { eventName, eventDay, eventTime, peopleGoing, tags } = route.params;
 
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
                 <View style={styles.topBar}>
-                    <Text>{route.params?.eventName}</Text>
+                    
+                    {/* <Text>{peopleGoing}</Text> */}
+                    {/* <Text>{tags}</Text> */}
+
                 </View>
+                
+                <Text>{eventName}</Text>
+                    <Text>{eventDay}</Text>
+                    <Text>{eventTime}</Text>
             </ScrollView>
             
         </SafeAreaView>

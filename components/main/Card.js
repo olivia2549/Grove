@@ -95,17 +95,12 @@ export const Card = (props) => {
     }
     
     const navigation = useNavigation(); 
-    
-    const [eventName, setEventName] = useState("");    
+
+    const hello = props.eventName;
+  
     
     return (
-        // when the card is pressed, we head to EventDetails page
-        <TouchableOpacity onPress={() => {
-            navigation.navigate({
-               name: 'EventDetails',
-               params: { eventName: "bye"},
-            });
-        }}>
+        
             <View style={styles.card}>
                 <View style={styles.eventDetails}>
                     <Text style={styles.eventName}>{props.eventName}</Text>
@@ -124,9 +119,7 @@ export const Card = (props) => {
                         {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
                     </View>
                 </View>
-            </View>
-        </TouchableOpacity>
-        
+            </View>        
     )
 }
 
