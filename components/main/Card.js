@@ -1,8 +1,107 @@
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * Card.js
+ * Displays main feed
+ */
 // this is the card component for the posts in the feed
 
-import React from 'react';
+import React, {useState} from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Container } from "../styling";
+
+const getWeekDay = (dateObject) => {
+    const dayNumber = dateObject.getDay();
+    switch (dayNumber) {
+        case 0:
+            return "Sunday";
+        case 1:
+            return "Monday";
+        case 2:
+            return "Tuesday";
+        case 3:
+            return "Wednesday";
+        case 4:
+            return "Thursday";
+        case 5:
+            return "Friday"
+        case 6:
+            return "Sunday";
+    }
+}
+
+const getMonthName = (dateObject) => {
+    const monthNumber = dateObject.getMonth();
+    switch (monthNumber) {
+        case 0:
+            return "January"
+        case 1:
+            return "February"
+        case 2:
+            return "March"
+        case 3:
+            return "April"
+        case 4:
+            return "May"
+        case 5:
+            return "June"
+        case 6:
+            return "July"
+        case 7:
+            return "August"
+        case 8:
+            return "September"
+        case 9:
+            return "October"
+        case 10:
+            return "November"
+        case 11:
+            return "December"
+    }
+}
+
+const parseDate = (dateObject) => {
+    return ({
+        date: dateObject.getDate(),
+        month: getMonthName(dateObject),
+        year:dateObject.getFullYear(),
+        day:getWeekDay(dateObject),
+        hour: dateObject.getHours(),
+        minute: dateObject.getMinutes(),
+        seconds: dateObject.getSeconds(),
+    })
+
+export const Card = (props) => {
+    const Tag = (props) => {
+        return (
+            <View style={styles.tags}>
+                <Text>{props.tag}</Text>
+            </View>
+        )
+    }
+
+    return (
+        <View style={styles.card}>
+            <View style={styles.eventDetails}>
+                <Text style={styles.eventName}>{props.eventName}</Text>
+                <View style={styles.eventDate}>
+                    <Text style={styles.eventDay}>{props.eventDay}</Text>
+                    <Text style={styles.eventTime}>{props.eventTime}</Text>
+                </View>
+            </View>
+            <View style={styles.peopleGoingAndTagsContainer}>
+                <View style={styles.peopleGoingContainer}>
+                    <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+                </View>
+                <View style={styles.tagsContainer}>
+                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+                </View>
+            </View>
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     card: {
@@ -72,37 +171,5 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     }
 })
-
-export const Card = (props) => {
-    const Tag = (props) => {
-        return (
-            <View style={styles.tags}>
-                <Text>{props.tag}</Text>
-            </View>
-        )
-    }
-
-    return (
-        <View style={styles.card}>
-            <View style={styles.eventDetails}>
-                <Text style={styles.eventName}>{props.eventName}</Text>
-                <View style={styles.eventDate}>
-                    <Text style={styles.eventDay}>{props.eventDay}</Text>
-                    <Text style={styles.eventTime}>{props.eventTime}</Text>
-                </View>
-            </View>
-            <View style={styles.peopleGoingAndTagsContainer}>
-                <View style={styles.peopleGoingContainer}>
-                    <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
-                </View>
-                <View style={styles.tagsContainer}>
-                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
-                </View>
-            </View>
-        </View>
-    )
-}
 
 export default Card;
