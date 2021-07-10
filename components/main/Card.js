@@ -1,8 +1,12 @@
 // this is the card component for the posts in the feed
 
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import React, {useEffect, useState} from "react";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { Container } from "../styling";
+import { useNavigation } from '@react-navigation/native';
+
+import EventDetails from './EventDetails'
+
 
 const styles = StyleSheet.create({
     card: {
@@ -82,26 +86,47 @@ export const Card = (props) => {
         )
     }
 
+    const OpenEventDetails = () => {
+        return (
+            <EventDetails
+                eventName={props.eventName}
+            />
+        )
+    }
+    
+    const navigation = useNavigation(); 
+    
+    const [eventName, setEventName] = useState("");    
+    
     return (
-        <View style={styles.card}>
-            <View style={styles.eventDetails}>
-                <Text style={styles.eventName}>{props.eventName}</Text>
-                <View style={styles.eventDate}>
-                    <Text style={styles.eventDay}>{props.eventDay}</Text>
-                    <Text style={styles.eventTime}>{props.eventTime}</Text>
+        // when the card is pressed, we head to EventDetails page
+        <TouchableOpacity onPress={() => {
+            navigation.navigate({
+               name: 'EventDetails',
+               params: { eventName: "bye"},
+            });
+        }}>
+            <View style={styles.card}>
+                <View style={styles.eventDetails}>
+                    <Text style={styles.eventName}>{props.eventName}</Text>
+                    <View style={styles.eventDate}>
+                        <Text style={styles.eventDay}>{props.eventDay}</Text>
+                        <Text style={styles.eventTime}>{props.eventTime}</Text>
+                    </View>
+                </View>
+                <View style={styles.peopleGoingAndTagsContainer}>
+                    <View style={styles.peopleGoingContainer}>
+                        <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+                    </View>
+                    <View style={styles.tagsContainer}>
+                        {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                        {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                        {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+                    </View>
                 </View>
             </View>
-            <View style={styles.peopleGoingAndTagsContainer}>
-                <View style={styles.peopleGoingContainer}>
-                    <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
-                </View>
-                <View style={styles.tagsContainer}>
-                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
-                </View>
-            </View>
-        </View>
+        </TouchableOpacity>
+        
     )
 }
 

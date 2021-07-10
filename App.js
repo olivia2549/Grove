@@ -48,6 +48,7 @@ import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
 import AddEventName from './components/main/AddEventName';
 import AddEventDescription from './components/main/AddEventDescription';
+import EventDetails from './components/main/EventDetails';
 
 const Stack = createStackNavigator();
 
@@ -96,6 +97,7 @@ export const App = () => {
                     <Stack.Screen name="Main" component={MainScreen}/>
                     <Stack.Screen name="AddEventName" component={AddEventName}/>
                     <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>
+                    <Stack.Screen name="EventDetails" component={EventDetails}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
