@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { FlatList, Button } from "react-native";
+import { View, FlatList } from "react-native";
 import { Container } from "../styling";
 
 import firebase from "firebase";
@@ -72,20 +72,23 @@ const Feed = () => {
     ]
 
     return (
-        <Container>
-            <FlatList
-                data={POSTS}
-                renderItem={({ item }) => (
-                    <Card
-                        eventName={item.eventName}
-                        eventDay={item.eventDay}
-                        eventTime={item.eventTime}
-                        peopleGoing={item.peopleGoing}
-                        tags={item.tags}
-                    />
-                )}
-            />
-        </Container>
+        <View style={{backgroundColor: "#fff"}}>
+            <Container>
+                <FlatList
+                    data={POSTS}
+                    renderItem={({ item }) => (
+                        <Card
+                            eventName={item.eventName}
+                            eventDay={item.eventDay}
+                            eventTime={item.eventTime}
+                            peopleGoing={item.peopleGoing}
+                            tags={item.tags}
+                        />
+                    )}
+                    showsVerticalScrollIndicator={false}
+                />
+            </Container>
+        </View>
     );
 }
 

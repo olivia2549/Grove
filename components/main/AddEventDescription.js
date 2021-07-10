@@ -12,11 +12,11 @@ const AddEventDescription = () => {
 
     useEffect(() => {
         console.log(eventName);
+        dispatch(addEventDescription(eventDescription));
     })
 
     const onChange = (ev) => {
         setEventDescription(ev.target.value);
-        dispatch(addEventDescription(eventDescription));
     }
 
     return (
