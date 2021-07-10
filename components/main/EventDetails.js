@@ -43,15 +43,18 @@ export const EventDetails = ({navigation, route}) => {
         <SafeAreaView style={styles.container}>
             <ScrollView>
                 <View style={styles.topBar}>
-                    
-                    {/* <Text>{peopleGoing}</Text> */}
-                    {/* <Text>{tags}</Text> */}
+                    <Text>{eventName}</Text>
+                    <Text>{eventDay}</Text>
+                    <Text>{eventTime}</Text>
+                    <Text>{peopleGoing}</Text>
+                    <Text>__</Text>
+                    {
+                        tags.map((tag) => <Text>{tag}</Text>)
+                    }
 
                 </View>
                 
-                <Text>{eventName}</Text>
-                    <Text>{eventDay}</Text>
-                    <Text>{eventTime}</Text>
+                
             </ScrollView>
             
         </SafeAreaView>
