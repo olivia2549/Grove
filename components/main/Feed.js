@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { FlatList, Button } from "react-native";
+import { View, FlatList } from "react-native";
 import { Container } from "../styling";
 
 import firebase from "firebase";
@@ -37,6 +37,8 @@ const Feed = () => {
     })
 
     return (
+
+      <View style={{backgroundColor: "#fff"}}>  
         <Container>
             <FlatList
                 data={posts}
@@ -45,42 +47,12 @@ const Feed = () => {
                         content={post}
                     />
                 )}
+                showsVerticalScrollIndicator={false}
             />
         </Container>
+      </View>
+
     );
 }
 
 export default Feed;
-
-
-
-// const POSTS = [
-//     {
-//         eventName: "Club Spikeball",
-//         eventDay: "Wed, Aug 7",
-//         eventTime: "4:00pm-6:00pm",
-//         peopleGoing: 23,
-//         tags: ["Free food","Sports","Anyone Welcome"]
-//     },
-//     {
-//         eventName: "Interfaith Council Dialogue Dinner",
-//         eventDay: "Today, Aug 5",
-//         eventTime: "4:00pm-6:00pm",
-//         peopleGoing: 33,
-//         tags: ["Free food","Clubs","Anyone Welcome"]
-//     },
-//     {
-//         eventName: "Change++ Speaker Event",
-//         eventDay: "Tomorrow, Aug 6",
-//         eventTime: "4:00pm-6:00pm",
-//         peopleGoing: 50,
-//         tags: ["Coding Clubs","Invite Only"]
-//     },
-//     {
-//         eventName: "Change++ Speaker Event",
-//         eventDay: "Tomorrow, Aug 6",
-//         eventTime: "4:00pm-6:00pm",
-//         peopleGoing: 50,
-//         tags: ["Coding Clubs","Invite Only"]
-//     }
-// ]
