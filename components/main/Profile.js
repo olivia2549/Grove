@@ -7,7 +7,6 @@
 
 import React, { useState, useEffect } from "react";
 import {StyleSheet, View, Text, Image, FlatList, Button} from "react-native";
-import { Container } from "../styling";
 
 import { useSelector } from "react-redux";
 
@@ -29,7 +28,12 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         aspectRatio: 1
-    }
+    },
+    screenContainer: {
+        flex: 1,
+        justifyContent: "center",
+        padding: 16
+    },
 })
 
 export const Profile = (props) => {
@@ -94,7 +98,7 @@ export const Profile = (props) => {
     }
 
     return (
-        <Container>
+        <View style={styles.screenContainer}>
             <Button title="Sign Out" onPress={signOut}/>
 
             <View style={styles.containerInfo}>
@@ -113,7 +117,7 @@ export const Profile = (props) => {
                     )}
                 />
             </View>
-        </Container>
+        </View>
     );
 }
 

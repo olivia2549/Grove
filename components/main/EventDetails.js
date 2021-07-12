@@ -6,31 +6,40 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Animated, } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
-import { Container } from "../styling";
-
-const windowHeight = Dimensions.get('window').width;
-const windowWidth = Dimensions.get('window').height;
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexDirection: 'column',
     },
     topBar: {
         backgroundColor: '#5DB075',
-        height: windowHeight * 0.3,
+        height: windowHeight * 0.1,
         width: "100%",
         position: "absolute",
         top: 0,
+        justifyContent: 'center',
+        flex: 1/2,
+        // flexDirection: 'row',
         // borderRadius: 20,
         // margin: 10,
     },
     bottomBar: {
         
     },
-
+    eventName: {
+        color: '#ffffff',
+        fontWeight: "600",
+        // flex: 1,
+    },
+    scrollable: {
+        flex: 1/2,
+    }
 })
 
 // function to provide details about each event/card that is present in the feed page
@@ -41,22 +50,20 @@ export const EventDetails = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
                 <View style={styles.topBar}>
-                    <Text>{eventName}</Text>
-                    <Text>{eventDay}</Text>
-                    <Text>{eventTime}</Text>
-                    <Text>{peopleGoing}</Text>
-                    <Text>__</Text>
-                    {
-                        tags.map((tag) => <Text>{tag}</Text>)
-                    }
-
+                    <Text style={styles.eventName}>{eventName}</Text>
                 </View>
-                
-                
-            </ScrollView>
-            
+                <ScrollView style={styles.scrollable}>
+                    <View >
+                        <Text>{eventDay}</Text>
+                        <Text>{eventTime}</Text>
+                        <Text>{peopleGoing}</Text>
+                        <Text>__</Text>
+                        {
+                            tags.map((tag) => <Text>{tag}</Text>)
+                        }
+                    </View>
+                </ScrollView>
         </SafeAreaView>
     );
 }
