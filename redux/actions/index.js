@@ -6,7 +6,13 @@
  */
 
 
-import {EVENT_NAME_STATE_CHANGE, EVENT_DESCRIPTION_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE, CLEAR_DATA} from "../constants/index";
+import {
+    EVENT_NAME_STATE_CHANGE,
+    EVENT_DESCRIPTION_STATE_CHANGE,
+    USER_POSTS_STATE_CHANGE,
+    USER_STATE_CHANGE,
+    CLEAR_DATA,
+} from "../constants/index";
 
 import firebase from "firebase";
 

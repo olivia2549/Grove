@@ -91,6 +91,7 @@ export const App = () => {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName='Main' screenOptions={{
                     headerStyle: {height: 100, backgroundColor: "#fff", shadowColor: "transparent"},
+                    cardStyle: {backgroundColor: "#fff"},
                     headerTitleStyle: styles.headerTitle,
                     headerLeft: () => (
                         <Text style={{color: "#000", fontSize: 48, marginLeft: 15}}>Grove</Text>

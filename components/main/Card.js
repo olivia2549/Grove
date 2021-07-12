@@ -6,7 +6,7 @@
  */
 // this is the card component for the posts in the feed
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Container } from "../styling";
 
@@ -65,8 +65,8 @@ const getMonthName = (dateObject) => {
             return "December"
     }
 }
-  
-  const parseDate = (dateObject) => {
+
+const parseDate = (dateObject) => {
     return ({
         date: dateObject.getDate(),
         month: getMonthName(dateObject),
@@ -81,14 +81,13 @@ const getMonthName = (dateObject) => {
 }
 
 export const Card = (props) => {
-    const post = props.content;
-    const start = parseDate(post.starttime);
-    const end = parseDate(post.endtime);
+    const start = parseDate(props.startTime);
+    const end = parseDate(props.endTime);
 
     const Tag = (props) => {
         return (
             <View style={styles.tags}>
-                <Text>{post.tag}</Text>
+                <Text>{props.tags}</Text>
             </View>
         )
     }
@@ -96,7 +95,7 @@ export const Card = (props) => {
     return (
         <View style={styles.card}>
             <View style={styles.eventDetails}>
-                <Text style={styles.eventName}>{post.eventName}</Text>
+                <Text style={styles.eventName}>{props.eventName}</Text>
                 <View style={styles.eventDate}>
                     <Text style={styles.eventDay}>{start.day}</Text>
                     <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>
@@ -104,12 +103,12 @@ export const Card = (props) => {
             </View>
             <View style={styles.peopleGoingAndTagsContainer}>
                 <View style={styles.peopleGoingContainer}>
-                    <Text style={styles.peopleGoing}>{post.attendee.length} people going</Text>
+                    <Text style={styles.peopleGoing}>{props.attendees.length} people going</Text>
                 </View>
                 <View style={styles.tagsContainer}>
-                    {(post.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                    {(post.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                    {(post.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
                 </View>
             </View>
         </View>
