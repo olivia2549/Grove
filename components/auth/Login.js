@@ -6,7 +6,8 @@
  */
 
 import React, {useState, useEffect} from "react";
-import { View, Button, TextInput } from "react-native"
+import { View, Button, TextInput, StyleSheet, } from "react-native"
+import { FancyButton, FancyInput, } from "../styling";
 
 import firebase from "firebase";
 
@@ -27,23 +28,31 @@ export const Login = () => {
 
     // Displays to the screen
     return (
-        <View>
-            <TextInput
+        <View style={styles.screenContainer}>
+            <FancyInput
                 placeholder="email"
                 onChangeText={(email) => setState({
                     ...state,   // preserve old state
                     email: email})}
             />
-            <TextInput
+            <FancyInput
                 placeholder="password"
                 secureTextEntry={true}
                 onChangeText={(password) => setState({
                     ...state,
                     password: password})}
             />
-            <Button title="Sign In" onPress={() => onSignUp()}/>
+            <FancyButton title="Sign In" onPress={() => onSignUp()}/>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    screenContainer: {
+      flex: 1,
+      justifyContent: "center",
+      padding: 16
+    }
+});
 
 export default Login;
