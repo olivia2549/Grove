@@ -18,10 +18,33 @@ import { Card } from './Card';
 // there will be card components within the view. The card components will be clickable
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const navigation = useNavigation();
-    const [state, setState] = useState({ posts: [] })
+    // const [state, setState] = useState({ posts: [] })
     // const [posts, setPosts] = useState([]);
+    const POSTS = [
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        }
+    ]
 
     // firebase.firestore().collection('posts').onSnapshot(snapshot => {
     //     let changes = snapshot.docChanges();
@@ -54,19 +77,19 @@ const Feed = () => {
     //     })
     // })
 
-    firebase.firestore()
-        .collection("posts")
-        .get()
-        .then((snapshot) => {
-            let temp = state.posts;
-            console.log("Total posts: ", snapshot.size);
-            snapshot.forEach(doc => {
-                temp.push(doc.data());
-            })
-            setState({posts: temp});
-            console.log(state.posts[0].name);
-        })
-        .catch((error) => {console.log(error)})
+    // firebase.firestore()
+    //     .collection("posts")
+    //     .get()
+    //     .then((snapshot) => {
+    //         let temp = state.posts;
+    //         console.log("Total posts: ", snapshot.size);
+    //         snapshot.forEach(doc => {
+    //             temp.push(doc.data());
+    //         })
+    //         setState({posts: temp});
+    //         console.log(state.posts[0].name);
+    //     })
+    //     .catch((error) => {console.log(error)})
 
     return (
       <View style={{backgroundColor: "#fff"}}>  
@@ -96,30 +119,6 @@ const Feed = () => {
         </Container>
       </View>
     );
-
-    const POSTS = [
-        {
-            eventName: "Coding with Sybbure",
-            eventDay: "Mon, Aug 7",
-            eventTime: "10:00am-12:00pm",
-            peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
-        },
-        {
-            eventName: "Coding with Sybbure",
-            eventDay: "Mon, Aug 7",
-            eventTime: "10:00am-12:00pm",
-            peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
-        },
-        {
-            eventName: "Coding with Sybbure",
-            eventDay: "Mon, Aug 7",
-            eventTime: "10:00am-12:00pm",
-            peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
-        }
-    ]
 }
 
 export default Feed;
