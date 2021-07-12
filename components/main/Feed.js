@@ -18,10 +18,10 @@ import { Card } from './Card';
 // there will be card components within the view. The card components will be clickable
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
-    // const dispatch = useDispatch();
     const navigation = useNavigation();
     // const [state, setState] = useState({ posts: [] })
-    // const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([]);
+
     const POSTS = [
         {
             eventName: "Coding with Sybbure",
@@ -46,50 +46,38 @@ const Feed = () => {
         }
     ]
 
-    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
-    //     let changes = snapshot.docChanges();
-    //     changes.forEach(change => {
-    //         let temp = state.posts;
-    //         if (change.type === 'added') {
-    //             temp.push(change.doc);
+    // useEffect(() => {
+    //     firebase.firestore()
+    //         .collection("posts")
+    //         .get()
+    //         .then((snapshot) => {
+    //             let temp = state.posts;
+    //             console.log("Total posts: ", snapshot.size);
+    //             snapshot.forEach(doc => {
+    //                 temp.push(doc.data());
+    //             })
     //             setState({posts: temp});
-    //         } else if (change.type === 'removed') {
-    //             setState({posts: temp.filter(post => post.id !== change.doc.id)});
-    //         }
-    //     })
-    //     console.log(state.posts[0].name);
-    // })
-
-    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
-    //     let changes = snapshot.docChanges();
-    //     changes.forEach(change => {
-    //         if (change.type === 'added') {
-    //             setPosts(prevPosts => {
-    //                 prevPosts.push(change.doc);
-    //                 return prevPosts;
-    //             });
-    //         } else if (change.type === 'removed') {
-    //             setPosts(prevPosts => {
-    //                 prevPosts.filter(post => post.id !== change.doc.id)
-    //                 return prevPosts;
-    //             });
-    //         }
-    //     })
-    // })
-
-    // firebase.firestore()
-    //     .collection("posts")
-    //     .get()
-    //     .then((snapshot) => {
-    //         let temp = state.posts;
-    //         console.log("Total posts: ", snapshot.size);
-    //         snapshot.forEach(doc => {
-    //             temp.push(doc.data());
     //         })
-    //         setState({posts: temp});
-    //         console.log(state.posts[0].name);
+    //         .catch((error) => {console.log(error)})
+    //     console.log(state.posts[0].name);
+    // }, [state])
+
+    // useEffect(() => {
+    //     firebase.firestore().collection('posts').onSnapshot(snapshot => {
+    //         let changes = snapshot.docChanges();
+    //         changes.forEach(change => {
+    //             let temp = state.posts;
+    //             if (change.type === 'added') {
+    //                 temp.push(change.doc);
+    //                 setPosts(temp);
+    //             } else if (change.type === 'removed') {
+    //                 setPosts(temp.filter(post => post.id !== change.doc.id));
+    //             }
+    //         })
     //     })
-    //     .catch((error) => {console.log(error)})
+    // }, [posts])
+    //
+    // console.log(posts[0].name);
 
     return (
       <View style={{backgroundColor: "#fff"}}>  
