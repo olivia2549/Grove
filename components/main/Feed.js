@@ -6,8 +6,9 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, TouchableOpacity, Button } from "react-native";
 import { Container } from "../styling";
+import { useNavigation } from '@react-navigation/native';
 
 import firebase from "firebase";
 
@@ -36,16 +37,32 @@ const Feed = () => {
         })
     })
 
+    const navigation = useNavigation(); 
+
+
     return (
 
       <View style={{backgroundColor: "#fff"}}>  
         <Container>
             <FlatList
+                data={POSTS}
+                renderItem={({ item }) => (
+                    
+                // when the card is pressed, we head to EventDetails page
+                <TouchableOpacity onPress={() => navigation.navigate("EventDetails",{
+                    eventName: item.eventName, 
+                    eventDay: item.eventDay,
+                    eventTime: item.eventTime, 
+                    peopleGoing: item.peopleGoing, 
+                    tags: item.tags,
+                })}>
                 data={posts}
                 renderItem={({ post }) => (
                     <Card
                         content={post}
                     />
+                </TouchableOpacity>
+                    
                 )}
                 showsVerticalScrollIndicator={false}
             />
