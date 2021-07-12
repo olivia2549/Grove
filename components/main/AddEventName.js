@@ -10,13 +10,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text, View, TextInput, Platform } from 'react-native';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch } from "react-redux";
 import { addEventName } from "../../redux/actions";
 import AddEventDescription from "./AddEventDescription";
-
-const Stack = createStackNavigator();
 
 export const AddEventName = () => {
     const navigation = useNavigation();

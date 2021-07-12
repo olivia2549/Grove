@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { FlatList,TouchableOpacity, Button } from "react-native";
+import { View, FlatList, TouchableOpacity, Button } from "react-native";
 import { Container } from "../styling";
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,60 +22,27 @@ import {useDispatch} from "react-redux";
 const Feed = () => {
     const dispatch = useDispatch();
 
-    // const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([]);
 
-    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
-    //     let changes = snapshot.docChanges();
-    //     changes.forEach(change => {
-    //         let temp = posts;
-    //         if (change.type === 'added') {
-    //             temp.push(change.doc);
-    //             setPosts(temp);
-    //         } else if (change.type === 'removed') {
-    //             setPosts(temp.filter(post => post.id !== change.doc.id));
-    //         }
-    //     })
-    // })
-    //
-    // useEffect(() => {
-    //     console.log(posts);
-    // })
-
-    const POSTS = [
-        {
-            eventName: "Club Spikeball",
-            eventDay: "Wed, Aug 7",
-            eventTime: "4:00pm-6:00pm",
-            peopleGoing: 23,
-            tags: ["Free food","Sports","Anyone Welcome"]
-        },
-        {
-            eventName: "Interfaith Council Dialogue Dinner",
-            eventDay: "Today, Aug 5",
-            eventTime: "4:00pm-6:00pm",
-            peopleGoing: 33,
-            tags: ["Free food","Clubs","Anyone Welcome"]
-        },
-        {
-            eventName: "Change++ Speaker Event",
-            eventDay: "Tomorrow, Aug 6",
-            eventTime: "4:00pm-6:00pm",
-            peopleGoing: 50,
-            tags: ["Coding Clubs","Invite Only"]
-        },
-        {
-            eventName: "Change++ Speaker Event",
-            eventDay: "Tomorrow, Aug 6",
-            eventTime: "4:00pm-6:00pm",
-            peopleGoing: 50,
-            tags: ["Coding Clubs","Invite Only"]
-        }
-    ]
+    firebase.firestore().collection('posts').onSnapshot(snapshot => {
+        let changes = snapshot.docChanges();
+        changes.forEach(change => {
+            let temp = posts;
+            if (change.type === 'added') {
+                temp.push(change.doc);
+                setPosts(temp);
+            } else if (change.type === 'removed') {
+                setPosts(temp.filter(post => post.id !== change.doc.id));
+            }
+        })
+    })
 
     const navigation = useNavigation(); 
 
 
     return (
+
+      <View style={{backgroundColor: "#fff"}}>  
         <Container>
             <FlatList
                 data={POSTS}
@@ -89,18 +56,19 @@ const Feed = () => {
                     peopleGoing: item.peopleGoing, 
                     tags: item.tags,
                 })}>
+                data={posts}
+                renderItem={({ post }) => (
                     <Card
-                        eventName={item.eventName}
-                        eventDay={item.eventDay}
-                        eventTime={item.eventTime}
-                        peopleGoing={item.peopleGoing}
-                        tags={item.tags}
+                        content={post}
                     />
                 </TouchableOpacity>
                     
                 )}
+                showsVerticalScrollIndicator={false}
             />
         </Container>
+      </View>
+
     );
 }
 

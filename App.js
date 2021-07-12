@@ -6,9 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
-
-import { NavigationContainer } from '@react-navigation/native';
+import {View, Text, StyleSheet} from 'react-native';
+import { NavigationContainer, Link } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Allows us to use redux
@@ -21,8 +20,8 @@ const composedEnhancer = compose(applyMiddleware(thunk),
     ? window.__REDUX_DEVTOOLS_EXTENSION__()
     : f => f
 );
-// export const store = createStore(allReducers, applyMiddleware(thunk));
-export const store = createStore(allReducers, composedEnhancer);
+export const store = createStore(allReducers, applyMiddleware(thunk));
+// export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 
@@ -93,7 +92,13 @@ export const App = () => {
         // Provider allows us to access the redux store data in our app
         <Provider store={store}>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName='Main'>
+                <Stack.Navigator initialRouteName='Main' screenOptions={{
+                    headerStyle: {height: 100, backgroundColor: "#fff", shadowColor: "transparent"},
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (
+                        <Text style={{color: "#000", fontSize: 48, marginLeft: 15}}>Grove</Text>
+                    )
+                }}>
                     <Stack.Screen name="Main" component={MainScreen}/>
                     <Stack.Screen name="AddEventName" component={AddEventName}/>
                     <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>
@@ -104,5 +109,11 @@ export const App = () => {
     )
 
 }
+
+const styles = StyleSheet.create({
+    headerTitle: {
+        display: "none"
+    }
+})
 
 export default App;
