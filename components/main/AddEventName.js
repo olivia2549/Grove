@@ -19,10 +19,6 @@ export const AddEventName = () => {
     const dispatch = useDispatch();
     const [eventName, setEventName] = useState("");
 
-    const onChange = (ev) => {
-        setEventName(ev.target.value);
-    }
-
     useEffect(() => {
         dispatch(addEventName(eventName));
     })
@@ -34,9 +30,9 @@ export const AddEventName = () => {
             <TextInput
                 id="eventName"
                 name="eventName"
-                onChange={onChange}
+                onChangeText={(text) => {setEventName(text)}}
                 placeholder="Event Name..."
-                value={eventName}
+                defaultValue={eventName}
             />
 
             <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription")}}/>

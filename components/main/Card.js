@@ -68,8 +68,8 @@ const getMonthName = (dateObject) => {
             return "December"
     }
 }
-  
-  const parseDate = (dateObject) => {
+
+const parseDate = (dateObject) => {
     return ({
         date: dateObject.getDate(),
         month: getMonthName(dateObject),
@@ -87,6 +87,7 @@ const getMonthName = (dateObject) => {
     // const post = props.content;
     // const start = parseDate(post.starttime);
     // const end = parseDate(post.endtime);
+    const navigation = useNavigation(); 
 
     const Tag = (props) => {
         return (
@@ -95,7 +96,7 @@ const getMonthName = (dateObject) => {
             </View>
         )
     }
-
+  
     const OpenEventDetails = () => {
         return (
             <EventDetails
@@ -103,12 +104,9 @@ const getMonthName = (dateObject) => {
             />
         )
     }
-    
-    const navigation = useNavigation(); 
 
-    const hello = props.eventName;
 
-return (
+    return (
         
             // <View style={styles.card}>
             //     <View style={styles.eventDetails}>
@@ -129,22 +127,22 @@ return (
             //         </View>
             //     </View>
             // </View>
-    <View style={styles.card}>
-        <View style={styles.eventDetails}>
-            <Text style={styles.eventName}>{props.eventName}</Text>
-            <View style={styles.eventDate}>
-                <Text style={styles.eventDay}>{props.eventDay}</Text>
-                <Text style={styles.eventTime}>{props.eventTime}</Text>
-            </View>
-        </View>
-        <View style={styles.peopleGoingAndTagsContainer}>
-            <View style={styles.peopleGoingContainer}>
-                <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
-            </View>
-            <View style={styles.tagsContainer}>
-                {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+      <View style={styles.card}>
+          <View style={styles.eventDetails}>
+              <Text style={styles.eventName}>{props.eventName}</Text>
+              <View style={styles.eventDate}>
+                  <Text style={styles.eventDay}>{props.eventDay}</Text>
+                  <Text style={styles.eventTime}>{props.eventTime}</Text>
+              </View>
+          </View>
+          <View style={styles.peopleGoingAndTagsContainer}>
+              <View style={styles.peopleGoingContainer}>
+                  <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+              </View>
+              <View style={styles.tagsContainer}>
+                  {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                  {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                  {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
             </View>
         </View>
     </View>

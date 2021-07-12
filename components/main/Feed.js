@@ -6,15 +6,13 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, FlatList, TouchableOpacity, Button } from "react-native";
+import { View, FlatList, Text, TouchableOpacity, Button } from "react-native";
 import { Container } from "../styling";
 import { useNavigation } from '@react-navigation/native';
 
 import firebase from "firebase";
 
 import { Card } from './Card';
-import {clearData} from "../../redux/actions";
-import {useDispatch} from "react-redux";
 
 // function to filter the posts
 // there will be card components within the view. The card components will be clickable
@@ -22,45 +20,53 @@ import {useDispatch} from "react-redux";
 const Feed = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-
+    const [state, setState] = useState({ posts: [] })
     // const [posts, setPosts] = useState([]);
-    //
+
     // firebase.firestore().collection('posts').onSnapshot(snapshot => {
     //     let changes = snapshot.docChanges();
     //     changes.forEach(change => {
-    //         let temp = posts;
+    //         let temp = state.posts;
     //         if (change.type === 'added') {
     //             temp.push(change.doc);
-    //             setPosts(temp);
+    //             setState({posts: temp});
     //         } else if (change.type === 'removed') {
-    //             setPosts(temp.filter(post => post.id !== change.doc.id));
+    //             setState({posts: temp.filter(post => post.id !== change.doc.id)});
+    //         }
+    //     })
+    //     console.log(state.posts[0].name);
+    // })
+
+    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
+    //     let changes = snapshot.docChanges();
+    //     changes.forEach(change => {
+    //         if (change.type === 'added') {
+    //             setPosts(prevPosts => {
+    //                 prevPosts.push(change.doc);
+    //                 return prevPosts;
+    //             });
+    //         } else if (change.type === 'removed') {
+    //             setPosts(prevPosts => {
+    //                 prevPosts.filter(post => post.id !== change.doc.id)
+    //                 return prevPosts;
+    //             });
     //         }
     //     })
     // })
 
-    const POSTS = [
-        {
-            eventName: "Coding with Sybbure",
-            eventDay: "Mon, Aug 7",
-            eventTime: "10:00am-12:00pm",
-            peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
-        },
-        {
-            eventName: "Coding with Sybbure",
-            eventDay: "Mon, Aug 7",
-            eventTime: "10:00am-12:00pm",
-            peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
-        },
-        {
-            eventName: "Coding with Sybbure",
-            eventDay: "Mon, Aug 7",
-            eventTime: "10:00am-12:00pm",
-            peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
-        }
-    ]
+    firebase.firestore()
+        .collection("posts")
+        .get()
+        .then((snapshot) => {
+            let temp = state.posts;
+            console.log("Total posts: ", snapshot.size);
+            snapshot.forEach(doc => {
+                temp.push(doc.data());
+            })
+            setState({posts: temp});
+            console.log(state.posts[0].name);
+        })
+        .catch((error) => {console.log(error)})
 
     return (
       <View style={{backgroundColor: "#fff"}}>  
@@ -90,6 +96,30 @@ const Feed = () => {
         </Container>
       </View>
     );
+
+    const POSTS = [
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        }
+    ]
 }
 
 export default Feed;
