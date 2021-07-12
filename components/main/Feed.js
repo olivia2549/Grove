@@ -7,7 +7,6 @@
 
 import React, {useEffect, useState} from "react";
 import { View, FlatList, Text, TouchableOpacity, Button } from "react-native";
-import { Container } from "../styling";
 import { useNavigation } from '@react-navigation/native';
 
 import firebase from "firebase";
@@ -81,7 +80,7 @@ const Feed = () => {
 
     return (
       <View style={{backgroundColor: "#fff"}}>  
-        <Container>
+        <View style={{justifyContent: "center", margin: 15}}>
             <FlatList
                 data={POSTS}
                 renderItem={({ item }) => (
@@ -104,7 +103,7 @@ const Feed = () => {
                 )}
                 showsVerticalScrollIndicator={false}
             />
-        </Container>
+        </View>
       </View>
     );
 }
