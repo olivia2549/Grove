@@ -6,8 +6,9 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, FlatList, Text } from "react-native";
+import { View, FlatList, Text, TouchableOpacity, Button } from "react-native";
 import { Container } from "../styling";
+import { useNavigation } from '@react-navigation/native';
 
 import firebase from "firebase";
 
@@ -17,6 +18,8 @@ import { Card } from './Card';
 // there will be card components within the view. The card components will be clickable
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
     const [state, setState] = useState({ posts: [] })
     // const [posts, setPosts] = useState([]);
 
@@ -66,16 +69,57 @@ const Feed = () => {
         .catch((error) => {console.log(error)})
 
     return (
+      <View style={{backgroundColor: "#fff"}}>  
         <Container>
-            {/*<FlatList*/}
-            {/*    data={posts}*/}
-            {/*    renderItem={({ post }) => (*/}
-            {/*        <Card/>*/}
-            {/*    )}*/}
-            {/*    showsVerticalScrollIndicator={false}*/}
-            {/*/>*/}
+            <FlatList
+                data={POSTS}
+                renderItem={({ item }) => (
+                    // when the card is pressed, we head to EventDetails page
+                    <TouchableOpacity onPress={() => navigation.navigate("EventDetails",{
+                        eventName: item.eventName,
+                        eventDay: item.eventDay,
+                        eventTime: item.eventTime,
+                        peopleGoing: item.peopleGoing,
+                        tags: item.tags,
+                    })}>
+                    <Card
+                        eventName={item.eventName}
+                        eventDay={item.eventDay}
+                        eventTime={item.eventTime}
+                        peopleGoing={item.peopleGoing}
+                        tags={item.tags}
+                    />
+                    </TouchableOpacity>
+                )}
+                showsVerticalScrollIndicator={false}
+            />
         </Container>
+      </View>
     );
+
+    const POSTS = [
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        }
+    ]
 }
 
 export default Feed;

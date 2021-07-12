@@ -7,8 +7,11 @@
 // this is the card component for the posts in the feed
 
 import React, {useEffect, useState} from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { Container } from "../styling";
+import { useNavigation } from '@react-navigation/native';
+
+import EventDetails from './EventDetails'
 
 const getWeekDay = (dateObject) => {
     const dayNumber = dateObject.getDay();
@@ -80,39 +83,70 @@ const parseDate = (dateObject) => {
     })
 }
 
-export const Card = (props) => {
-    const start = parseDate(props.startTime);
-    const end = parseDate(props.endTime);
+  export const Card = (props) => {
+    // const post = props.content;
+    // const start = parseDate(post.starttime);
+    // const end = parseDate(post.endtime);
+    const navigation = useNavigation(); 
 
     const Tag = (props) => {
         return (
             <View style={styles.tags}>
-                <Text>{props.tags}</Text>
+                <Text>{props.tag}</Text>
             </View>
         )
     }
+  
+    const OpenEventDetails = () => {
+        return (
+            <EventDetails
+                eventName={props.eventName}
+            />
+        )
+    }
+
 
     return (
-        <View style={styles.card}>
-            <View style={styles.eventDetails}>
-                <Text style={styles.eventName}>{props.eventName}</Text>
-                <View style={styles.eventDate}>
-                    <Text style={styles.eventDay}>{start.day}</Text>
-                    <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>
-                </View>
-            </View>
-            <View style={styles.peopleGoingAndTagsContainer}>
-                <View style={styles.peopleGoingContainer}>
-                    <Text style={styles.peopleGoing}>{props.attendees.length} people going</Text>
-                </View>
-                <View style={styles.tagsContainer}>
-                    {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                    {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                    {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
-                </View>
+        
+            // <View style={styles.card}>
+            //     <View style={styles.eventDetails}>
+            //         <Text style={styles.eventName}>{props.eventName}</Text>
+            //         <View style={styles.eventDate}>
+            //             <Text style={styles.eventDay}>{props.eventDay}</Text>
+            //             <Text style={styles.eventTime}>{props.eventTime}</Text>
+            //         </View>
+            //     </View>
+            //     <View style={styles.peopleGoingAndTagsContainer}>
+            //         <View style={styles.peopleGoingContainer}>
+            //             <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+            //         </View>
+            //         <View style={styles.tagsContainer}>
+            //             {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+            //             {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+            //             {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+            //         </View>
+            //     </View>
+            // </View>
+      <View style={styles.card}>
+          <View style={styles.eventDetails}>
+              <Text style={styles.eventName}>{props.eventName}</Text>
+              <View style={styles.eventDate}>
+                  <Text style={styles.eventDay}>{props.eventDay}</Text>
+                  <Text style={styles.eventTime}>{props.eventTime}</Text>
+              </View>
+          </View>
+          <View style={styles.peopleGoingAndTagsContainer}>
+              <View style={styles.peopleGoingContainer}>
+                  <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+              </View>
+              <View style={styles.tagsContainer}>
+                  {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                  {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                  {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
             </View>
         </View>
-    )
+    </View>
+)
 }
 
 const styles = StyleSheet.create({
@@ -182,6 +216,6 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 8,
     }
-})
-
+})    
+    
 export default Card;
