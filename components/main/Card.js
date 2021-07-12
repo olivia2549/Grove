@@ -84,14 +84,14 @@ const getMonthName = (dateObject) => {
 }
 
   export const Card = (props) => {
-    const post = props.content;
-    const start = parseDate(post.starttime);
-    const end = parseDate(post.endtime);
+    // const post = props.content;
+    // const start = parseDate(post.starttime);
+    // const end = parseDate(post.endtime);
 
     const Tag = (props) => {
         return (
             <View style={styles.tags}>
-                <Text>{post.tag}</Text>
+                <Text>{props.tag}</Text>
             </View>
         )
     }
@@ -110,26 +110,45 @@ const getMonthName = (dateObject) => {
 
 return (
         
-            <View style={styles.card}>
-                <View style={styles.eventDetails}>
-                    <Text style={styles.eventName}>{props.eventName}</Text>
-                    <View style={styles.eventDate}>
-                        <Text style={styles.eventDay}>{props.eventDay}</Text>
-                        <Text style={styles.eventTime}>{props.eventTime}</Text>
-                    </View>
-                </View>
-                <View style={styles.peopleGoingAndTagsContainer}>
-                    <View style={styles.peopleGoingContainer}>
-                        <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
-                    </View>
-                    <View style={styles.tagsContainer}>
-                        {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
-                        {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
-                        {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
-                    </View>
-                </View>
-            </View>        
-    )
+            // <View style={styles.card}>
+            //     <View style={styles.eventDetails}>
+            //         <Text style={styles.eventName}>{props.eventName}</Text>
+            //         <View style={styles.eventDate}>
+            //             <Text style={styles.eventDay}>{props.eventDay}</Text>
+            //             <Text style={styles.eventTime}>{props.eventTime}</Text>
+            //         </View>
+            //     </View>
+            //     <View style={styles.peopleGoingAndTagsContainer}>
+            //         <View style={styles.peopleGoingContainer}>
+            //             <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+            //         </View>
+            //         <View style={styles.tagsContainer}>
+            //             {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+            //             {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+            //             {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+            //         </View>
+            //     </View>
+            // </View>
+    <View style={styles.card}>
+        <View style={styles.eventDetails}>
+            <Text style={styles.eventName}>{props.eventName}</Text>
+            <View style={styles.eventDate}>
+                <Text style={styles.eventDay}>{props.eventDay}</Text>
+                <Text style={styles.eventTime}>{props.eventTime}</Text>
+            </View>
+        </View>
+        <View style={styles.peopleGoingAndTagsContainer}>
+            <View style={styles.peopleGoingContainer}>
+                <Text style={styles.peopleGoing}>{props.peopleGoing} people going</Text>
+            </View>
+            <View style={styles.tagsContainer}>
+                {(props.tags[0] != null) && <Tag tag={props.tags[0]}/>}
+                {(props.tags[1] != null) && <Tag tag={props.tags[1]}/>}
+                {(props.tags[2] != null) && <Tag tag={props.tags[2]}/>}
+            </View>
+        </View>
+    </View>
+)
 }
 
 const styles = StyleSheet.create({

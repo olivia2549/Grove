@@ -21,54 +21,74 @@ import {useDispatch} from "react-redux";
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
-    const [posts, setPosts] = useState([]);
+    // const [posts, setPosts] = useState([]);
+    //
+    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
+    //     let changes = snapshot.docChanges();
+    //     changes.forEach(change => {
+    //         let temp = posts;
+    //         if (change.type === 'added') {
+    //             temp.push(change.doc);
+    //             setPosts(temp);
+    //         } else if (change.type === 'removed') {
+    //             setPosts(temp.filter(post => post.id !== change.doc.id));
+    //         }
+    //     })
+    // })
 
-    firebase.firestore().collection('posts').onSnapshot(snapshot => {
-        let changes = snapshot.docChanges();
-        changes.forEach(change => {
-            let temp = posts;
-            if (change.type === 'added') {
-                temp.push(change.doc);
-                setPosts(temp);
-            } else if (change.type === 'removed') {
-                setPosts(temp.filter(post => post.id !== change.doc.id));
-            }
-        })
-    })
-
-    const navigation = useNavigation(); 
-
+    const POSTS = [
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        },
+        {
+            eventName: "Coding with Sybbure",
+            eventDay: "Mon, Aug 7",
+            eventTime: "10:00am-12:00pm",
+            peopleGoing: 23,
+            tags: ["Coding Clubs", "Free Food"],
+        }
+    ]
 
     return (
-
       <View style={{backgroundColor: "#fff"}}>  
         <Container>
             <FlatList
                 data={POSTS}
                 renderItem={({ item }) => (
-                    
-                // when the card is pressed, we head to EventDetails page
-                <TouchableOpacity onPress={() => navigation.navigate("EventDetails",{
-                    eventName: item.eventName, 
-                    eventDay: item.eventDay,
-                    eventTime: item.eventTime, 
-                    peopleGoing: item.peopleGoing, 
-                    tags: item.tags,
-                })}>
-                data={posts}
-                renderItem={({ post }) => (
+                    // when the card is pressed, we head to EventDetails page
+                    <TouchableOpacity onPress={() => navigation.navigate("EventDetails",{
+                        eventName: item.eventName,
+                        eventDay: item.eventDay,
+                        eventTime: item.eventTime,
+                        peopleGoing: item.peopleGoing,
+                        tags: item.tags,
+                    })}>
                     <Card
-                        content={post}
+                        eventName={item.eventName}
+                        eventDay={item.eventDay}
+                        eventTime={item.eventTime}
+                        peopleGoing={item.peopleGoing}
+                        tags={item.tags}
                     />
-                </TouchableOpacity>
-                    
+                    </TouchableOpacity>
                 )}
                 showsVerticalScrollIndicator={false}
             />
         </Container>
       </View>
-
     );
 }
 
