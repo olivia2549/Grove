@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     marginBottom: 8,
     marginLeft: 15,
-    marginRight: 15
+    marginRight: 15,
   },
   fancyButtonText: {
       fontSize: 18,

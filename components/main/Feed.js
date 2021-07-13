@@ -24,6 +24,7 @@ const Feed = () => {
     const POSTS = [
         {
             eventName: "Coding with Sybbure",
+            eventDetail: "Come code with all the bad boys and girls as we prepare to get our FAANG internships.",
             eventDay: "Mon, Aug 7",
             eventTime: "10:00am-12:00pm",
             peopleGoing: 23,
@@ -31,6 +32,7 @@ const Feed = () => {
         },
         {
             eventName: "Coding with Sybbure",
+            eventDetail: "Come code with all the bad boys and girls as we prepare to get our FAANG internships.",
             eventDay: "Mon, Aug 7",
             eventTime: "10:00am-12:00pm",
             peopleGoing: 23,
@@ -38,6 +40,7 @@ const Feed = () => {
         },
         {
             eventName: "Coding with Sybbure",
+            eventDetail: "Come code with all the bad boys and girls as we prepare to get our FAANG internships.",
             eventDay: "Mon, Aug 7",
             eventTime: "10:00am-12:00pm",
             peopleGoing: 23,
@@ -87,6 +90,7 @@ const Feed = () => {
                     // when the card is pressed, we head to EventDetails page
                     <TouchableOpacity onPress={() => navigation.navigate("EventDetails",{
                         eventName: item.eventName,
+                        eventDetail: item.eventDetail,
                         eventDay: item.eventDay,
                         eventTime: item.eventTime,
                         peopleGoing: item.peopleGoing,

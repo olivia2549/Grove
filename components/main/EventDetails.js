@@ -9,6 +9,7 @@ import React, {useEffect, useState} from "react";
 import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Animated, Button, } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import { FancyButton, FancyInput } from "../styling";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -34,6 +35,8 @@ const styles = StyleSheet.create({
     bottomBar: {
         
     },
+
+    // for event details
     eventName: {
         color: '#ffffff',
         fontWeight: "600",
@@ -45,12 +48,37 @@ const styles = StyleSheet.create({
         top: "14%",
         // flex: 1/2,
     },
+    
+    // for Share and I'm Going Buttons
+    buttonContainer: {
+        flexDirection: "row",
+        flex: 1,
+        alignItems: "flex-end",
+    },
+    fancyButtonContainer: {
+        elevation: 8,
+        backgroundColor: "#5DB075",
+        borderRadius: 100,
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        marginBottom: 8,
+        marginLeft: 15,
+        marginRight: 15,
+        flex: 1,
+    },
+    fancyButtonText: {
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
 })
 
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({navigation, route}) => {
     // get the parameters
-    const { eventName, eventDay, eventTime, peopleGoing, tags } = route.params;
+    const { eventName, eventDetail, eventDay, eventTime, peopleGoing, tags } = route.params;
 
     // title font size 
     const [currentFont, setCurrentFont] = useState(windowWidth * 0.12);
@@ -83,25 +111,28 @@ export const EventDetails = ({navigation, route}) => {
                         if (lines.length > 1) {
                             setCurrentFont(currentFont - 1);
                         }
-                    } }
-                    >
-                        {eventName}</Text>
-                </GestureRecognizer>
-    
-
-                
-
-                {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
-                <ScrollView style={styles.scrollable}>
-                        <Text>{eventDay}</Text>
-                        <Text>{eventTime}</Text>
-                        <Text>{peopleGoing}</Text>
-                        <Text>__</Text>
-                        {
-                            tags.map((tag) => <Text>{tag}</Text>)
-                        }
-                </ScrollView>
-
+                    }}
+                    >{eventName}</Text>
+            </GestureRecognizer>
+            {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
+            <ScrollView style={styles.scrollable}>
+                <Text>{eventDetail}</Text>
+                    <Text>{eventDay}</Text>
+                    <Text>{eventTime}</Text>
+                    <Text>{peopleGoing}</Text>
+                    <Text>__</Text>
+                    {
+                        tags.map((tag) => <Text>{tag}</Text>)
+                    }
+            </ScrollView>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={console.log("share!")} style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>Share</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={console.log("i'm going!")} style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>I'm Going</Text>
+                </TouchableOpacity>
+            </View>
                 
 
                 
