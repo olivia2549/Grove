@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import EventDetails from './EventDetails'
 
-const getWeekDay = (dateObject) => {
+export const getWeekDay = (dateObject) => {
     const dayNumber = dateObject.getDay();
     if (dateObject.getDate() === new Date().getDate() &&
         dateObject.getMonth() === new Date().getMonth &&
@@ -39,7 +39,7 @@ const getWeekDay = (dateObject) => {
     }
 }
 
-const getMonthName = (dateObject) => {
+export const getMonthName = (dateObject) => {
     const monthNumber = dateObject.getMonth();
     switch (monthNumber) {
         case 0:
@@ -69,7 +69,7 @@ const getMonthName = (dateObject) => {
     }
 }
 
-const parseDate = (dateObject) => {
+export const parseDate = (dateObject) => {
     return ({
         date: dateObject.getDate(),
         month: getMonthName(dateObject),
@@ -83,10 +83,10 @@ const parseDate = (dateObject) => {
     })
 }
 
-  export const Card = (props) => {
+export const Card = (props) => {
     const post = props.post;
-    const start = parseDate(post.starttime);
-    const end = parseDate(post.endtime);
+    const start = parseDate(post.starttime.toDate());
+    const end = parseDate(post.endtime.toDate());
     const navigation = useNavigation();
 
     const Tag = (props) => {
@@ -126,7 +126,7 @@ const parseDate = (dateObject) => {
             </View>
         </View>
     </View>
-)
+    )
 }
 
 const styles = StyleSheet.create({

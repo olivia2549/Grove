@@ -20,9 +20,10 @@ const Feed = () => {
     const navigation = useNavigation();
     const [posts, setPosts] = useState([]);
 
+    // this continuously checks for updates from the db
     firebase.firestore().collection('posts').onSnapshot(snapshot => {
         let changes = snapshot.docChanges();
-        changes.forEach(change => {
+        changes.forEach(async change => {
             let temp = posts;
             if (change.type === 'added') {
                 temp.push(change.doc.data());
@@ -30,31 +31,44 @@ const Feed = () => {
             } else if (change.type === 'removed') {
                 setPosts(temp.filter(post => post.id !== change.doc.data().id));
             }
-        })
+        });
     });
 
-    console.log(posts);
+    // this only fetches once
+    // useEffect(() => {
+    //     firebase.firestore().collection('posts').get().then(snapshot => {
+    //         const temp = [];
+    //         snapshot.forEach(doc => {
+    //             temp.push(doc.data());
+    //         })
+    //         setPosts(temp);
+    //     });
+    // });
+
+
+
 
     return (
-      <View style={{backgroundColor: "#fff"}}>
-        <View style={{justifyContent: "center", margin: 15}}>
-            <FlatList
-                data={posts}
-                renderItem={({ post }) => (
-                    // when the card is pressed, we head to EventDetails page
-                    <TouchableOpacity onPress={() => navigation.navigate("EventDetails",{
-                        post: post
-                    })}>
-                    <Card
-                        post={post}
-                    />
-                        Hello
-                    </TouchableOpacity>
-                )}
-                showsVerticalScrollIndicator={false}
-            />
+        <View style={{backgroundColor: "#fff"}}>
+            <View style={{justifyContent: "center", margin: 15}}>
+                {posts.length == 0 ?
+                    <Text>Nothing to show</Text> :
+                    <FlatList
+                        data={posts}
+                        renderItem={(post) => (
+                            // when the card is pressed, we head to EventDetails page
+                            <TouchableOpacity onPress={() => navigation.navigate("EventDetails", {
+                                post: post
+                            })}>
+                                <Card
+                                    post={post.item}
+                                />
+                            </TouchableOpacity>
+                        )}
+                        showsVerticalScrollIndicator={false}
+                    />}
+            </View>
         </View>
-      </View>
     );
 }
 
