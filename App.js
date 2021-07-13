@@ -92,7 +92,9 @@ export const App = () => {
         // Provider allows us to access the redux store data in our app
         <Provider store={store}>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName='Main' screenOptions={{headerShown: false}}>
+                <Stack.Navigator mode="modal" initialRouteName='Main' screenOptions={{
+                    headerShown: false
+                }} > 
                     <Stack.Screen name="Main" component={MainScreen}/>
                     <Stack.Screen name="AddEventName" component={AddEventName}/>
                     <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>

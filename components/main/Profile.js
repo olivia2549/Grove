@@ -28,7 +28,12 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         aspectRatio: 1
-    }
+    },
+    screenContainer: {
+        flex: 1,
+        justifyContent: "center",
+        padding: 16
+    },
 })
 
 export const Profile = (props) => {
@@ -93,7 +98,8 @@ export const Profile = (props) => {
     }
 
     return (
-        <View>
+        <View style={styles.screenContainer}>
+
             <Button title="Sign Out" onPress={signOut}/>
 
             <View style={styles.containerInfo}>
