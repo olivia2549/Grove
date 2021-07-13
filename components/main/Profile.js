@@ -99,6 +99,7 @@ export const Profile = (props) => {
 
     return (
         <View style={styles.screenContainer}>
+
             <Button title="Sign Out" onPress={signOut}/>
 
             <View style={styles.containerInfo}>
