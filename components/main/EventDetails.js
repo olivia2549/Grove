@@ -76,7 +76,6 @@ export const EventDetails = ({navigation, route}) => {
                 style={styles.topBar}
                 > 
                     <Text 
-                    numberOfLines={ 1 }
                     adjustsFontSizeToFit
                     style={ [styles.eventName, {fontSize: currentFont}]}
                     onTextLayout={ (e) => {
