@@ -6,9 +6,11 @@
  */
 
 import React, { useState } from 'react';
-import { View, Button, TextInput, StyleSheet } from 'react-native'
+import { View, Button, TextInput, StyleSheet, Alert } from 'react-native'
 import firebase from "firebase";
 import { FancyInput, fancyButton, FancyButton } from '../styling';
+
+const VALID_DOMAINS = ["vanderbilt.edu"];
 
 export const Register = () => {
     // The information we need for user registration
@@ -20,6 +22,15 @@ export const Register = () => {
 
     // Saves the new user information to firebase
     const onSignUp = () => {
+        const domain = state.email.split("@")[1];
+        if (VALID_DOMAINS.indexOf(domain) == -1 ){
+            Alert.alert(
+                "Invalid email",
+                "Please use your school email to sign up.",
+                [{text: "OK", onPress: () => console.log("OK pressed")}]
+            );
+            return;
+        }
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((result) => {
                 firebase.firestore().collection("users")
