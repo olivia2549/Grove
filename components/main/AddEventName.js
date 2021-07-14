@@ -35,7 +35,7 @@ export const AddEventName = () => {
                 defaultValue={eventName}
             />
 
-            <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription")}}/>
+            <Button title="Next" onPress={() => navigation.navigate("AddEventDescription", { eventName })}/>
         </View>
     );
 };
