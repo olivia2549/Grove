@@ -85,6 +85,7 @@ export const parseDate = (dateObject) => {
 
 export const Card = (props) => {
     const post = props.post;
+    // console.log(post);
     const start = parseDate(post.starttime.toDate());
     const end = parseDate(post.endtime.toDate());
     const navigation = useNavigation();
@@ -100,7 +101,7 @@ export const Card = (props) => {
     const OpenEventDetails = () => {
         return (
             <EventDetails
-                eventName={props.eventName}
+                eventName={post.name}
             />
         )
     }
@@ -109,7 +110,7 @@ export const Card = (props) => {
     return (
       <View style={styles.card}>
           <View style={styles.eventDetails}>
-              <Text style={styles.eventName}>{post.eventName}</Text>
+              <Text style={styles.eventName}>{post.name}</Text>
               <View style={styles.eventDate}>
                   <Text style={styles.eventDay}>{start.day}</Text>
                   <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>

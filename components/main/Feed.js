@@ -21,31 +21,30 @@ const Feed = () => {
     const [posts, setPosts] = useState([]);
 
     // this continuously checks for updates from the db
-    firebase.firestore().collection('posts').onSnapshot(snapshot => {
-        let changes = snapshot.docChanges();
-        changes.forEach(async change => {
-            let temp = posts;
-            if (change.type === 'added') {
-                temp.push(change.doc.data());
-                setPosts(temp);
-            } else if (change.type === 'removed') {
-                setPosts(temp.filter(post => post.id !== change.doc.data().id));
-            }
-        });
-    });
-
-    // this only fetches once
-    // useEffect(() => {
-    //     firebase.firestore().collection('posts').get().then(snapshot => {
-    //         const temp = [];
-    //         snapshot.forEach(doc => {
-    //             temp.push(doc.data());
-    //         })
-    //         setPosts(temp);
+    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
+    //     let changes = snapshot.docChanges();
+    //     changes.forEach(async change => {
+    //         let temp = posts;
+    //         if (change.type === 'added') {
+    //             temp.push(change.doc.data());
+    //             setPosts(temp);
+    //         } else if (change.type === 'removed') {
+    //             setPosts(temp.filter(post => post.id !== change.doc.data().id));
+    //         }
     //     });
     // });
 
-
+    // this only fetches once
+    useEffect(() => {
+        firebase.firestore().collection('posts').get().then(snapshot => {
+            const temp = [];
+            snapshot.forEach(doc => {
+                temp.push(doc.data());
+            })
+            setPosts(temp);
+            console.log(posts);
+        });
+    }, []);
 
 
     return (
