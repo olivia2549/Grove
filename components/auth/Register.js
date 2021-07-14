@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Button, TextInput, StyleSheet, Alert } from 'react-native'
+import { View, Button, TextInput, StyleSheet, Alert, KeyboardAvoidingView, } from 'react-native'
 import firebase from "firebase";
 import { FancyInput, fancyButton, FancyButton } from '../styling';
 
@@ -44,7 +44,7 @@ export const Register = () => {
 
     // Displays to the screen
     return (
-        <View style={styles.screenContainer}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
             <FancyInput
                 placeholder="Full name"
                 onChangeText={(name) => setState({
@@ -65,7 +65,7 @@ export const Register = () => {
                     password: password})}
             />
             <FancyButton title="Sign Up" onPress={() => onSignUp()}/>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

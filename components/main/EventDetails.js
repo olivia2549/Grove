@@ -167,16 +167,15 @@ export const EventDetails = ({navigation, route}) => {
                     </View>
                 </View>
                 
-                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{justifyContent: "center", padding: windowWidth * .05, flex: 1}}>
                     <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{attendee.length} people going</Text>
                     
 
-                        <FancyInput
+                        {/* <FancyInput
                             placeholder="Search"
                             onChangeText={console.log("search bar activated")}
-                        />  
-
-                </View>
+                        />   */}
+                </KeyboardAvoidingView>
                 
                    
             </ScrollView>
