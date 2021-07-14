@@ -128,6 +128,18 @@ export const EventDetails = ({navigation, route}) => {
                 <View style={{padding: windowWidth * 0.05}}>
                     <Text style={{fontSize: 25}}>{eventDetail}</Text>
                 </View>
+
+                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                    <View>
+                        <Text style={{fontSize: 25, fontWeight: "bold", marginTop: -windowHeight * 0.03, marginBottom: windowHeight * 0.015}}>Where</Text>
+                    </View>
+                    <View>
+                        <Text style={{fontSize: 25, fontWeight: "bold", marginBottom: windowHeight * 0.015}}>Starts</Text>
+                    </View>
+                    <View>
+                        <Text  style={{fontSize: 25, fontWeight: "bold"}}>Ends</Text>
+                    </View>
+                </View>
                 
                 
                     <Text>{eventDay}</Text>
