@@ -35,9 +35,14 @@ const styles = StyleSheet.create({
         // margin: 10,
     },
     bottomBar: {
-        
     },
-
+    tagBox: {height: windowHeight * 0.07,
+         backgroundColor: "lightgrey",
+        marginLeft: 15,
+        borderRadius: 10,
+        justifyContent: "center",
+        padding: 13,
+    },
     // for event details
     eventName: {
         color: '#ffffff',
@@ -74,6 +79,17 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
+    },
+    tagText: {
+        color: "black",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: windowWidth * 0.05,
+    },
+    whereWhen: {
+        fontSize: windowWidth * 0.06,
+        fontWeight: "bold",
+        marginBottom: windowHeight * 0.015,
     },
 })
 
@@ -127,8 +143,8 @@ export const EventDetails = ({navigation, route}) => {
                 <View style={{flexDirection:"row", marginTop: windowHeight * 0.04}}>
                    {
                         tags.map((tag) => 
-                            <View style={{height: windowHeight * 0.07, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
-                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: windowWidth * 0.05}}>{tag}</Text>
+                            <View style={styles.tagBox}>
+                                <Text style={styles.tagText}>{tag}</Text>
                             </View>
                         )
                     }
@@ -139,7 +155,7 @@ export const EventDetails = ({navigation, route}) => {
 
                 <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
                     <View style={{flexDirection: "row"}}>
-                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold",  marginBottom: windowHeight * 0.015}}>Where</Text>
+                        <Text style={styles.whereWhen}>Where</Text>
                         <View style={{marginLeft: windowWidth * 0.02, marginTop: -windowWidth * 0.02, width: windowWidth * 0.688, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             {/* this is hard coded, would need to be changed once we fetch info from the data */}
                             <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{location}</Text>
@@ -167,6 +183,7 @@ export const EventDetails = ({navigation, route}) => {
                     </View>
                 </View>
                 
+                
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{justifyContent: "center", padding: windowWidth * .05, flex: 1}}>
                     <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{attendee.length} people going</Text>
                     
@@ -189,7 +206,7 @@ export const EventDetails = ({navigation, route}) => {
                 </TouchableOpacity>
             </View>
 
-                
+            
         </SafeAreaView>
     );
 }

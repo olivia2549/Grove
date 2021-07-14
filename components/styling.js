@@ -14,6 +14,12 @@ export const FancyButton = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
+export const FancyButtonButLower = ({ onPress, title }) => (
+  <TouchableOpacity onPress={onPress} style={styles.fancyButtonButLowerContainer}>
+    <Text style={styles.fancyButtonText}>{title}</Text>
+  </TouchableOpacity>
+);
+
 export const FancyInput = ({ placeholder, onChangeText, secureTextEntry }) => (
   <View style={styles.inputView}>
     <TextInput
@@ -43,6 +49,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginLeft: 15,
     marginRight: 15,
+  },
+  fancyButtonButLowerContainer: {
+    elevation: 8,
+    backgroundColor: "#5DB075",
+    borderRadius: 100,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    marginBottom: 8,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 40
   },
   fancyButtonText: {
       fontSize: 18,
