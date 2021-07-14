@@ -11,6 +11,7 @@ import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dime
 import { useNavigation } from '@react-navigation/native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { FancyButton, FancyInput } from "../styling";
+import {parseDate, } from "./Card";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -79,7 +80,9 @@ const styles = StyleSheet.create({
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({navigation, route}) => {
     // get the parameters
-    const { eventName, eventDetail, eventDay, eventTime, peopleGoing, tags } = route.params;
+    const { name, description, starttime, endtime, location, attendee, tags } = route.params.post.item;
+    const start = parseDate(starttime.toDate());
+    const end = parseDate(endtime.toDate());
 
     // title font size 
     const [currentFont, setCurrentFont] = useState(windowWidth * 0.12);
@@ -117,7 +120,7 @@ export const EventDetails = ({navigation, route}) => {
                             setCurrentFont(currentFont - 1);
                         }
                     }}
-                    >{eventName}</Text>
+                    >{name}</Text>
             </GestureRecognizer>
             {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
             <ScrollView style={styles.scrollable}>
@@ -128,10 +131,10 @@ export const EventDetails = ({navigation, route}) => {
                                 <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: windowWidth * 0.05}}>{tag}</Text>
                             </View>
                         )
-                    } 
+                    }
                 </View>
                 <View style={{padding: windowWidth * 0.05}}>
-                    <Text style={{fontSize: windowWidth * 0.07}}>{eventDetail}</Text>
+                    <Text style={{fontSize: windowWidth * 0.07}}>{description}</Text>
                 </View>
 
                 <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
@@ -139,33 +142,33 @@ export const EventDetails = ({navigation, route}) => {
                         <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold",  marginBottom: windowHeight * 0.015}}>Where</Text>
                         <View style={{marginLeft: windowWidth * 0.02, marginTop: -windowWidth * 0.02, width: windowWidth * 0.688, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             {/* this is hard coded, would need to be changed once we fetch info from the data */}
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>Wilson Lawn</Text>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{location}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection: "row", marginTop: 15, marginLeft: 1}}>
                         <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginBottom: windowHeight * 0.015}}>Starts</Text>
                       
                         <View style={{flex: 1, marginLeft: windowWidth * 0.03, marginTop: -10, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{eventDay}</Text>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{start.day}</Text>
                         </View>
                         <View style={{flex: 1, marginLeft: 10, marginTop: -10, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{eventTime}</Text>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{start.ampmTime}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection: "row", marginTop: windowWidth * 0.029, marginLeft: 1}}>
                         <Text  style={{fontSize: windowWidth * 0.06, fontWeight: "bold"}}>Ends</Text>
 
                         <View style={{flex: 1, marginLeft: windowWidth * 0.06, marginTop: -windowWidth * 0.02, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{eventDay}</Text>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.day}</Text>
                         </View>
                         <View style={{flex: 1, marginLeft: windowWidth * 0.027, marginTop: -windowWidth * 0.02, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{eventTime}</Text>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.ampmTime}</Text>
                         </View>
                     </View>
                 </View>
                 
                 <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
-                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{peopleGoing} people going</Text>     
+                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{attendee.length} people going</Text>
                     
 
                         <FancyInput
