@@ -28,7 +28,7 @@ const Feed = () => {
             eventDay: "Mon, Aug 7",
             eventTime: "10:00am-12:00pm",
             peopleGoing: 23,
-            tags: ["Coding Clubs", "Free Food"],
+            tags: ["Coding Clubs", "Free Food Free Food"],
         },
         {
             eventName: "Coding with Sybbure",
