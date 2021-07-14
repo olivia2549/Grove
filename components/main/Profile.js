@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from "react";
 import {StyleSheet, View, Text, Image, FlatList, Button} from "react-native";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import firebase from "firebase";
 import {USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE} from "../../redux/constants";
@@ -41,6 +41,7 @@ export const Profile = (props) => {
     const [user, setUser] = useState(null);
     const currentUser = useSelector((state) => state.currentUser);
     const currentUserPosts = useSelector(state => state.currentUser.posts);
+    const dispatch = useDispatch();
 
     const signOut = () => {
         firebase.auth().signOut();

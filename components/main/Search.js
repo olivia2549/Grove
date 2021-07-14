@@ -8,6 +8,7 @@
 import React, { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, TextInput, FlatList } from "react-native";
+import { FancyInput } from "../styling";
 
 import firebase from "firebase";
 require('firebase/firestore');
@@ -38,8 +39,8 @@ export const Search = () => {
     }
 
     return (
-        <View>
-            <TextInput placeholder="Search..." onChangeText={(search) => {fetchUsers(search)}}/>
+        <View style={{padding: 40}}>
+            <FancyInput placeholder="Search..." onChangeText={(search) => {fetchUsers(search)}}/>
 
             <FlatList
                 numColumns={1}
