@@ -116,17 +116,32 @@ export const EventDetails = ({navigation, route}) => {
             </GestureRecognizer>
             {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
             <ScrollView style={styles.scrollable}>
-                <View style={{flexDirection:"row", marginTop: windowHeight * 0.04, justifyContent: "center"}}>
+                <View style={{flexDirection:"row", marginTop: windowHeight * 0.04}}>
                    {
                         tags.map((tag) => 
-                            <View style={{height: 45, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 10}}>
-                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center"}}>{tag}</Text>
+                            <View style={{height: windowHeight * 0.08, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
+                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: windowWidth * 0.05}}>{tag}</Text>
                             </View>
                         )
                     } 
                 </View>
+                <View style={{padding: windowWidth * 0.05}}>
+                    <Text style={{fontSize: 25}}>{eventDetail}</Text>
+                </View>
+
+                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                    <View>
+                        <Text style={{fontSize: 25, fontWeight: "bold", marginTop: -windowHeight * 0.03, marginBottom: windowHeight * 0.015}}>Where</Text>
+                    </View>
+                    <View>
+                        <Text style={{fontSize: 25, fontWeight: "bold", marginBottom: windowHeight * 0.015}}>Starts</Text>
+                    </View>
+                    <View>
+                        <Text  style={{fontSize: 25, fontWeight: "bold"}}>Ends</Text>
+                    </View>
+                </View>
                 
-                <Text>{eventDetail}</Text>
+                
                     <Text>{eventDay}</Text>
                     <Text>{eventTime}</Text>
                     <Text>{peopleGoing}</Text>
