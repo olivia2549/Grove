@@ -25,6 +25,7 @@
     "react-native-paper": "^4.9.1",
     "react-native-screen": "^1.0.1",
     "react-native-screens": "~3.0.0",
+    "react-native-swipe-gestures": "^1.0.5",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.4",

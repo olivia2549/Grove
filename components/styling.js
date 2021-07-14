@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity, TextInput,} from "react-native";
+import React, {useRef, useState} from "react";
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, KeyboardAvoidingView,} from "react-native";
 import styled from "styled-components";
 
 // export const Container = (props) => (
@@ -27,6 +27,7 @@ export const FancyInput = ({ placeholder, onChangeText, secureTextEntry }) => (
   
 )
 
+
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     marginBottom: 8,
     marginLeft: 15,
-    marginRight: 15
+    marginRight: 15,
   },
   fancyButtonText: {
       fontSize: 18,
@@ -66,5 +67,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
+    width: "95%",
   },
 });

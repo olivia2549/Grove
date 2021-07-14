@@ -34,6 +34,7 @@ const Feed = () => {
     //     });
     // });
 
+
     // this only fetches once
     useEffect(() => {
         firebase.firestore().collection('posts').get().then(snapshot => {
@@ -67,6 +68,7 @@ const Feed = () => {
                         showsVerticalScrollIndicator={false}
                     />}
             </View>
+
         </View>
     );
 }
