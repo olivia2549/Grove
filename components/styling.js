@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity, TextInput,} from "react-native";
+import React, {useRef, useState} from "react";
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, KeyboardAvoidingView,} from "react-native";
 import styled from "styled-components";
 
 // export const Container = (props) => (
@@ -26,6 +26,7 @@ export const FancyInput = ({ placeholder, onChangeText, secureTextEntry }) => (
   </View>
   
 )
+
 
 const styles = StyleSheet.create({
   screenContainer: {
@@ -66,5 +67,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
+    width: "95%",
   },
 });

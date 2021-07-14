@@ -6,7 +6,8 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Animated, Button, } from "react-native";
+import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Animated, Button,Platform, KeyboardAvoidingView
+ } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { FancyButton, FancyInput } from "../styling";
@@ -97,6 +98,10 @@ export const EventDetails = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            {/* <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}
+                        style={{flex: 1}}
+                        > */}
 
             <GestureRecognizer
                 onSwipeDown={(state) => onSwipeDown(state)}
@@ -159,13 +164,20 @@ export const EventDetails = ({navigation, route}) => {
                     </View>
                 </View>
                 
-                
+                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{peopleGoing} people going</Text>     
                     
-                    <Text>{peopleGoing}</Text>
-                    <Text>__</Text>
+
+                        <FancyInput
+                            placeholder="Search"
+                            onChangeText={console.log("search bar activated")}
+                        />  
+
+                </View>
+                
                    
             </ScrollView>
-
+            {/* </KeyboardAvoidingView> */}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
                     <Text style={styles.fancyButtonText}>Share</Text>
@@ -174,7 +186,6 @@ export const EventDetails = ({navigation, route}) => {
                     <Text style={styles.fancyButtonText}>I'm Going</Text>
                 </TouchableOpacity>
             </View>
-                
 
                 
         </SafeAreaView>
