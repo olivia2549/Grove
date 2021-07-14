@@ -116,20 +116,29 @@ export const EventDetails = ({navigation, route}) => {
             </GestureRecognizer>
             {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
             <ScrollView style={styles.scrollable}>
+                <View style={{flexDirection:"row", marginTop: windowHeight * 0.04, justifyContent: "center"}}>
+                   {
+                        tags.map((tag) => 
+                            <View style={{height: 45, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 10}}>
+                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center"}}>{tag}</Text>
+                            </View>
+                        )
+                    } 
+                </View>
+                
                 <Text>{eventDetail}</Text>
                     <Text>{eventDay}</Text>
                     <Text>{eventTime}</Text>
                     <Text>{peopleGoing}</Text>
                     <Text>__</Text>
-                    {
-                        tags.map((tag) => <Text>{tag}</Text>)
-                    }
+                   
             </ScrollView>
+
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={console.log("share!")} style={styles.fancyButtonContainer}>
+                <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
                     <Text style={styles.fancyButtonText}>Share</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={console.log("i'm going!")} style={styles.fancyButtonContainer}>
+                <TouchableOpacity onPress={() => console.log("i'm going")}  style={styles.fancyButtonContainer}>
                     <Text style={styles.fancyButtonText}>I'm Going</Text>
                 </TouchableOpacity>
             </View>
