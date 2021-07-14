@@ -16,12 +16,8 @@ import AddEventDescription from "./AddEventDescription";
 
 export const AddEventName = () => {
     const navigation = useNavigation();
-    const dispatch = useDispatch();
     const [eventName, setEventName] = useState("");
 
-    useEffect(() => {
-        dispatch(addEventName(eventName));
-    })
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -35,7 +31,8 @@ export const AddEventName = () => {
                 defaultValue={eventName}
             />
 
-            <Button title="Next" onPress={() => navigation.navigate("AddEventDescription", { eventName })}/>
+            <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription", { eventName })}}/>
+
         </View>
     );
 };
