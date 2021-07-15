@@ -16,7 +16,7 @@ import AddEventDescription from "./AddEventDescription";
 
 export const AddEventName = () => {
     const navigation = useNavigation();
-    const [eventName, setEventName] = useState("");
+    const [name, setName] = useState("");
 
 
     return (
@@ -24,14 +24,14 @@ export const AddEventName = () => {
             <Text>Create Event</Text>
 
             <TextInput
-                id="eventName"
-                name="eventName"
-                onChangeText={(text) => {setEventName(text)}}
+                id="name"
+                name="name"
+                onChangeText={(text) => {setName(text)}}
                 placeholder="Event Name..."
-                defaultValue={eventName}
+                defaultValue={name}
             />
 
-            <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription", { eventName })}}/>
+            <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription", { name })}}/>
 
         </View>
     );
