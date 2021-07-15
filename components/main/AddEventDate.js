@@ -65,10 +65,13 @@ const AddEventDate = ({ route }) => {
             {Platform.OS == 'ios' ? 
                 <View>
                     <IosDateTimePicker title="Starts" value={post.startdate}/>
-                    <IosDateTimePicker title="Starts" value={post.startdate}/>
+                    <IosDateTimePicker title="Ends" value={post.startdate}/>
                 </View>
             : 
-            <AndroidDateTimePicker title="Ends" value={post.enddate}/>}
+                <View>
+                    <AndroidDateTimePicker title="Starts" value={post.enddate}/>
+                    <AndroidDateTimePicker title="Ends" value={post.enddate}/>
+                </View>}
         </View>
     );
 };
