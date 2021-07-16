@@ -5,17 +5,16 @@
  * Defines redux actions
  */
 
-
 import {
-    EVENT_NAME_STATE_CHANGE,
+    CLEAR_DATA,
     EVENT_DESCRIPTION_STATE_CHANGE,
-    EVENT_LOCATION_STATE_CHANGE,
-    EVENT_STARTTIME_STATE_CHANGE,
     EVENT_ENDTIME_STATE_CHANGE,
+    EVENT_LOCATION_STATE_CHANGE,
+    EVENT_NAME_STATE_CHANGE,
+    EVENT_STARTTIME_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
     USER_POSTS_STATE_CHANGE,
     USER_STATE_CHANGE,
-    CLEAR_DATA,
 } from "../constants/index";
 
 import firebase from "firebase";
@@ -104,13 +103,25 @@ export const addEventTags = (evTags) => {
     })
 }
 
-export const addStartEventTime = (evTime) => {
+export const addStartEventTime = (evTime, dateOrTime) => {
+    if (dateOrTime === "date") {
+        // TODO: change only the date in redux
+    }
+    else {
+        // TODO: change only the time in redux
+    }
     return ((dispatch) => {
         dispatch({type: EVENT_STARTTIME_STATE_CHANGE, eventStartTime: evTime});
     })
 }
 
-export const addEndEventTime = (evTime) => {
+export const addEndEventTime = (evTime, dateOrTime) => {
+    if (dateOrTime === "date") {
+        // TODO: change only the date in redux
+    }
+    else {
+        // TODO: change only the time in redux
+    }
     return ((dispatch) => {
         dispatch({type: EVENT_ENDTIME_STATE_CHANGE, eventEndTime: evTime});
     })

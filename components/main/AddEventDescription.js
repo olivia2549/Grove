@@ -20,11 +20,7 @@ const AddEventDescription = ({ route }) => {
         "Party",
     ];
 
-    selectedTags = [];
-
-    const onChange = (ev) => {
-        setEventDescription(ev.target.value);
-    };
+    const selectedTags = [];
 
     const Tag = (props) => {
         const grey = "#f6f7fa";
@@ -33,9 +29,9 @@ const AddEventDescription = ({ route }) => {
 
         const onPress = () => {
             const tagName = props.title;
-            color == grey ? setColor(green) : setColor(grey);
+            color === grey ? setColor(green) : setColor(grey);
             // push tagName to selectedTags if not already there, pop if already there
-            if (selectedTags.indexOf(tagName) == -1) {
+            if (selectedTags.indexOf(tagName) === -1) {
                 selectedTags.push(tagName);
             }
             else {
@@ -74,7 +70,7 @@ const AddEventDescription = ({ route }) => {
             <TextInput
                 id="eventDescription"
                 name="eventDescription"
-                onChange={onChange}
+                onChangeText={(text) => {setEventDescription(text)}}
                 placeholder="Description..."
                 value={eventDescription}
             />

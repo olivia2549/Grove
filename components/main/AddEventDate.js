@@ -5,81 +5,69 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { addEndEventTime, addEventLocation, addStartEventTime } from '../../redux/actions';
 import { useNavigation } from "@react-navigation/native";
 
-const AddEventDate = ({ route }) => {
+const AddEventDate = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const [mode, setMode] = useState('date');
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const defaultDate = new Date();
     const [location, setLocation] = useState("");
 
-    const onChange = (ev, selectedDate) => {
-        const currentDate = selectedDate || date;
-        ev.target.id == "start" ? 
-            setStartDate(currentDate) : 
-            setEndDate(currentDate);
+    const onChange = (ev, selectedDate, id, dateOrTime) => {
+        const currentDate = selectedDate || defaultDate;
+        console.log(currentDate);
+        if (id === "Starts") {
+            dispatch(addStartEventTime(currentDate, dateOrTime));
+        }
+        else {
+            dispatch(addEndEventTime(currentDate, dateOrTime));
+        }
     };
 
-    const IosDateTimePicker = (props) => {
+    const DateTimePickerWithText = (props) => {
         return (
             <View>
                 <Text>{props.title}</Text>
-                <DateTimePicker
-                    mode="datetime"
-                    display="default"
-                    is24Hour={true}
-                    onChange={props.onChange}
-                    value={startDate}
-                />
+                <View style={{flexDirection: "row", alignItems: "flex-start", width: "70%"}}>
+                    <View style={{flex: 1}}>
+                        <DateTimePicker
+                            mode="date"
+                            display="default"
+                            is24Hour={true}
+                            onChange={(ev, selectedDate) => {
+                                onChange(ev, selectedDate, props.title, "date")
+                            }}
+                            value={defaultDate}
+                        />
+                    </View>
+                    <View style={{flex: 1}}>
+                        <DateTimePicker
+                            mode="time"
+                            display="default"
+                            is24Hour={true}
+                            onChange={(ev, selectedDate) => {
+                                onChange(ev, selectedDate, props.title, "time")
+                            }}
+                            value={defaultDate}
+                        />
+                    </View>
+                </View>
             </View>
         );
     };
-
-    const AndroidDateTimePicker = (props) => {
-        return (
-            <View>
-                <Text>{props.title}</Text>
-                <DateTimePicker
-                    mode="date"
-                    display="default"
-                    is24Hour={true}
-                    onChange={onChange}
-                    value={startDate}
-                />
-                <DateTimePicker
-                    mode="time"
-                    display="default"
-                    is24Hour={true}
-                    onChange={onChange}
-                    value={startDate}
-                />
-            </View>
-        );
-    };
-
 
     return (
         <View style={{marginTop: 50}}>
             <Text>Time and Location</Text>
-            {Platform.OS == 'ios' ? 
-                <View>
-                    <IosDateTimePicker title="Starts" value={startDate}/>
-                    <IosDateTimePicker title="Ends" value={startDate}/>
-                </View>
-            : 
-                <View>
-                    <AndroidDateTimePicker title="Starts" value={endDate}/>
-                    <AndroidDateTimePicker title="Ends" value={endDate}/>
-                </View>}
+            <View>
+                <DateTimePickerWithText title="Starts"/>
+                <DateTimePickerWithText title="Ends"/>
+            </View>
             <TextInput
                 placeholder="Event Location..."
                 onChangeText={(text) => { setLocation(text); }}
-            ></TextInput>
+            />
             <Button
                 title="Next"
                 onPress={() => {
-                    dispatch(addStartEventTime(startDate));
-                    dispatch(addEndEventTime(endDate));
                     dispatch(addEventLocation(location));
                     navigation.navigate("AddEventConfirmation");
                 }}

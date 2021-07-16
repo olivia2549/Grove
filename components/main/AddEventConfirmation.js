@@ -2,43 +2,44 @@ import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const AddEventConfirmation = ({ route }) => {
-    const eventName = useSelector(state => state.eventName);
-    const eventDescription = useSelector(state => state.eventDescription);
-    const eventTags = useSelector(state => state.eventTags);
-    const startTime = useSelector(state => state.eventStartTime);
-    const endTime = useSelector(state => state.eventEndTime);
-    const location = useSelector(state => state.location);
-
+const AddEventConfirmation = () => {
     // an object to hold the event data as key and value pairs
     const eventData = {
-        name: eventName,
-        description: eventDescription,
-        tags: eventTags,
-        starttime: startTime,
-        endtime: endTime,
-        location: location,
+        name: useSelector(state => state.event.eventName),
+        description: useSelector(state => state.event.eventDescription),
+        tags: useSelector(state => state.event.eventTags),
+        starttime: useSelector(state => state.event.eventStartTime),
+        endtime: useSelector(state => state.event.eventEndTime),
+        location: useSelector(state => state.event.eventLocation),
     };
 
+    console.log(eventData.starttime);
+
     return (
-        <View style={{ margin: 50 }}>
-            <Text>
-                {`Event Name: ${eventName}`}
+        <View style={{ marginTop: 50, marginLeft: 15 }}>
+            <Text style={{ fontSize: 36, fontWeight: "bold" }}>
+                {eventData.name}
             </Text>
             <Text>
-                {`Event Description: ${eventDescription}`}
+                {eventData.description}
             </Text>
             <Text>
-                {`Event Tags: ${eventTags}`}
+                {`Where: ${eventData.location}`}
+            </Text>
+            <View style={{flexDirection:"row", height: 60}}>
+                {
+                    eventData.tags.map((tag) =>
+                        <View style={{height: 45, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
+                            <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: 16}}>{tag}</Text>
+                        </View>
+                    )
+                }
+            </View>
+            <Text>
+                {`Event Start Time: ${eventData.starttime}`}
             </Text>
             <Text>
-                {`Event Start Time: ${startTime}`}
-            </Text>
-            <Text>
-                {`Event End Time: ${endTime}`}
-            </Text>
-            <Text>
-                {`Event Location: ${location}`}
+                {`Event End Time: ${eventData.endtime}`}
             </Text>
         </View>
     )
