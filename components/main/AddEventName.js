@@ -13,11 +13,24 @@ import { Button, Text, View, TextInput, Platform } from 'react-native';
 import { useDispatch } from "react-redux";
 import { addEventName } from "../../redux/actions";
 import AddEventDescription from "./AddEventDescription";
+import { useSelector } from "react-redux";
 
 export const AddEventName = () => {
+    const currentUser = useSelector(state => state.currentUser);
+    const [eventName, setEventName] = useState('');
+    const dispatch = useDispatch();
     const navigation = useNavigation();
-    const [name, setName] = useState("");
 
+    // const [post, setPost] = useState({
+    //     name: "",
+    //     description: "demo",
+    //     tags: [],
+    //     location: "",
+    //     startdate: new Date(),
+    //     enddate: new Date(),
+    //     attendee: [],
+    //     creator: currentUser, 
+    // });
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -26,13 +39,17 @@ export const AddEventName = () => {
             <TextInput
                 id="name"
                 name="name"
-                onChangeText={(text) => {setName(text)}}
+                onChangeText={(text) => {setEventName(text)}}
                 placeholder="Event Name..."
-                defaultValue={name}
+                defaultValue={eventName}
             />
 
-            <Button title="Next" onPress={() => {navigation.navigate("AddEventDescription", { name })}}/>
-
+            <Button 
+                title="Next" 
+                onPress={() => {
+                    dispatch(addEventName(eventName));
+                    navigation.navigate("AddEventDescription")}}
+            />
         </View>
     );
 };

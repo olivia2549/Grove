@@ -49,6 +49,7 @@ import AddEventName from './components/main/AddEventName';
 import AddEventDescription from './components/main/AddEventDescription';
 import AddEventDate from './components/main/AddEventDate';
 import EventDetails from './components/main/EventDetails';
+import AddEventConfirmation from './components/main/AddEventConfirmation';
 
 const Stack = createStackNavigator();
 
@@ -101,6 +102,7 @@ export const App = () => {
                     <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>
                     <Stack.Screen name="AddEventDate" component={AddEventDate}/>
                     <Stack.Screen name="EventDetails" component={EventDetails}/>
+                    <Stack.Screen name="AddEventConfirmation" component={AddEventConfirmation}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>

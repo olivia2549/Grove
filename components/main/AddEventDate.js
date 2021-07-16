@@ -1,24 +1,23 @@
 import React, {useState} from 'react';
-import {View, Button, Text, Platform} from 'react-native';
+import {View, Button, Text, Platform, TextInput} from 'react-native';
+import { useDispatch } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { addEndEventTime, addEventLocation, addStartEventTime } from '../../redux/actions';
+import { useNavigation } from "@react-navigation/native";
 
 const AddEventDate = ({ route }) => {
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
     const [mode, setMode] = useState('date');
-
-    const [post, setPost] = useState({
-        name: route.params.name,
-        description: "",
-        tags: [],
-        location: "",
-        startdate: new Date(),
-        enddate: new Date(),
-    });
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [location, setLocation] = useState("");
 
     const onChange = (ev, selectedDate) => {
         const currentDate = selectedDate || date;
         ev.target.id == "start" ? 
-            setPost({startdate: currentDate}) : 
-            setPost({enddate: currentDate})
+            setStartDate(currentDate) : 
+            setEndDate(currentDate);
     };
 
     const IosDateTimePicker = (props) => {
@@ -30,7 +29,7 @@ const AddEventDate = ({ route }) => {
                     display="default"
                     is24Hour={true}
                     onChange={props.onChange}
-                    value={post.startdate}
+                    value={startDate}
                 />
             </View>
         );
@@ -45,14 +44,14 @@ const AddEventDate = ({ route }) => {
                     display="default"
                     is24Hour={true}
                     onChange={onChange}
-                    value={post.startdate}
+                    value={startDate}
                 />
                 <DateTimePicker
                     mode="time"
                     display="default"
                     is24Hour={true}
                     onChange={onChange}
-                    value={post.startdate}
+                    value={startDate}
                 />
             </View>
         );
@@ -64,15 +63,29 @@ const AddEventDate = ({ route }) => {
             <Text>Time and Location</Text>
             {Platform.OS == 'ios' ? 
                 <View>
-                    <IosDateTimePicker title="Starts" value={post.startdate}/>
-                    <IosDateTimePicker title="Ends" value={post.startdate}/>
+                    <IosDateTimePicker title="Starts" value={startDate}/>
+                    <IosDateTimePicker title="Ends" value={startDate}/>
                 </View>
             : 
                 <View>
-                    <AndroidDateTimePicker title="Starts" value={post.enddate}/>
-                    <AndroidDateTimePicker title="Ends" value={post.enddate}/>
+                    <AndroidDateTimePicker title="Starts" value={endDate}/>
+                    <AndroidDateTimePicker title="Ends" value={endDate}/>
                 </View>}
+            <TextInput
+                placeholder="Event Location..."
+                onChangeText={(text) => { setLocation(text); }}
+            ></TextInput>
+            <Button
+                title="Next"
+                onPress={() => {
+                    dispatch(addStartEventTime(startDate));
+                    dispatch(addEndEventTime(endDate));
+                    dispatch(addEventLocation(location));
+                    navigation.navigate("AddEventConfirmation");
+                }}
+            />
         </View>
+
     );
 };
 

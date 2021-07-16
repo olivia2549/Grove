@@ -9,6 +9,10 @@
 import {
     EVENT_NAME_STATE_CHANGE,
     EVENT_DESCRIPTION_STATE_CHANGE,
+    EVENT_LOCATION_STATE_CHANGE,
+    EVENT_STARTTIME_STATE_CHANGE,
+    EVENT_ENDTIME_STATE_CHANGE,
+    EVENT_TAGS_STATE_CHANGE,
     USER_POSTS_STATE_CHANGE,
     USER_STATE_CHANGE,
     CLEAR_DATA,
@@ -91,5 +95,29 @@ export const addEventName = (evName) => {
 export const addEventDescription = (evDescription) => {
     return ((dispatch) => {
         dispatch({type: EVENT_DESCRIPTION_STATE_CHANGE, eventDescription: evDescription});
+    })
+}
+
+export const addEventTags = (evTags) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_TAGS_STATE_CHANGE, eventTags: evTags});
+    })
+}
+
+export const addStartEventTime = (evTime) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_STARTTIME_STATE_CHANGE, eventStartTime: evTime});
+    })
+}
+
+export const addEndEventTime = (evTime) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_ENDTIME_STATE_CHANGE, eventEndTime: evTime});
+    })
+}
+
+export const addEventLocation = (evLocation) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_LOCATION_STATE_CHANGE, eventLocation: evLocation});
     })
 }

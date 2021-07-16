@@ -2,11 +2,14 @@ import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { addEventDescription } from "../../redux/actions";
+import { addEventDescription, addEventTags } from "../../redux/actions";
 
 const AddEventDescription = ({ route }) => {
     const navigation = useNavigation();
-    const eventName = route.params.eventName;
+    const dispatch = useDispatch();
+
+    const [eventDescription, setEventDescription] = useState("");
+
     const allTags = [
         "Sports",
         "Social",
@@ -17,17 +20,10 @@ const AddEventDescription = ({ route }) => {
         "Party",
     ];
 
-    const [post, setPost] = useState({
-        name: route.params.name,
-        description: "",
-        tags: [],
-    });
+    selectedTags = [];
 
     const onChange = (ev) => {
-        setPost({
-            ...post,
-            description: ev.target.value,
-        });
+        setEventDescription(ev.target.value);
     };
 
     const Tag = (props) => {
@@ -36,10 +32,15 @@ const AddEventDescription = ({ route }) => {
         let [color, setColor] = useState(grey);
 
         const onPress = () => {
+            const tagName = props.title;
             color == grey ? setColor(green) : setColor(grey);
-            const temp = post.tags;
-            temp.push(props.tag);
-            setPost({ ...post, tags: temp });
+            // push tagName to selectedTags if not already there, pop if already there
+            if (selectedTags.indexOf(tagName) == -1) {
+                selectedTags.push(tagName);
+            }
+            else {
+                selectedTags.splice(selectedTags.indexOf(tagName), 1);
+            }
         };
 
         return (
@@ -75,13 +76,15 @@ const AddEventDescription = ({ route }) => {
                 name="eventDescription"
                 onChange={onChange}
                 placeholder="Description..."
-                value={post.description}
+                value={eventDescription}
             />
 
             <Button
                 title="Next"
                 onPress={() => {
-                    navigation.navigate("AddEventDate", { post });
+                    dispatch(addEventDescription(eventDescription));
+                    dispatch(addEventTags(selectedTags));
+                    navigation.navigate("AddEventDate");
                 }}
             />
         </View>

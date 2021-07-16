@@ -4,11 +4,17 @@
  * Reducers/event.js
  * Event reducer; stores state about an event
  */
-import { EVENT_NAME_STATE_CHANGE, EVENT_DESCRIPTION_STATE_CHANGE } from "../constants";
+import { EVENT_NAME_STATE_CHANGE, EVENT_DESCRIPTION_STATE_CHANGE, 
+    EVENT_TAGS_STATE_CHANGE, EVENT_ENDTIME_STATE_CHANGE, 
+    EVENT_STARTTIME_STATE_CHANGE } from "../constants";
 
 const initialState = {
     eventName: "",
-    eventDescription: ""
+    eventDescription: "",
+    eventTags: [],
+    eventStartTime: new Date(),
+    eventEndTime: new Date(),
+    eventLocation: "",
 }
 
 /**
@@ -30,6 +36,26 @@ export const eventReducer = (state = initialState, action) => {
             return {
                 ...state,
                 eventDescription: action.eventDescription
+            }
+        case 'EVENT_TAGS_STATE_CHANGE':
+            return {
+                ...state,
+                eventTags: action.eventTags
+            }
+        case 'EVENT_LOCATION_STATE_CHANGE':
+            return {
+                ...state,
+                eventLocation: action.eventLocation
+            }
+        case 'EVENT_STARTTIME_STATE_CHANGE':
+            return {
+                ...state,
+                eventStartTime: action.eventStartTime
+            }
+        case 'EVENT_ENDTIME_STATE_CHANGE':
+            return {
+                ...state,
+                eventEndTime: action.eventEndTime
             }
         default:
             return state;
