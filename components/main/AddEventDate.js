@@ -83,7 +83,7 @@ import React, {useState} from 'react';
 import {View, Button, Text, Platform, TextInput} from 'react-native';
 import { useDispatch } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { addEndEventTime, addEventLocation, addStartEventTime } from '../../redux/actions';
+import { addEndDateTime, addEventLocation, addStartDateTime } from '../../redux/actions';
 import { useNavigation } from "@react-navigation/native";
 
 const AddEventDate = () => {
@@ -105,10 +105,10 @@ const AddEventDate = () => {
             } else {
                 start.time = currentDate.getTime();
             }
-            dispatch(addStartEventTime(currentDate, dateOrTime));
+            dispatch(addStartDateTime(currentDate, dateOrTime));
         }
         else {
-            dispatch(addEndEventTime(currentDate, dateOrTime));
+            dispatch(addEndDateTime(currentDate, dateOrTime));
         }
     };
 

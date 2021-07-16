@@ -2,7 +2,7 @@
  * Copyright Grove, @2021 - All rights reserved
  *
  * AddEventName.js
- * Allows user to make a new post
+ * Allows user to make a new event
  */
 
 import { Text, View } from 'react-native';

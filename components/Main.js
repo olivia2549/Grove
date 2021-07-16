@@ -7,7 +7,7 @@
 
 import React, { useEffect } from "react";
 
-import {fetchUser, fetchUserPosts, clearData} from "../redux/actions";
+import {fetchUser, fetchUserEvents, clearData} from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 import firebase from "firebase";
@@ -36,7 +36,7 @@ export const Main = () => {
     // Fetch the user from firebase when the page mounts
     useEffect(() => {
         dispatch(fetchUser());
-        dispatch(fetchUserPosts());
+        dispatch(fetchUserEvents());
     }, []);
 
     // Displays to the screen

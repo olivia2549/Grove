@@ -4,7 +4,7 @@
  * Card.js
  * Displays main feed
  */
-// this is the card component for the posts in the feed
+// this is the card component for the events in the feed
 
 import React, {useEffect, useState} from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
@@ -12,6 +12,52 @@ import { Container } from "../styling";
 import { useNavigation } from '@react-navigation/native';
 
 import EventDetails from './EventDetails'
+
+export const Card = (props) => {
+    const event = props.event;
+    const start = parseDate(event.startDateTime.toDate());
+    const end = parseDate(event.endDateTime.toDate());
+    const navigation = useNavigation();
+
+    const Tag = (props) => {
+        return (
+            <View style={styles.tags}>
+                <Text>{props.tag}</Text>
+            </View>
+        )
+    }
+
+    const OpenEventDetails = () => {
+        return (
+            <EventDetails
+                eventName={event.name}
+            />
+        )
+    }
+
+
+    return (
+      <View style={styles.card}>
+          <View style={styles.eventDetails}>
+              <Text style={styles.eventName}>{event.name}</Text>
+              <View style={styles.eventDate}>
+                  <Text style={styles.eventDay}>{start.day}</Text>
+                  <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>
+              </View>
+          </View>
+          <View style={styles.peopleGoingAndTagsContainer}>
+              <View style={styles.peopleGoingContainer}>
+                  <Text style={styles.peopleGoing}>{event.attendees.length} people going</Text>
+              </View>
+              <View style={styles.tagsContainer}>
+                  {(event.tags[0] != null) && <Tag tag={event.tags[0]}/>}
+                  {(event.tags[1] != null) && <Tag tag={event.tags[1]}/>}
+                  {(event.tags[2] != null) && <Tag tag={event.tags[2]}/>}
+            </View>
+        </View>
+    </View>
+    )
+}
 
 export const getWeekDay = (dateObject) => {
     const dayNumber = dateObject.getDay();
@@ -81,53 +127,6 @@ export const parseDate = (dateObject) => {
         ampmTime: dateObject.toLocaleString('en-US',
             { hour: 'numeric', minute: 'numeric', hour12: true }),
     })
-}
-
-export const Card = (props) => {
-    const post = props.post;
-    // console.log(post);
-    const start = parseDate(post.starttime.toDate());
-    const end = parseDate(post.endtime.toDate());
-    const navigation = useNavigation();
-
-    const Tag = (props) => {
-        return (
-            <View style={styles.tags}>
-                <Text>{props.tag}</Text>
-            </View>
-        )
-    }
-
-    const OpenEventDetails = () => {
-        return (
-            <EventDetails
-                eventName={post.name}
-            />
-        )
-    }
-
-
-    return (
-      <View style={styles.card}>
-          <View style={styles.eventDetails}>
-              <Text style={styles.eventName}>{post.name}</Text>
-              <View style={styles.eventDate}>
-                  <Text style={styles.eventDay}>{start.day}</Text>
-                  <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>
-              </View>
-          </View>
-          <View style={styles.peopleGoingAndTagsContainer}>
-              <View style={styles.peopleGoingContainer}>
-                  <Text style={styles.peopleGoing}>{post.attendee.length} people going</Text>
-              </View>
-              <View style={styles.tagsContainer}>
-                  {(post.tags[0] != null) && <Tag tag={post.tags[0]}/>}
-                  {(post.tags[1] != null) && <Tag tag={post.tags[1]}/>}
-                  {(post.tags[2] != null) && <Tag tag={post.tags[2]}/>}
-            </View>
-        </View>
-    </View>
-    )
 }
 
 const styles = StyleSheet.create({

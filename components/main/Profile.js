@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
 })
 
 export const Profile = (props) => {
-    const [userPosts, setUserPosts] = useState([]);
+    const [userEvents, setUserEvents] = useState([]);
     const [user, setUser] = useState(null);
     const currentUser = useSelector((state) => state.currentUser);
-    const currentUserPosts = useSelector(state => state.currentUser.posts);
+    const currentUserEvents = useSelector(state => state.currentUser.events);
 
     const signOut = () => {
         firebase.auth().signOut();
@@ -52,9 +52,9 @@ export const Profile = (props) => {
         // If the uid to display is the current user, our job is easy
         if (props.route.params.uid === firebase.auth().currentUser.uid) {
             setUser(currentUser);
-            setUserPosts(currentUserPosts);
+            setUserEvents(currentUserEvents);
         }
-        // Otherwise, we need to grab a different user and their posts from firebase
+        // Otherwise, we need to grab a different user and their events from firebase
         else {
             // This is essentially 'fetchUser' from actions/index.js but doesn't change state of application
             firebase.firestore()
@@ -73,21 +73,21 @@ export const Profile = (props) => {
                 })
                 .catch((error) => {console.log(error)})
 
-            // This is essentially 'fetchUserPosts' from actions/index.js but doesn't change state of application
+            // This is essentially 'fetchUserEvents' from actions/index.js but doesn't change state of application
             firebase.firestore()
-                .collection("posts")
+                .collection("events")
                 .doc(props.route.params.uid)    // This time, grab the uid from what was passed in as a props param
-                .collection("userPosts")    // fetch everything in the collection
+                .collection("userEvents")    // fetch everything in the collection
                 .orderBy("creation", "asc") // ascending order by creation date
                 .get()
                 .then((snapshot) => {
-                    // Iterate through everything in the snapshot and build a posts array
-                    let postsArr = snapshot.docs.map(doc => {
+                    // Iterate through everything in the snapshot and build a events array
+                    let eventsArr = snapshot.docs.map(doc => {
                         const data = doc.data();
                         const id = doc.id;
-                        return { id, ...data }  // the object to place in the posts array
+                        return { id, ...data }  // the object to place in the events array
                     });
-                    setUserPosts(postsArr);
+                    setUserEvents(eventsArr);
                 })
                 .catch((error) => {console.log(error)})
         }
@@ -110,7 +110,7 @@ export const Profile = (props) => {
                 <FlatList
                     numColumns={3}
                     horizontal={false}
-                    data={userPosts}
+                    data={userEvents}
                     renderItem={({item}) => (
                         <View style={styles.containerImage}>
                             <Image style={styles.image} source={{uri: item.downloadURL}}/>

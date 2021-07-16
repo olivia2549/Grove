@@ -16,6 +16,124 @@ import {parseDate, } from "./Card";
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
+// function to provide details about each event/card that is present in the feed page
+export const EventDetails = ({navigation, route}) => {
+    // get the parameters
+    const event = route.params.event.item;
+    const start = parseDate(event.startDateTime.toDate());
+    const end = parseDate(event.endDateTime.toDate());
+
+    // title font size 
+    const [currentFont, setCurrentFont] = useState(windowWidth * 0.12);
+
+    // gestureName is for knowing which gesture direction user executed
+    const [gestureName, setGestureName] = useState("none");
+
+    const onSwipeDown = (gestureState) =>{
+        navigation.goBack();
+    }
+
+    const config = {
+        velocityThreshold: 0.3,
+        directionalOffsetThreshold: 80
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            {/* <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}
+                        style={{flex: 1}}
+                        > */}
+
+            <GestureRecognizer
+                onSwipeDown={(state) => onSwipeDown(state)}
+                config={config}
+                style={styles.topBar}
+                > 
+                    <Text 
+                    adjustsFontSizeToFit
+                    style={ [styles.eventName, {fontSize: currentFont}]}
+                    onTextLayout={ (e) => {
+                        const { lines } = e.nativeEvent;
+                        if (lines.length > 1) {
+                            setCurrentFont(currentFont - 1);
+                        }
+                    }}
+                    >{event.name}</Text>
+            </GestureRecognizer>
+            {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
+            <ScrollView style={styles.scrollable}>
+                <View style={{flexDirection:"row", marginTop: windowHeight * 0.04}}>
+                   {
+                        event.tags.map((tag) => 
+                            <View style={{height: windowHeight * 0.07, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
+                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: windowWidth * 0.05}}>{tag}</Text>
+                            </View>
+                        )
+                    }
+                </View>
+                <View style={{padding: windowWidth * 0.05}}>
+                    <Text style={{fontSize: windowWidth * 0.07}}>{event.description}</Text>
+                </View>
+
+                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                    <View style={{flexDirection: "row"}}>
+                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold",  marginBottom: windowHeight * 0.015}}>Where</Text>
+                        <View style={{marginLeft: windowWidth * 0.02, marginTop: -windowWidth * 0.02, width: windowWidth * 0.688, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                            {/* this is hard coded, would need to be changed once we fetch info from the data */}
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{event.location}</Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection: "row", marginTop: 15, marginLeft: 1}}>
+                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginBottom: windowHeight * 0.015}}>Starts</Text>
+                      
+                        <View style={{flex: 1, marginLeft: windowWidth * 0.03, marginTop: -10, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{start.day}</Text>
+                        </View>
+                        <View style={{flex: 1, marginLeft: 10, marginTop: -10, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{start.ampmTime}</Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection: "row", marginTop: windowWidth * 0.029, marginLeft: 1}}>
+                        <Text  style={{fontSize: windowWidth * 0.06, fontWeight: "bold"}}>Ends</Text>
+
+                        <View style={{flex: 1, marginLeft: windowWidth * 0.06, marginTop: -windowWidth * 0.02, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.day}</Text>
+                        </View>
+                        <View style={{flex: 1, marginLeft: windowWidth * 0.027, marginTop: -windowWidth * 0.02, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.ampmTime}</Text>
+                        </View>
+                    </View>
+                </View>
+                
+                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{event.attendees.length} people going</Text>
+                    
+
+                        <FancyInput
+                            placeholder="Search"
+                            onChangeText={console.log("search bar activated")}
+                        />  
+
+                </View>
+                
+                   
+            </ScrollView>
+            {/* </KeyboardAvoidingView> */}
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>Share</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => console.log("i'm going")}  style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>I'm Going</Text>
+                </TouchableOpacity>
+            </View>
+
+                
+        </SafeAreaView>
+    );
+}
+
 const styles = StyleSheet.create({
     container: {
         // flexDirection: 'column',
@@ -77,125 +195,7 @@ const styles = StyleSheet.create({
     },
 })
 
-// function to provide details about each event/card that is present in the feed page
-export const EventDetails = ({navigation, route}) => {
-    // get the parameters
-    const { name, description, starttime, endtime, location, attendee, tags } = route.params.post.item;
-    const start = parseDate(starttime.toDate());
-    const end = parseDate(endtime.toDate());
-
-    // title font size 
-    const [currentFont, setCurrentFont] = useState(windowWidth * 0.12);
-
-    // gestureName is for knowing which gesture direction user executed
-    const [gestureName, setGestureName] = useState("none");
-
-    const onSwipeDown = (gestureState) =>{
-        navigation.goBack();
-    }
-
-    const config = {
-        velocityThreshold: 0.3,
-        directionalOffsetThreshold: 80
-    };
-
-    return (
-        <SafeAreaView style={styles.container}>
-            {/* <KeyboardAvoidingView
-                        behavior={Platform.OS === "ios" ? "padding" : "height"}
-                        style={{flex: 1}}
-                        > */}
-
-            <GestureRecognizer
-                onSwipeDown={(state) => onSwipeDown(state)}
-                config={config}
-                style={styles.topBar}
-                > 
-                    <Text 
-                    adjustsFontSizeToFit
-                    style={ [styles.eventName, {fontSize: currentFont}]}
-                    onTextLayout={ (e) => {
-                        const { lines } = e.nativeEvent;
-                        if (lines.length > 1) {
-                            setCurrentFont(currentFont - 1);
-                        }
-                    }}
-                    >{name}</Text>
-            </GestureRecognizer>
-            {/* <View style={{height: 30, width: 100, backgroundColor: "black"}}></View> */}
-            <ScrollView style={styles.scrollable}>
-                <View style={{flexDirection:"row", marginTop: windowHeight * 0.04}}>
-                   {
-                        tags.map((tag) => 
-                            <View style={{height: windowHeight * 0.07, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
-                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: windowWidth * 0.05}}>{tag}</Text>
-                            </View>
-                        )
-                    }
-                </View>
-                <View style={{padding: windowWidth * 0.05}}>
-                    <Text style={{fontSize: windowWidth * 0.07}}>{description}</Text>
-                </View>
-
-                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
-                    <View style={{flexDirection: "row"}}>
-                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold",  marginBottom: windowHeight * 0.015}}>Where</Text>
-                        <View style={{marginLeft: windowWidth * 0.02, marginTop: -windowWidth * 0.02, width: windowWidth * 0.688, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            {/* this is hard coded, would need to be changed once we fetch info from the data */}
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{location}</Text>
-                        </View>
-                    </View>
-                    <View style={{flexDirection: "row", marginTop: 15, marginLeft: 1}}>
-                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginBottom: windowHeight * 0.015}}>Starts</Text>
-                      
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.03, marginTop: -10, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{start.day}</Text>
-                        </View>
-                        <View style={{flex: 1, marginLeft: 10, marginTop: -10, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.027, color:"black", fontSize: windowWidth * 0.05}}>{start.ampmTime}</Text>
-                        </View>
-                    </View>
-                    <View style={{flexDirection: "row", marginTop: windowWidth * 0.029, marginLeft: 1}}>
-                        <Text  style={{fontSize: windowWidth * 0.06, fontWeight: "bold"}}>Ends</Text>
-
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.06, marginTop: -windowWidth * 0.02, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.day}</Text>
-                        </View>
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.027, marginTop: -windowWidth * 0.02, height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.ampmTime}</Text>
-                        </View>
-                    </View>
-                </View>
-                
-                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
-                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{attendee.length} people going</Text>
-                    
-
-                        <FancyInput
-                            placeholder="Search"
-                            onChangeText={console.log("search bar activated")}
-                        />  
-
-                </View>
-                
-                   
-            </ScrollView>
-            {/* </KeyboardAvoidingView> */}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
-                    <Text style={styles.fancyButtonText}>Share</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("i'm going")}  style={styles.fancyButtonContainer}>
-                    <Text style={styles.fancyButtonText}>I'm Going</Text>
-                </TouchableOpacity>
-            </View>
-
-                
-        </SafeAreaView>
-    );
-}
-
-
-
 export default EventDetails;
+
+
  

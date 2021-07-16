@@ -7,7 +7,7 @@
 
 const initialState = {
     currentUser: null,
-    posts: []
+    events: []
 }
 
 /**
@@ -29,7 +29,7 @@ export const userReducer = (state = initialState, action) => {
         case 'USER_POSTS_STATE_CHANGE':
             return {
                 ...state,
-                posts: action.posts
+                events: action.events
             }
         case 'CLEAR_DATA':
             return initialState;

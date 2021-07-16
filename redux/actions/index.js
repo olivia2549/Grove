@@ -7,23 +7,19 @@
 
 import {
     CLEAR_DATA,
-    EVENT_DESCRIPTION_STATE_CHANGE,
-    EVENT_ENDTIME_STATE_CHANGE,
-    EVENT_LOCATION_STATE_CHANGE,
     EVENT_NAME_STATE_CHANGE,
-    EVENT_STARTTIME_STATE_CHANGE,
+    EVENT_DESCRIPTION_STATE_CHANGE,
+    EVENT_START_TIME_STATE_CHANGE,
+    EVENT_END_TIME_STATE_CHANGE,
+    EVENT_START_DATE_STATE_CHANGE,
+    EVENT_END_DATE_STATE_CHANGE,
+    EVENT_LOCATION_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
     USER_POSTS_STATE_CHANGE,
     USER_STATE_CHANGE,
-    EVENT_ENDDATE_STATE_CHANGE,
-    EVENT_STARTDATE_STATE_CHANGE,
 } from "../constants/index";
 
 import firebase from "firebase";
-
-// fetch user
-// save user
-// save posts
 
 /**
  * clearData
@@ -36,8 +32,62 @@ export const clearData = () => {
     })
 }
 
+export const addEventName = (evName) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_NAME_STATE_CHANGE, name: evName});
+    })
+}
+
+export const addEventDescription = (evDescription) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_DESCRIPTION_STATE_CHANGE, description: evDescription});
+    })
+}
+
+export const addEventTags = (evTags) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_TAGS_STATE_CHANGE, tags: evTags});
+    })
+}
+
+export const addStartDateTime = (evTime, dateOrTime) => {
+    if (dateOrTime === "date") {
+        return ((dispatch) => {
+            dispatch({type: EVENT_START_DATE_STATE_CHANGE, startDate: evTime});
+        })
+    }
+    else {
+        return ((dispatch) => {
+            dispatch({type: EVENT_START_TIME_STATE_CHANGE, startTime: evTime});
+        })
+    }
+    
+}
+
+export const addEndDateTime = (evTime, dateOrTime) => {
+    if (dateOrTime === "date") {
+        return ((dispatch) => {
+            dispatch({type: EVENT_END_DATE_STATE_CHANGE, endDate: evTime});
+        })
+    }
+    else {
+        return ((dispatch) => {
+            dispatch({type: EVENT_END_TIME_STATE_CHANGE, endTime: evTime});
+        })
+    }
+}
+
+export const addEventLocation = (evLocation) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_LOCATION_STATE_CHANGE, location: evLocation});
+    })
+}
+
+
+// EXTRA
+
 /**
- * fetchUser
+ * fetchUser - WE DONT USE THIS FORNOW
  *
  * Grabs user information from firebase
  */
@@ -62,14 +112,14 @@ export const fetchUser = () => {
 }
 
 /**
- * fetchUser
+ * fetchUser - WE DON'T USE THIS FOR NOW
  *
  * Grabs user information from firebase
  */
-export const fetchUserPosts = () => {
+export const fetchUserEvents = () => {
     return ((dispatch) => {  // makes a call to the database
         firebase.firestore()
-            .collection("posts")
+            .collection("events")
             .doc(firebase.auth().currentUser.uid)
             .collection("userPosts")    // fetch everything in the collection
             .orderBy("creation", "asc") // ascending order by creation date
@@ -84,56 +134,5 @@ export const fetchUserPosts = () => {
                 dispatch({type: USER_POSTS_STATE_CHANGE, posts: postsArr});
             })
             .catch((error) => {console.log(error)})
-    })
-}
-
-export const addEventName = (evName) => {
-    return ((dispatch) => {
-        dispatch({type: EVENT_NAME_STATE_CHANGE, eventName: evName});
-    })
-}
-
-export const addEventDescription = (evDescription) => {
-    return ((dispatch) => {
-        dispatch({type: EVENT_DESCRIPTION_STATE_CHANGE, eventDescription: evDescription});
-    })
-}
-
-export const addEventTags = (evTags) => {
-    return ((dispatch) => {
-        dispatch({type: EVENT_TAGS_STATE_CHANGE, eventTags: evTags});
-    })
-}
-
-export const addStartEventTime = (evTime, dateOrTime) => {
-    if (dateOrTime === "date") {
-        return ((dispatch) => {
-            dispatch({type: EVENT_STARTDATE_STATE_CHANGE, startDate: evTime});
-        })
-    }
-    else {
-        return ((dispatch) => {
-            dispatch({type: EVENT_STARTTIME_STATE_CHANGE, startTime: evTime});
-        })
-    }
-    
-}
-
-export const addEndEventTime = (evTime, dateOrTime) => {
-    if (dateOrTime === "date") {
-        return ((dispatch) => {
-            dispatch({type: EVENT_ENDDATE_STATE_CHANGE, endDate: evTime});
-        })
-    }
-    else {
-        return ((dispatch) => {
-            dispatch({type: EVENT_ENDTIME_STATE_CHANGE, endTime: evTime});
-        })
-    }
-}
-
-export const addEventLocation = (evLocation) => {
-    return ((dispatch) => {
-        dispatch({type: EVENT_LOCATION_STATE_CHANGE, eventLocation: evLocation});
     })
 }

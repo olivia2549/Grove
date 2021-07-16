@@ -2,7 +2,7 @@
  * Copyright Grove, @2021 - All rights reserved
  *
  * AddEventName.js
- * Allows user to make a new post
+ * Allows user to make a new event
  */
 
 import React, { useState, useEffect } from 'react';
@@ -20,17 +20,6 @@ export const AddEventName = () => {
     const [eventName, setEventName] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation();
-
-    // const [post, setPost] = useState({
-    //     name: "",
-    //     description: "demo",
-    //     tags: [],
-    //     location: "",
-    //     startdate: new Date(),
-    //     enddate: new Date(),
-    //     attendee: [],
-    //     creator: currentUser, 
-    // });
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

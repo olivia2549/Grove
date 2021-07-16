@@ -1,7 +1,7 @@
 import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addEventDescription, addEventTags } from "../../redux/actions";
 
 const AddEventDescription = ({ route }) => {
