@@ -52,7 +52,7 @@ export const Main = () => {
             <Tab.Screen name="Search" component={SearchScreen}
                 options={{
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="magnify" color={color} size={26}/>
+                        <MaterialCommunityIcons name="account-multiple-plus" color={color} size={26}/>
                         )
                 }}
             />

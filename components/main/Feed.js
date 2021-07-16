@@ -6,8 +6,9 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, FlatList, Text, TouchableOpacity, Button } from "react-native";
+import { View, FlatList, Text, TouchableOpacity, Button, SafeAreaView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { FancyInput } from "../styling";
 
 import firebase from "firebase";
 
@@ -49,8 +50,17 @@ const Feed = () => {
 
 
     return (
-        <View style={{backgroundColor: "#fff"}}>
-            <View style={{justifyContent: "center", margin: 15}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: "#FFF"}}>
+            <View style={{margin: 5}}>
+                <View style={{margin: 5, flexDirection: 'row'}}>
+                    <Text style={{fontSize: 40}}>Grove</Text>
+                    {/* <TouchableOpacity style={{color: 'lightgreen', }}>
+                        <Text>Hi</Text>
+                    </TouchableOpacity> */}
+                </View>
+                <FancyInput placeholder="Search..."/>
+            </View>
+            <View style={{justifyContent: "center", margin: 10}}>
                 {posts.length == 0 ?
                     <Text>Nothing to show</Text> :
                     <FlatList
@@ -69,7 +79,7 @@ const Feed = () => {
                     />}
             </View>
 
-        </View>
+        </SafeAreaView>
     );
 }
 
