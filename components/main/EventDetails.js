@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     whereWhen: {
         fontSize: windowWidth * 0.06,
         fontWeight: "bold",
-        marginBottom: windowHeight * 0.015,
+        marginTop: 3,
+        // marginBottom: windowHeight * 0.015,
     },
 })
 
@@ -152,28 +153,28 @@ export const EventDetails = ({navigation, route}) => {
                 <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
                     <View style={{flexDirection: "row"}}>
                         <Text style={styles.whereWhen}>Where</Text>
-                        <View style={{marginLeft: windowWidth * 0.02, justifyContent: "center", width: "77.3%", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                        <View style={{flex: 1, marginLeft: windowWidth * 0.02, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             {/* this is hard coded, would need to be changed once we fetch info from the data */}
                             <Text style={{marginLeft: windowWidth * 0.03,  color:"black", fontSize: windowWidth * 0.05}}>{location}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection: "row", marginTop: 6, marginLeft: 1}}>
-                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginBottom: windowHeight * 0.015}}>Starts</Text>
+                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginTop: 3}}>Starts</Text>
                       
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.03, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                        <View style={{flex: 1, marginLeft: 15, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{start.day}</Text>
                         </View>
-                        <View style={{flex: 1, marginLeft: 10, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                        <View style={{flex: 1, marginLeft: 15, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{start.ampmTime}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection: "row", marginTop: 6, marginLeft: 1}}>
-                        <Text  style={{fontSize: windowWidth * 0.06, fontWeight: "bold"}}>Ends</Text>
+                        <Text  style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginTop: 2}}>Ends</Text>
 
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.06, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                        <View style={{flex: 1, marginLeft: 25, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.day}</Text>
                         </View>
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.027, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                        <View style={{flex: 1, marginLeft: 15, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.ampmTime}</Text>
                         </View>
                     </View>
