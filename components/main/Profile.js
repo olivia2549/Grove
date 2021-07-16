@@ -8,6 +8,8 @@
 import React, { useState, useEffect } from "react";
 import {StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity, Platform} from "react-native";
 
+import Card from "./Card";
+
 import { useSelector, useDispatch } from "react-redux";
 
 import firebase from "firebase";
@@ -37,6 +39,7 @@ const styles = StyleSheet.create({
     },
 })
 
+
 export const Profile = (props) => {
     const [user, setUser] = useState(null);
     const currentUser = useSelector((state) => state.currentUser);
@@ -46,6 +49,7 @@ export const Profile = (props) => {
         firebase.auth().signOut();
         dispatch(clearData());
     };
+
 
     // Load user, and if different than current user, fetch from database
     useEffect(() => {
