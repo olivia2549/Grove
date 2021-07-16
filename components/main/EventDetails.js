@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { FancyButton, FancyInput } from "../styling";
 import {parseDate, } from "./Card";
+import firebase from "firebase";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -93,9 +94,12 @@ const styles = StyleSheet.create({
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({navigation, route}) => {
     // get the parameters
-    const { name, description, starttime, endtime, location, attendee, tags } = route.params.post.item;
-    const start = parseDate(starttime.toDate());
-    const end = parseDate(endtime.toDate());
+    // const { name, description, starttime, endtime, location, attendee, tags } = route.params.post.item;
+    const post = route.params.post.item;
+    const start = parseDate(post.starttime.toDate());
+    const end = parseDate(post.endtime.toDate());
+    const [goingBtnText, setGoingBtnText] = useState("i'm going");
+    const [goingBtnSelected, setGoingBtnSelected] = useState(false);
 
     // title font size 
     const [currentFont, setCurrentFont] = useState(50);
@@ -103,9 +107,40 @@ export const EventDetails = ({navigation, route}) => {
     // gestureName is for knowing which gesture direction user executed
     const [gestureName, setGestureName] = useState("none");
 
-    const onSwipeDown = (gestureState) =>{
+    const onSwipeDown = (gestureState) => {
         navigation.goBack();
     }
+
+    const onGoing = () => {
+        setGoingBtnSelected(!goingBtnSelected);
+        goingBtnSelected ? setGoingBtnText("i'm not going") : setGoingBtnText("i'm going");
+        if (goingBtnSelected) {
+            console.log("adding post to users...");
+            firebase.firestore().collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                    eventsAttending: firebase.firestore.FieldValue.arrayUnion(post)
+                })
+            // TODO: make this work right
+            firebase.firestore().collection("posts")
+                .doc(post.id)
+                .update({
+                    attendee: firebase.firestore.FieldValue.arrayUnion(post)
+                })
+        } else {
+            console.log("removing post from users...")
+            firebase.firestore().collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                    eventsAttending: firebase.firestore.FieldValue.arrayRemove(post)
+                })
+            firebase.firestore().collection("posts")
+                .doc(post.id)
+                .update({
+                    attendee: firebase.firestore.FieldValue.arrayRemove(post)
+                })
+        }
+    };
 
     const config = {
         velocityThreshold: 0.3,
@@ -133,13 +168,13 @@ export const EventDetails = ({navigation, route}) => {
                             setCurrentFont(currentFont - 1);
                         }
                     }}
-                    >{name}</Text>
+                    >{post.name}</Text>
             </GestureRecognizer>
       
             <ScrollView style={{flex: Platform.OS === 'ios' ? 0 : 7, top: 10}}>
                 <View style={{flexDirection:"row"}}>
                    {
-                        tags.map((tag) => 
+                        post.tags.map((tag) =>
                             <View style={styles.tagBox}>
                                 <Text style={styles.tagText}>{tag}</Text>
                             </View>
@@ -147,7 +182,7 @@ export const EventDetails = ({navigation, route}) => {
                     }
                 </View>
                 <View style={{padding: windowWidth * 0.05}}>
-                    <Text style={{fontSize: windowWidth * 0.07}}>{description}</Text>
+                    <Text style={{fontSize: windowWidth * 0.07}}>{post.description}</Text>
                 </View>
 
                 <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
@@ -155,7 +190,7 @@ export const EventDetails = ({navigation, route}) => {
                         <Text style={styles.whereWhen}>Where</Text>
                         <View style={{flex: 1, marginLeft: windowWidth * 0.02, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
                             {/* this is hard coded, would need to be changed once we fetch info from the data */}
-                            <Text style={{marginLeft: windowWidth * 0.03,  color:"black", fontSize: windowWidth * 0.05}}>{location}</Text>
+                            <Text style={{marginLeft: windowWidth * 0.03,  color:"black", fontSize: windowWidth * 0.05}}>{post.location}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection: "row", marginTop: 6, marginLeft: 1}}>
@@ -182,7 +217,7 @@ export const EventDetails = ({navigation, route}) => {
                 
                 
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{justifyContent: "center", padding: windowWidth * .05, flex: 1}}>
-                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{attendee.length} people going</Text>
+                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{post.attendee.length} people going</Text>
 
                 </KeyboardAvoidingView>
             </ScrollView>
@@ -191,8 +226,8 @@ export const EventDetails = ({navigation, route}) => {
                 <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
                     <Text style={styles.fancyButtonText}>Share</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("i'm going")}  style={styles.fancyButtonContainer}>
-                    <Text style={styles.fancyButtonText}>I'm Going</Text>
+                <TouchableOpacity onPress={onGoing}  style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>{goingBtnText}</Text>
                 </TouchableOpacity>
             </View>
 
