@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import {StyleSheet, View, Text, Image, FlatList, Button} from "react-native";
+import {StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity, Platform} from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         justifyContent: "center",
-        padding: 16
+        backgroundColor: "white"
+        // padding: 16
     },
 })
 
@@ -100,25 +101,48 @@ export const Profile = (props) => {
 
     return (
         <View style={styles.screenContainer}>
-
-            <Button title="Sign Out" onPress={signOut}/>
-
-            <View style={styles.containerInfo}>
-                <Text>{user.name}</Text>
-                <Text>{user.email}</Text>
+            <View style={{flex: 1, backgroundColor: "#5DB075", justifyContent: "center"}}>
+                <Text style={{textAlign: "center", fontWeight: "500", fontSize: 33, color: "white", marginBottom: 18}}>{user.name}</Text>
+                
             </View>
-            <View style={styles.containerGallery}>
-                <FlatList
-                    numColumns={3}
-                    horizontal={false}
-                    data={userPosts}
-                    renderItem={({item}) => (
-                        <View style={styles.containerImage}>
-                            <Image style={styles.image} source={{uri: item.downloadURL}}/>
-                        </View>
-                    )}
+            
+            <Image 
+                source={require('../../assets/fakeprofile.jfif')}  
+                style={{width: 90, height: 90, borderRadius: 400/2, marginLeft: 15, marginTop: -45, backgroundColor: "white"}} 
                 />
+
+            <View style={{flex: Platform.OS === 'ios' ? 0 : 4, backgroundColor: "white"}}>
+                
+                <View style={styles.containerInfo}>
+                    
+                    <Text>{user.email}</Text>
+                </View>
+                <View style={styles.containerGallery}>
+                    <FlatList
+                        numColumns={3}
+                        horizontal={false}
+                        data={userPosts}
+                        renderItem={({item}) => (
+                            <View style={styles.containerImage}>
+                                <Image style={styles.image} source={{uri: item.downloadURL}}/>
+                            </View>
+                        )}
+                    />
+                </View> 
             </View>
+
+           
+            {/* <Button style={{}} title="Sign Out" onPress={signOut}/> */}
+
+            
+            
+            {/* <View style={{padding: 15}}> */}
+                <TouchableOpacity onPress={signOut} style={{ width: "90%", marginLeft: 18, marginBottom: 6, height: "4%", backgroundColor: "#5DB075", borderRadius: 20}}>
+                    <Text style={{textAlign:"center", marginTop: 5, color: "white"}}>Sign Out</Text>
+                </TouchableOpacity>
+            {/* </View> */}
+
+            
         </View>
     );
 }
