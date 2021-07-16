@@ -14,14 +14,27 @@ import { FancyButtonButLower } from '../styling';
 import { useDispatch } from "react-redux";
 import { addEventName } from "../../redux/actions";
 import AddEventDescription from "./AddEventDescription";
+import { useSelector } from "react-redux";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
 export const AddEventName = () => {
+    const currentUser = useSelector(state => state.currentUser);
+    const [eventName, setEventName] = useState('');
+    const dispatch = useDispatch();
     const navigation = useNavigation();
-    const [eventName, setEventName] = useState("");
 
+    // const [post, setPost] = useState({
+    //     name: "",
+    //     description: "demo",
+    //     tags: [],
+    //     location: "",
+    //     startdate: new Date(),
+    //     enddate: new Date(),
+    //     attendee: [],
+    //     creator: currentUser, 
+    // });
 
     return (
         <SafeAreaView style={{flex: 1}}>

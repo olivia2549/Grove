@@ -5,13 +5,16 @@
  * Defines redux actions
  */
 
-
 import {
-    EVENT_NAME_STATE_CHANGE,
+    CLEAR_DATA,
     EVENT_DESCRIPTION_STATE_CHANGE,
+    EVENT_ENDTIME_STATE_CHANGE,
+    EVENT_LOCATION_STATE_CHANGE,
+    EVENT_NAME_STATE_CHANGE,
+    EVENT_STARTTIME_STATE_CHANGE,
+    EVENT_TAGS_STATE_CHANGE,
     USER_POSTS_STATE_CHANGE,
     USER_STATE_CHANGE,
-    CLEAR_DATA,
 } from "../constants/index";
 
 import firebase from "firebase";
@@ -91,5 +94,41 @@ export const addEventName = (evName) => {
 export const addEventDescription = (evDescription) => {
     return ((dispatch) => {
         dispatch({type: EVENT_DESCRIPTION_STATE_CHANGE, eventDescription: evDescription});
+    })
+}
+
+export const addEventTags = (evTags) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_TAGS_STATE_CHANGE, eventTags: evTags});
+    })
+}
+
+export const addStartEventTime = (evTime, dateOrTime) => {
+    if (dateOrTime === "date") {
+        // TODO: change only the date in redux
+    }
+    else {
+        // TODO: change only the time in redux
+    }
+    return ((dispatch) => {
+        dispatch({type: EVENT_STARTTIME_STATE_CHANGE, eventStartTime: evTime});
+    })
+}
+
+export const addEndEventTime = (evTime, dateOrTime) => {
+    if (dateOrTime === "date") {
+        // TODO: change only the date in redux
+    }
+    else {
+        // TODO: change only the time in redux
+    }
+    return ((dispatch) => {
+        dispatch({type: EVENT_ENDTIME_STATE_CHANGE, eventEndTime: evTime});
+    })
+}
+
+export const addEventLocation = (evLocation) => {
+    return ((dispatch) => {
+        dispatch({type: EVENT_LOCATION_STATE_CHANGE, eventLocation: evLocation});
     })
 }
