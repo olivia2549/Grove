@@ -38,10 +38,8 @@ const styles = StyleSheet.create({
 })
 
 export const Profile = (props) => {
-    const [userPosts, setUserPosts] = useState([]);
     const [user, setUser] = useState(null);
     const currentUser = useSelector((state) => state.currentUser);
-    const currentUserPosts = useSelector(state => state.currentUser.posts);
     const dispatch = useDispatch();
 
     const signOut = () => {
@@ -54,7 +52,6 @@ export const Profile = (props) => {
         // If the uid to display is the current user, our job is easy
         if (props.route.params.uid === firebase.auth().currentUser.uid) {
             setUser(currentUser);
-            setUserPosts(currentUserPosts);
         }
         // Otherwise, we need to grab a different user and their posts from firebase
         else {
@@ -79,7 +76,6 @@ export const Profile = (props) => {
             firebase.firestore()
                 .collection("posts")
                 .doc(props.route.params.uid)    // This time, grab the uid from what was passed in as a props param
-                .collection("userPosts")    // fetch everything in the collection
                 .orderBy("creation", "asc") // ascending order by creation date
                 .get()
                 .then((snapshot) => {
@@ -89,7 +85,6 @@ export const Profile = (props) => {
                         const id = doc.id;
                         return { id, ...data }  // the object to place in the posts array
                     });
-                    setUserPosts(postsArr);
                 })
                 .catch((error) => {console.log(error)})
         }
@@ -106,10 +101,10 @@ export const Profile = (props) => {
                 
             </View>
             
-            <Image 
+            {/* <Image 
                 source={require('../../assets/fakeprofile.jfif')}  
                 style={{width: 90, height: 90, borderRadius: 400/2, marginLeft: 15, marginTop: -45, backgroundColor: "white"}} 
-                />
+                /> */}
 
             <View style={{flex: Platform.OS === 'ios' ? 0 : 4, backgroundColor: "white"}}>
                 
@@ -121,7 +116,6 @@ export const Profile = (props) => {
                     <FlatList
                         numColumns={3}
                         horizontal={false}
-                        data={userPosts}
                         renderItem={({item}) => (
                             <View style={styles.containerImage}>
                                 <Image style={styles.image} source={{uri: item.downloadURL}}/>

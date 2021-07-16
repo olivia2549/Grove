@@ -37,14 +37,20 @@ export const Register = () => {
                     .doc(firebase.auth().currentUser.uid)
                     .set({
                         name: state.name,
-                        email: state.email
+                        email: state.email,
+                        bio: "",
+                        year: -1,
+                        major: "",
+                        friends: [],
+                        eventsAttending: [],
+                        eventsPosted: [],
                     })
         }).catch((error) => {console.log(error)})
     }
 
     // Displays to the screen
     return (
-        <View>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
              <FancyInput
                 placeholder="Full name"
                 onChangeText={(name) => setState({
@@ -64,8 +70,8 @@ export const Register = () => {
                     ...state,
                     password: password})}
             />
-            <FancyButton title="Sign Up" onPress={() => onSignUp()}/>
-        </View>
+            <FancyButton title="Get Started" onPress={() => onSignUp()}/>
+        </KeyboardAvoidingView>
         // <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
            
         // {/* </KeyboardAvoidingView> */}
