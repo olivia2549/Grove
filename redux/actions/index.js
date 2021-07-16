@@ -15,6 +15,8 @@ import {
     EVENT_TAGS_STATE_CHANGE,
     USER_POSTS_STATE_CHANGE,
     USER_STATE_CHANGE,
+    EVENT_ENDDATE_STATE_CHANGE,
+    EVENT_STARTDATE_STATE_CHANGE,
 } from "../constants/index";
 
 import firebase from "firebase";
@@ -105,26 +107,29 @@ export const addEventTags = (evTags) => {
 
 export const addStartEventTime = (evTime, dateOrTime) => {
     if (dateOrTime === "date") {
-        // TODO: change only the date in redux
+        return ((dispatch) => {
+            dispatch({type: EVENT_STARTDATE_STATE_CHANGE, startDate: evTime});
+        })
     }
     else {
-        // TODO: change only the time in redux
+        return ((dispatch) => {
+            dispatch({type: EVENT_STARTTIME_STATE_CHANGE, startTime: evTime});
+        })
     }
-    return ((dispatch) => {
-        dispatch({type: EVENT_STARTTIME_STATE_CHANGE, eventStartTime: evTime});
-    })
+    
 }
 
 export const addEndEventTime = (evTime, dateOrTime) => {
     if (dateOrTime === "date") {
-        // TODO: change only the date in redux
+        return ((dispatch) => {
+            dispatch({type: EVENT_ENDDATE_STATE_CHANGE, endDate: evTime});
+        })
     }
     else {
-        // TODO: change only the time in redux
+        return ((dispatch) => {
+            dispatch({type: EVENT_ENDTIME_STATE_CHANGE, endTime: evTime});
+        })
     }
-    return ((dispatch) => {
-        dispatch({type: EVENT_ENDTIME_STATE_CHANGE, eventEndTime: evTime});
-    })
 }
 
 export const addEventLocation = (evLocation) => {

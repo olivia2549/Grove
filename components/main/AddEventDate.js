@@ -4,7 +4,7 @@
 // import DateTimePicker from '@react-native-community/datetimepicker';
 // import { addEndEventTime, addEventLocation, addStartEventTime } from '../../redux/actions';
 // import { useNavigation } from "@react-navigation/native";
-//
+
 // const AddEventDate = () => {
 //     const dispatch = useDispatch();
 //     const navigation = useNavigation();
@@ -12,14 +12,14 @@
 //     const [startDate, setStartDate] = useState(new Date());
 //     const [endDate, setEndDate] = useState(new Date());
 //     const [location, setLocation] = useState("");
-//
+
 //     const onChange = (ev, selectedDate, id) => {
 //         const currentDate = selectedDate || defaultDate;
 //         id === "Starts" ?
 //             setStartDate(currentDate) :
 //             setEndDate(currentDate);
 //     };
-//
+
 //     const DateTimePickerWithText = (props) => {
 //         return (
 //             <View>
@@ -51,7 +51,7 @@
 //             </View>
 //         );
 //     };
-//
+
 //     return (
 //         <View style={{marginTop: 50}}>
 //             <Text>Time and Location</Text>
@@ -73,10 +73,10 @@
 //                 }}
 //             />
 //         </View>
-//
+
 //     );
 // };
-//
+
 // export default AddEventDate;
 
 import React, {useState} from 'react';
@@ -91,11 +91,20 @@ const AddEventDate = () => {
     const navigation = useNavigation();
     const defaultDate = new Date();
     const [location, setLocation] = useState("");
+    let start = {
+        time: defaultDate.getTime(),
+        date: defaultDate.getDate(),
+    }; 
 
     const onChange = (ev, selectedDate, id, dateOrTime) => {
         const currentDate = selectedDate || defaultDate;
         console.log(currentDate);
         if (id === "Starts") {
+            if (dateOrTime === "date") {
+                start.date = currentDate.getDate();
+            } else {
+                start.time = currentDate.getTime();
+            }
             dispatch(addStartEventTime(currentDate, dateOrTime));
         }
         else {
