@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import {StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity, Platform} from "react-native";
+import {StyleSheet, View, Text, Image, FlatList, Button, TouchableOpacity, Platform, Dimensions} from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -14,6 +14,10 @@ import firebase from "firebase";
 import {USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE} from "../../redux/constants";
 import {clearData} from "../../redux/actions";
 require ('firebase/firestore');
+
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     containerInfo: {
@@ -102,16 +106,20 @@ export const Profile = (props) => {
     return (
         <View style={styles.screenContainer}>
             <View style={{flex: 1, backgroundColor: "#5DB075", justifyContent: "center"}}>
-                <Text style={{textAlign: "center", fontWeight: "500", fontSize: 33, color: "white", marginBottom: 18}}>{user.name}</Text>
+                <Text style={{textAlign: "center", fontWeight: "500", fontSize: 33, color: "white", marginBottom: Platform.OS === 'ios' ? 0 : 18}}>{user.name}</Text>
                 
             </View>
-            
-            <Image 
-                source={require('../../assets/fakeprofile.jfif')}  
-                style={{width: 90, height: 90, borderRadius: 400/2, marginLeft: 15, marginTop: -45, backgroundColor: "white"}} 
-                />
 
-            <View style={{flex: Platform.OS === 'ios' ? 0 : 4, backgroundColor: "white"}}>
+            <View style={{width: windowWidth * 0.25, height: windowHeight * 0.13, borderRadius: 200, justifyContent: "center", marginLeft: 15, marginTop: -45, backgroundColor: "white"}}>
+                <Image 
+                source={require('../../assets/profile.jpeg')}  
+                style={{width: windowWidth * 0.22, height: windowHeight * 0.12 , borderRadius: 400/2, marginLeft: 5}} 
+                /> 
+            </View>
+            
+           
+
+            <View style={{flex: Platform.OS === 'ios' ? 3 : 4, backgroundColor: "white"}}>
                 
                 <View style={styles.containerInfo}>
                     
