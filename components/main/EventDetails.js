@@ -13,6 +13,10 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { FancyButton, FancyInput } from "../styling";
 import {parseDate, } from "./Card";
 
+// for responsive font size
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+
+
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
@@ -232,16 +236,20 @@ export const EventDetails = ({navigation, route}) => {
                 config={config}
                 style={styles.topBar}
                 > 
+                {
+                    name.lines > 1 && console.log("too long!")
+                }
                     <Text 
-                    adjustsFontSizeToFit
-                    style={ [styles.eventName, {fontSize: currentFont}]}
-                    onTextLayout={ (e) => {
-                        const { lines } = e.nativeEvent;
-                        if (lines.length > 1) {
-                            setCurrentFont(currentFont - 1);
-                        }
-                    }}
-                    >{name}</Text>
+                        adjustsFontSizeToFit
+                        style={ [styles.eventName, {fontSize: currentFont}]}
+                        onTextLayout={ (e) => {
+                            const { lines } = e.nativeEvent;
+                            console.log(lines)
+                            if (lines.length > 1) {
+                                setCurrentFont(currentFont - 1);
+                            }
+                        }}
+                        >{name}</Text>
             </GestureRecognizer>
       
             <ScrollView style={styles.scrollStyle}>
