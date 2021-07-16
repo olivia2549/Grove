@@ -44,8 +44,8 @@ export const Register = () => {
 
     // Displays to the screen
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
-            <FancyInput
+        <View>
+             <FancyInput
                 placeholder="Full name"
                 onChangeText={(name) => setState({
                     ...state,
@@ -65,7 +65,10 @@ export const Register = () => {
                     password: password})}
             />
             <FancyButton title="Sign Up" onPress={() => onSignUp()}/>
-        </KeyboardAvoidingView>
+        </View>
+        // <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
+           
+        // {/* </KeyboardAvoidingView> */}
     );
 };
 
