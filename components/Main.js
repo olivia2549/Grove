@@ -60,8 +60,8 @@ export const Main = () => {
                 listeners={({ navigation }) => ({   // Listens for a tab press
                     tabPress: ev => {
                         ev.preventDefault();    // Allows us to override what happens when tab clicked
-                        // Routes to the Add stack screen in App.js, which comes from AddEventName.js component
-                        navigation.navigate("AddEventName");
+                        // Routes to the Add stack screen in App.js, which comes from AddEventInfo.js component
+                        navigation.navigate("AddEventInfo");
                     }
                 })}
                 options={{
@@ -74,7 +74,7 @@ export const Main = () => {
                 listeners={({ navigation }) => ({   // Listens for a tab press
                     tabPress: ev => {
                         ev.preventDefault();    // Allows us to override what happens when tab clicked
-                        // Routes to the Add stack screen in App.js, which comes from AddEventName.js component
+                        // Routes to the Add stack screen in App.js, which comes from AddEventInfo.js component
                         navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid});
                     }
                 })}

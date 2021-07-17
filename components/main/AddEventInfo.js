@@ -1,7 +1,7 @@
 /**
  * Copyright Grove, @2021 - All rights reserved
  *
- * AddEventName.js
+ * AddEventInfo.js
  * Allows user to make a new event
  */
 
@@ -13,13 +13,13 @@ import { FancyButtonButLower } from '../styling';
 
 import { useDispatch } from "react-redux";
 import { addEventName } from "../../redux/actions";
-import AddEventDescription from "./AddEventDescription";
+import AddEventDescription from "./AddEventTags";
 import { useSelector } from "react-redux";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
-export const AddEventName = () => {
+export const AddEventInfo = () => {
     const currentUser = useSelector(state => state.currentUser);
     const [eventName, setEventName] = useState('');
     const dispatch = useDispatch();
@@ -63,4 +63,4 @@ export const AddEventName = () => {
     );
 };
 
-export default AddEventName;
+export default AddEventInfo;

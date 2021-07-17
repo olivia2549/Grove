@@ -45,8 +45,8 @@ import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
 import MainScreen from './components/Main';
-import AddEventName from './components/main/AddEventName';
-import AddEventDescription from './components/main/AddEventDescription';
+import AddEventInfo from './components/main/AddEventInfo';
+import AddEventDescription from './components/main/AddEventTags';
 import AddEventDate from './components/main/AddEventDate';
 import EventDetails from './components/main/EventDetails';
 import AddEventConfirmation from './components/main/AddEventConfirmation';
@@ -99,8 +99,8 @@ export const App = () => {
                     headerShown: false
                 }} > 
                     <Stack.Screen name="Main" component={MainScreen}/>
-                    <Stack.Screen name="AddEventName" component={AddEventName}/>
-                    <Stack.Screen name="AddEventDescription" component={AddEventDescription}/>
+                    <Stack.Screen name="AddEventInfo" component={AddEventInfo}/>
+                    <Stack.Screen name="AddEventTags" component={AddEventTags}/>
                     <Stack.Screen name="AddEventDate" component={AddEventDate}/>
                     <Stack.Screen name="EventDetails" component={EventDetails}/>
                     <Stack.Screen name="AddEventConfirmation" component={AddEventConfirmation}/>
