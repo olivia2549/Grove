@@ -35,7 +35,7 @@ const windowWidth = Dimensions.get('window').width;
       try {
         const result = await Share.share({
           message:
-            '*User* is inviting you to *event*. Check it out on Grove! *link*',
+            'We need to change this to a deep link to the app',
         });
         if (result.action === Share.sharedAction) {
           if (result.activityType) {
@@ -130,8 +130,8 @@ export const EventDetails = ({navigation, route}) => {
                     >{event.name}</Text>
             </GestureRecognizer>
 
-            <ScrollView style={{flex: Platform.OS === 'ios' ? 0 : 7, top: 10}}>
-                <View style={{flexDirection:"row"}}>
+            <ScrollView style={styles.scrollStyle}>
+                <View style={styles.rowFlexContainer}>
                    {
                         event.tags.map((tag) =>
                             <View style={styles.tagBox}>
@@ -140,48 +140,48 @@ export const EventDetails = ({navigation, route}) => {
                         )
                     }
                 </View>
-                <View style={{padding: windowWidth * 0.05}}>
-                    <Text style={{fontSize: windowWidth * 0.07}}>{event.description}</Text>
+                <View style={styles.descriptionContainer}>
+                    <Text style={styles.descriptionText}>{event.description}</Text>
                 </View>
 
-                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
-                    <View style={{flexDirection: "row"}}>
+                <View style={styles.bigView}>
+                    <View style={styles.rowFlexContainer}>
                         <Text style={styles.whereWhen}>Where</Text>
-                        <View style={{flex: 1, marginLeft: windowWidth * 0.02, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
+                        <View style={styles.locationView}>
                             {/* this is hard coded, would need to be changed once we fetch info from the data */}
-                            <Text style={{marginLeft: windowWidth * 0.03,  color:"black", fontSize: windowWidth * 0.05}}>{event.location}</Text>
+                            <Text style={styles.locationText}>{event.location}</Text>
                         </View>
                     </View>
-                    <View style={{flexDirection: "row", marginTop: 6, marginLeft: 1}}>
-                        <Text style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginTop: 3}}>Starts</Text>
+                    <View style={styles.timeView}>
+                        <Text style={styles.startText}>Starts</Text>
 
-                        <View style={{flex: 1, marginLeft: 15, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{start.day}</Text>
+                        <View style={styles.startView}>
+                            <Text style={styles.startDayText}>{start.day}</Text>
                         </View>
-                        <View style={{flex: 1, marginLeft: 15, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{start.ampmTime}</Text>
+                        <View style={styles.startTimeView}>
+                            <Text style={styles.startTimeText}>{start.ampmTime}</Text>
                         </View>
                     </View>
-                    <View style={{flexDirection: "row", marginTop: 6, marginLeft: 1}}>
-                        <Text  style={{fontSize: windowWidth * 0.06, fontWeight: "bold", marginTop: 2}}>Ends</Text>
+                    <View style={styles.timeView}>
+                        <Text  style={styles.endsText}>Ends</Text>
 
-                        <View style={{flex: 1, marginLeft: 25, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.day}</Text>
+                        <View style={styles.endDayView}>
+                            <Text style={styles.endDayText}>{end.day}</Text>
                         </View>
-                        <View style={{flex: 1, marginLeft: 15, justifyContent: "center", height: windowHeight * 0.055, backgroundColor: "lightgrey", borderRadius: 10, }}>
-                            <Text style={{marginLeft: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{end.ampmTime}</Text>
+                        <View style={styles.endTimeView}>
+                            <Text style={styles.endTimeText}>{end.ampmTime}</Text>
                         </View>
                     </View>
                 </View>
 
 
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{justifyContent: "center", padding: windowWidth * .05, flex: 1}}>
-                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{event.attendees.length} people going</Text>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidContainer}>
+                    <Text style={styles.peopleGoingText}>{event.attendees.length} people going</Text>
 
                 </KeyboardAvoidingView>
             </ScrollView>
 
-            <View style={{ flexDirection: "row"}}>
+            <View style={styles.rowFlexContainer}>
                 <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
                     <Text style={styles.fancyButtonText}>Share</Text>
                 </TouchableOpacity>
@@ -266,6 +266,113 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginTop: 3,
         // marginBottom: windowHeight * 0.015,
+    },
+    locationView: {
+        flex: 1, 
+        marginLeft: windowWidth * 0.02, 
+        justifyContent: "center", 
+        height: windowHeight * 0.055, 
+        backgroundColor: "lightgrey", 
+        borderRadius: 10, 
+    },
+    locationText: {
+        marginLeft: windowWidth * 0.03,  
+        color:"black", 
+        fontSize: windowWidth * 0.05
+    },
+    timeView: {
+        flexDirection: "row", 
+        marginTop: 6,
+        marginLeft: 1,
+    },
+    scrollStyle: {
+        flex: Platform.OS === 'ios' ? 0 : 7, 
+        top: 10,
+    },
+    descriptionContainer: {
+        padding: windowWidth * 0.05,
+    },
+    descriptionText: {
+        fontSize: windowWidth * 0.07,
+    },
+    bigView: {
+        justifyContent: "center", 
+        padding: windowWidth * 0.05,
+    },
+    rowFlexContainer: {
+        flexDirection:"row",
+    },
+    startText: {
+        fontSize: windowWidth * 0.06, 
+        fontWeight: "bold", 
+        marginTop: 3,
+    },
+    startView: {
+        flex: 1, 
+        marginLeft: 15, 
+        justifyContent: "center", 
+        height: windowHeight * 0.055, 
+        backgroundColor: "lightgrey", 
+        borderRadius: 10, 
+    },
+    startDayText: {
+        marginLeft: windowWidth * 0.03, 
+        color:"black", 
+        fontSize: windowWidth * 0.05,
+    },
+    startTimeView: {
+        flex: 1, 
+        marginLeft: 15, 
+        justifyContent: "center", 
+        height: windowHeight * 0.055, 
+        backgroundColor: "lightgrey", 
+        borderRadius: 10, 
+    },
+    startTimeText: {
+        marginLeft: windowWidth * 0.03, 
+        color:"black", 
+        fontSize: windowWidth * 0.05,
+    },
+    endsText: {
+        fontSize: windowWidth * 0.06, 
+        fontWeight: "bold", 
+        marginTop: 2,
+    },
+    peopleGoingText: {
+        fontSize: windowWidth * 0.07, 
+        fontWeight: "bold", 
+        marginBottom: windowHeight * 0.01,
+    },
+    endDayView: {
+        flex: 1, 
+        marginLeft: 25, 
+        justifyContent: "center", 
+        height: windowHeight * 0.055, 
+        backgroundColor: "lightgrey", 
+        borderRadius: 10, 
+    },
+    endDayText: {
+        marginLeft: windowWidth * 0.03, 
+        color:"black", 
+        fontSize: windowWidth * 0.05,
+    },
+    endTimeView: {
+        flex: 1, 
+        marginLeft: 15, 
+        justifyContent: "center", 
+        height: windowHeight * 0.055, 
+        backgroundColor: "lightgrey", 
+        borderRadius: 10, 
+    },
+    endTimeText: {
+        marginLeft: windowWidth * 0.03, 
+        color:"black", 
+        fontSize: windowWidth * 0.05,
+    },
+    keyboardAvoidContainer: {
+        justifyContent: "center", 
+        padding: windowWidth * .05, 
+        flex: 1,
     },
 })
 
