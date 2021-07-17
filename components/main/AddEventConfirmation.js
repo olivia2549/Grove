@@ -27,7 +27,7 @@ const AddEventConfirmation = () => {
             <View style={{flexDirection:"row", height: 60}}>
                 {
                     eventData.tags.map((tag) =>
-                        <View style={{height: 45, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
+                        <View key={tag} style={{height: 45, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
                             <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: 16}}>{tag}</Text>
                         </View>
                     )

@@ -67,8 +67,7 @@ const Feed = () => {
                         showsVerticalScrollIndicator={false}
                     />}
             </View>
-
-        </SafeAreaView>
+        </View>
     );
 }
 

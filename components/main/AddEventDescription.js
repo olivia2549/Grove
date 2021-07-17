@@ -60,13 +60,7 @@ const AddEventDescription = ({ route }) => {
         <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-            <Text>Tags and Description</Text>
-            <View>
-                {allTags.map((tag, i) => {
-                    return <Tag key={i} title={tag} />;
-                })}
-            </View>
-
+            <Text>Description and Tags</Text>
             <TextInput
                 id="eventDescription"
                 name="eventDescription"
@@ -74,6 +68,11 @@ const AddEventDescription = ({ route }) => {
                 placeholder="Description..."
                 value={eventDescription}
             />
+            <View>
+                {allTags.map((tag, i) => {
+                    return <Tag key={i} title={tag} />;
+                })}
+            </View>
 
             <Button
                 title="Next"

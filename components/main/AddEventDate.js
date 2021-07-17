@@ -146,15 +146,15 @@ const AddEventDate = () => {
 
     return (
         <View style={{marginTop: 50}}>
-            <Text>Time and Location</Text>
-            <View>
-                <DateTimePickerWithText title="Starts"/>
-                <DateTimePickerWithText title="Ends"/>
-            </View>
+            <Text>Location and Time</Text>
             <TextInput
                 placeholder="Event Location..."
                 onChangeText={(text) => { setLocation(text); }}
             />
+            <View>
+                <DateTimePickerWithText title="Starts"/>
+                <DateTimePickerWithText title="Ends"/>
+            </View>
             <Button
                 title="Next"
                 onPress={() => {
