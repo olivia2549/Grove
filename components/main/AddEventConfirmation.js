@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 
 const AddEventConfirmation = () => {
+    const navigation = useNavigation();
     // an object to hold the event data as key and value pairs
     const eventData = {
         name: useSelector(state => state.event.name),
@@ -39,6 +41,13 @@ const AddEventConfirmation = () => {
             <Text>
                 {`Event End Time: ${eventData.endDateTime}`}
             </Text>
+
+            <Button
+                title="Looks good!"
+                onPress={() => {
+                    navigation.navigate("AddEventFinal");
+                }}
+            />
         </View>
     )
 }
