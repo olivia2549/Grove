@@ -157,10 +157,10 @@ export const ProfileFollowing = (props) => {
         </TouchableOpacity>
 
         <View style={styles.containerGallery}>
-          <FlatList
+          {/* <FlatList
+            data={currentUserEvents}
             numColumns={3}
             horizontal={false}
-            // data={user}
             renderItem={({ item }) => (
               <View style={styles.containerImage}>
                 <Image
@@ -169,6 +169,23 @@ export const ProfileFollowing = (props) => {
                 />
               </View>
             )}
+          /> */}
+
+          <FlatList
+            data={userEvents}
+            renderItem={(event) => (
+              // when the card is pressed, we head to EventDetails page
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EventDetails", {
+                    event: event,
+                  })
+                }
+              >
+                <Card event={event.item} />
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
