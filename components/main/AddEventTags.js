@@ -4,11 +4,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { addEventDescription, addEventTags } from "../../redux/actions";
 
-const AddEventDescription = ({ route }) => {
+export const AddEventTags = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
-
-    const [eventDescription, setEventDescription] = useState("");
 
     const allTags = [
         "Sports",
@@ -60,14 +58,7 @@ const AddEventDescription = ({ route }) => {
         <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-            <Text>Description and Tags</Text>
-            <TextInput
-                id="eventDescription"
-                name="eventDescription"
-                onChangeText={(text) => {setEventDescription(text)}}
-                placeholder="Description..."
-                value={eventDescription}
-            />
+            <Text>Add Tags</Text>
             <View>
                 {allTags.map((tag, i) => {
                     return <Tag key={i} title={tag} />;
@@ -77,7 +68,6 @@ const AddEventDescription = ({ route }) => {
             <Button
                 title="Next"
                 onPress={() => {
-                    dispatch(addEventDescription(eventDescription));
                     dispatch(addEventTags(selectedTags));
                     navigation.navigate("AddEventDate");
                 }}
@@ -86,4 +76,4 @@ const AddEventDescription = ({ route }) => {
     );
 };
 
-export default AddEventDescription;
+export default AddEventTags;
