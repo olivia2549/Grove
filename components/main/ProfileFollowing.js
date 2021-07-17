@@ -16,10 +16,12 @@ import {
   TouchableOpacity,
   Platform,
   Dimensions,
+  Switch,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 
+// firbase imports
 import firebase from "firebase";
 import {
   USER_POSTS_STATE_CHANGE,
@@ -28,15 +30,22 @@ import {
 import { clearData } from "../../redux/actions";
 require("firebase/firestore");
 
+// toggle button
+
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const Profile = (props) => {
+export const ProfileFollowing = (props) => {
   const [userEvents, setUserEvents] = useState([]);
   const [user, setUser] = useState(null);
   const currentUser = useSelector((state) => state.currentUser);
   const currentUserEvents = useSelector((state) => state.currentUser.events);
   const dispatch = useDispatch();
+
+  // for the switch
+  const [upComingEvents, setUpComingEvents] = useState(true);
+  const [eventsAttended, setEventsAttended] = useState(false);
+  const [toggleSide, setToggleSide] = useState("flex-start");
 
   const signOut = () => {
     firebase.auth().signOut();
@@ -98,6 +107,17 @@ export const Profile = (props) => {
     return <View />;
   }
 
+  const flipToggle = () => {
+    console.log("here");
+    if (upComingEvents) {
+      setToggleSide("flex-end");
+    } else if (eventsAttended) {
+      setToggleSide("flex-start");
+    }
+    setUpComingEvents(!upComingEvents);
+    setEventsAttended(!eventsAttended);
+  };
+
   return (
     <View style={styles.screenContainer}>
       <View style={styles.userNameContainer}>
@@ -115,23 +135,30 @@ export const Profile = (props) => {
         <View style={styles.containerInfo}>
           <Text style={styles.userEmail}>{user.email}</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => console.log("Tryna add some good friends")}
-          style={styles.addFriend}
-        >
-          <Text style={styles.addFriendText}>Add Friend</Text>
+        <TouchableOpacity style={styles.alreadyFriend}>
+          <Text style={styles.alreadyFriendText}>Friends</Text>
         </TouchableOpacity>
-        <View style={styles.lockContainer}>
-          <Image
-            source={require("../../assets/lock_outline.png")}
-            style={styles.lockIcon}
-          />
-          <Text style={styles.lockIconText}>
-            Follow this account to see their events
-          </Text>
-        </View>
+
+        <TouchableOpacity
+          style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+          onPress={flipToggle}
+        >
+          {upComingEvents && (
+            <View style={styles.upcomingEventsContainer}>
+              <Text style={styles.toggleText}>Upcoming Events</Text>
+            </View>
+          )}
+
+          {eventsAttended && (
+            <View style={styles.eventsAddedContainer}>
+              <Text style={styles.toggleText}>Events Attended</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
         <View style={styles.containerGallery}>
-          <FlatList
+          {/* <FlatList
+            data={currentUserEvents}
             numColumns={3}
             horizontal={false}
             renderItem={({ item }) => (
@@ -142,17 +169,26 @@ export const Profile = (props) => {
                 />
               </View>
             )}
+          /> */}
+
+          <FlatList
+            data={userEvents}
+            renderItem={(event) => (
+              // when the card is pressed, we head to EventDetails page
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EventDetails", {
+                    event: event,
+                  })
+                }
+              >
+                <Card event={event.item} />
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
-
-      {/* <Button style={{}} title="Sign Out" onPress={signOut}/> */}
-
-      {/* <View style={{padding: 15}}> */}
-      <TouchableOpacity onPress={signOut} style={styles.signOut}>
-        <Text style={styles.signOutText}>Sign Out</Text>
-      </TouchableOpacity>
-      {/* </View> */}
     </View>
   );
 };
@@ -223,54 +259,53 @@ const styles = StyleSheet.create({
   },
 
   // add friend
-  addFriend: {
-    flex: 1 / 8,
+  alreadyFriend: {
+    flex: 1 / 10,
     marginHorizontal: windowWidth * 0.028,
     marginTop: 8,
     height: "7%",
-    backgroundColor: "#5DB075",
+    backgroundColor: "lightgrey",
     borderRadius: 10,
     justifyContent: "center",
   },
-  addFriendText: {
+  alreadyFriendText: {
     textAlign: "center",
-    color: "white",
-    fontSize: windowWidth * 0.04,
-  },
-
-  // locked
-  lockContainer: {
-    marginTop: 25,
-    flexDirection: "row",
-  },
-  lockIcon: {
-    justifyContent: "center",
-    marginLeft: 20,
-    width: windowWidth * 0.058,
-    height: windowHeight * 0.037,
-  },
-  lockIconText: {
     color: "#666666",
-    fontSize: windowWidth * 0.042,
-    marginLeft: 10,
-    marginTop: 2,
+    fontSize: windowWidth * 0.045,
   },
 
-  //sign out
-  signOut: {
-    flex: 1 / 3,
-    marginHorizontal: 12,
-    marginLeft: 18,
-    marginBottom: 6,
-    backgroundColor: "#5DB075",
-    borderRadius: 20,
+  // toggle button
+  toggleContainer: {
+    flex: 1 / 8,
+    flexDirection: "row",
+    marginHorizontal: windowWidth * 0.028,
+    marginTop: 22,
+    height: "7%",
+    backgroundColor: "#ededed",
+    borderRadius: 30,
+    borderWidth: 0.3,
+    borderColor: "grey",
+  },
+  upcomingEventsContainer: {
+    flex: 1 / 2,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
     justifyContent: "center",
   },
-  signOutText: {
+  eventsAddedContainer: {
+    flex: 1 / 2,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
+    justifyContent: "center",
+  },
+  toggleText: {
     textAlign: "center",
-    color: "white",
-    fontSize: windowWidth * 0.031,
+    fontWeight: "500",
+    fontSize: windowWidth * 0.043,
+    color: "#5DB075",
   },
 });
 
-export default Profile;
+export default ProfileFollowing;
