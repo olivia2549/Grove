@@ -1,7 +1,7 @@
 /**
  * Copyright Grove, @2021 - All rights reserved
  *
- * AddEventName.js
+ * AddEventInfo.js
  * Allows user to make a new event
  */
 

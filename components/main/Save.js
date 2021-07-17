@@ -62,7 +62,7 @@ export const Save = (props) => {
 
     return (
         <View style={{flex: 1}}>
-            {/* uri is passed in as props and comes from the image picker in AddEventName.js */}
+            {/* uri is passed in as props and comes from the image picker in AddEventInfo.js */}
             <Image source={{uri: props.route.params.image}} style={{ width: 200, height: 200 }}/>
             <TextInput
                 placeholder="Write a caption"
