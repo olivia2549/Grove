@@ -12,24 +12,40 @@ import {
   Text,
   Image,
   FlatList,
+  Button,
   TouchableOpacity,
   Platform,
   Dimensions,
+  Switch,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
-import { clearData } from "../../redux/actions";
 
+// firbase imports
 import firebase from "firebase";
+import {
+  USER_POSTS_STATE_CHANGE,
+  USER_STATE_CHANGE,
+} from "../../redux/constants";
+import { clearData } from "../../redux/actions";
 require("firebase/firestore");
+
+// toggle button
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const Profile = (props) => {
+export const ProfileFollowing = (props) => {
+  const [userEvents, setUserEvents] = useState([]);
   const [user, setUser] = useState(null);
   const currentUser = useSelector((state) => state.currentUser);
+  const currentUserEvents = useSelector((state) => state.currentUser.events);
   const dispatch = useDispatch();
+
+  // for the switch
+  const [upComingEvents, setUpComingEvents] = useState(true);
+  const [eventsAttended, setEventsAttended] = useState(false);
+  const [toggleSide, setToggleSide] = useState("flex-start");
 
   const signOut = () => {
     firebase.auth().signOut();
@@ -41,6 +57,7 @@ export const Profile = (props) => {
     // If the uid to display is the current user, our job is easy
     if (props.route.params.uid === firebase.auth().currentUser.uid) {
       setUser(currentUser);
+      setUserEvents(currentUserEvents);
     }
     // Otherwise, we need to grab a different user and their events from firebase
     else {
@@ -51,8 +68,34 @@ export const Profile = (props) => {
         .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
         .get()
         .then((snapshot) => {
-          if (snapshot.exists) setUser(snapshot.data());
-          else console.log("User does not exist.");
+          // if the user exists, change the user state
+          if (snapshot.exists) {
+            // Set user to display onscreen
+            setUser(snapshot.data());
+          } else {
+            console.log("User does not exist.");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // This is essentially 'fetchUserEvents' from actions/index.js but doesn't change state of application
+      firebase
+        .firestore()
+        .collection("events")
+        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
+        .collection("userEvents") // fetch everything in the collection
+        .orderBy("creation", "asc") // ascending order by creation date
+        .get()
+        .then((snapshot) => {
+          // Iterate through everything in the snapshot and build a events array
+          let eventsArr = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            const id = doc.id;
+            return { id, ...data }; // the object to place in the events array
+          });
+          setUserEvents(eventsArr);
         })
         .catch((error) => {
           console.log(error);
@@ -61,8 +104,19 @@ export const Profile = (props) => {
   }, [props.route.params.uid]); // Only calls useEffect when uid changes (makes app faster)
 
   if (user === null) {
-    return <Text>User not found</Text>;
+    return <View />;
   }
+
+  const flipToggle = () => {
+    console.log("here");
+    if (upComingEvents) {
+      setToggleSide("flex-end");
+    } else if (eventsAttended) {
+      setToggleSide("flex-start");
+    }
+    setUpComingEvents(!upComingEvents);
+    setEventsAttended(!eventsAttended);
+  };
 
   return (
     <View style={styles.screenContainer}>
@@ -81,26 +135,32 @@ export const Profile = (props) => {
         <View style={styles.containerInfo}>
           <Text style={styles.userEmail}>{user.email}</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => console.log("Tryna add some good friends")}
-          style={styles.addFriend}
-        >
-          <Text style={styles.addFriendText}>Add Friend</Text>
+        <TouchableOpacity style={styles.alreadyFriend}>
+          <Text style={styles.alreadyFriendText}>Friends</Text>
         </TouchableOpacity>
-        <View style={styles.lockContainer}>
-          <Image
-            source={require("../../assets/lock_outline.png")}
-            style={styles.lockIcon}
-          />
-          <Text style={styles.lockIconText}>
-            Follow this account to see their events
-          </Text>
-        </View>
+
+        <TouchableOpacity
+          style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+          onPress={flipToggle}
+        >
+          {upComingEvents && (
+            <View style={styles.upcomingEventsContainer}>
+              <Text style={styles.toggleText}>Upcoming Events</Text>
+            </View>
+          )}
+
+          {eventsAttended && (
+            <View style={styles.eventsAddedContainer}>
+              <Text style={styles.toggleText}>Events Attended</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
         <View style={styles.containerGallery}>
-          <FlatList
+          {/* <FlatList
+            data={currentUserEvents}
             numColumns={3}
             horizontal={false}
-            // data={userPosts}
             renderItem={({ item }) => (
               <View style={styles.containerImage}>
                 <Image
@@ -109,13 +169,26 @@ export const Profile = (props) => {
                 />
               </View>
             )}
+          /> */}
+
+          <FlatList
+            data={userEvents}
+            renderItem={(event) => (
+              // when the card is pressed, we head to EventDetails page
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EventDetails", {
+                    event: event,
+                  })
+                }
+              >
+                <Card event={event.item} />
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
-
-      <TouchableOpacity onPress={signOut} style={styles.signOut}>
-        <Text style={styles.signOutText}>Sign Out</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -186,54 +259,53 @@ const styles = StyleSheet.create({
   },
 
   // add friend
-  addFriend: {
-    flex: 1 / 8,
+  alreadyFriend: {
+    flex: 1 / 10,
     marginHorizontal: windowWidth * 0.028,
     marginTop: 8,
     height: "7%",
-    backgroundColor: "#5DB075",
+    backgroundColor: "lightgrey",
     borderRadius: 10,
     justifyContent: "center",
   },
-  addFriendText: {
+  alreadyFriendText: {
     textAlign: "center",
-    color: "white",
-    fontSize: windowWidth * 0.04,
-  },
-
-  // locked
-  lockContainer: {
-    marginTop: 25,
-    flexDirection: "row",
-  },
-  lockIcon: {
-    justifyContent: "center",
-    marginLeft: 20,
-    width: windowWidth * 0.058,
-    height: windowHeight * 0.037,
-  },
-  lockIconText: {
     color: "#666666",
-    fontSize: windowWidth * 0.042,
-    marginLeft: 10,
-    marginTop: 2,
+    fontSize: windowWidth * 0.045,
   },
 
-  //sign out
-  signOut: {
-    flex: 1 / 3,
-    marginHorizontal: 12,
-    marginLeft: 18,
-    marginBottom: 6,
-    backgroundColor: "#5DB075",
-    borderRadius: 20,
+  // toggle button
+  toggleContainer: {
+    flex: 1 / 8,
+    flexDirection: "row",
+    marginHorizontal: windowWidth * 0.028,
+    marginTop: 22,
+    height: "7%",
+    backgroundColor: "#ededed",
+    borderRadius: 30,
+    borderWidth: 0.3,
+    borderColor: "grey",
+  },
+  upcomingEventsContainer: {
+    flex: 1 / 2,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
     justifyContent: "center",
   },
-  signOutText: {
+  eventsAddedContainer: {
+    flex: 1 / 2,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
+    justifyContent: "center",
+  },
+  toggleText: {
     textAlign: "center",
-    color: "white",
-    fontSize: windowWidth * 0.031,
+    fontWeight: "500",
+    fontSize: windowWidth * 0.043,
+    color: "#5DB075",
   },
 });
 
-export default Profile;
+export default ProfileFollowing;

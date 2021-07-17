@@ -20,8 +20,8 @@ const composedEnhancer = compose(applyMiddleware(thunk),
     ? window.__REDUX_DEVTOOLS_EXTENSION__()
     : f => f
 );
-export const store = createStore(allReducers, applyMiddleware(thunk));
-// export const store = createStore(allReducers, composedEnhancer);
+// export const store = createStore(allReducers, applyMiddleware(thunk));
+export const store = createStore(allReducers, composedEnhancer);
 
 import firebase from "firebase";
 

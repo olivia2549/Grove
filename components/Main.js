@@ -7,8 +7,8 @@
 
 import React, { useEffect } from "react";
 
-import {fetchUser, fetchUserEvents, clearData} from "../redux/actions";
-import { useSelector, useDispatch } from "react-redux";
+import { fetchUser } from "../redux/actions";
+import { useDispatch } from "react-redux";
 
 import firebase from "firebase";
 
@@ -30,13 +30,12 @@ const EmptyScreen = () => {
 }
 
 export const Main = () => {
-    const user = useSelector((state) => state.currentUser);
     const dispatch = useDispatch();
 
-    // Fetch the user from firebase when the page mounts
+    // When the page first mounts, we have a newly registered user.
+    // We need to grab this user and their events from firebase, and store in redux
     useEffect(() => {
         dispatch(fetchUser());
-        dispatch(fetchUserEvents());
     }, []);
 
     // Displays to the screen

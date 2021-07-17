@@ -24,19 +24,30 @@ export const Search = () => {
      * @param search - user input
      */
     const fetchUsers = (search) => {
-        firebase.firestore()
-            .collection("users")
-            .where('name', '>=', search) // username == search, or has search contents plus more chars
-            .get()
-            .then((snapshot) => {
-                let usersArr = snapshot.docs.map(doc => {
-                    const data = doc.data();
-                    const id = doc.id;
-                    return { id, ...data }  // the object to place in the users array
-                });
-                setUsers(usersArr);
-            })
+        if (search.length != 0) {
+            firebase.firestore()
+                .collection("users")
+                .orderBy('name')
+                .startAt(search)
+                .endAt(search + '\uf8ff')
+                // .where('name', '>=', search) // username == search, or has search contents plus more chars
+                .get()
+                .then((snapshot) => {
+                    let usersArr = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        const id = doc.id;
+                        return { id, ...data }  // the object to place in the users array
+                    });
+                    setUsers(usersArr);
+                })
+            }
+        // else {
+        //     suggestUsers
+        // }
     }
+
+    // const suggestUsers = () => {
+    // }
 
     return (
         <View style={{padding: 40}}>
