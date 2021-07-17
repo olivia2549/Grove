@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from "react";
-import { View, Button, TextInput, StyleSheet, } from "react-native"
+import { View, Button, TextInput, StyleSheet, KeyboardAvoidingView, } from "react-native"
 import { FancyButton, FancyInput, } from "../styling";
 
 import firebase from "firebase";
@@ -28,7 +28,7 @@ export const Login = () => {
 
     // Displays to the screen
     return (
-        <View style={styles.screenContainer}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
             <FancyInput
                 placeholder="email"
                 onChangeText={(email) => setState({
@@ -43,7 +43,7 @@ export const Login = () => {
                     password: password})}
             />
             <FancyButton title="Sign In" onPress={() => onSignUp()}/>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
