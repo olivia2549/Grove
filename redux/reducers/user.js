@@ -6,8 +6,14 @@
  */
 
 const initialState = {
-    currentUser: null,
-    events: []
+    name: "",
+    email: "",
+    year: -1,
+    major: "",
+    bio: "",
+    friends: [],
+    eventsPosted: [],
+    eventsAttending: [],
 }
 
 /**
@@ -23,12 +29,14 @@ export const userReducer = (state = initialState, action) => {
         case 'USER_STATE_CHANGE':   // This one of the actions
             return {
                 ...state,
-                currentUser: action.currentUser
-            }
-        case 'USER_POSTS_STATE_CHANGE':
-            return {
-                ...state,
-                events: action.events
+                name: action.name,
+                email: action.email,
+                year: action.year,
+                major: action.major,
+                bio: action.bio,
+                friends: action.friends,
+                eventsPosted: action.eventsPosted,
+                eventsAttending: action.eventsAttending,
             }
         case 'CLEAR_DATA':
             return initialState;

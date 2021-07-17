@@ -12,30 +12,23 @@ import {
   Text,
   Image,
   FlatList,
-  Button,
   TouchableOpacity,
   Platform,
   Dimensions,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
+import { clearData } from "../../redux/actions";
 
 import firebase from "firebase";
-import {
-  USER_POSTS_STATE_CHANGE,
-  USER_STATE_CHANGE,
-} from "../../redux/constants";
-import { clearData } from "../../redux/actions";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export const Profile = (props) => {
-  const [userEvents, setUserEvents] = useState([]);
   const [user, setUser] = useState(null);
   const currentUser = useSelector((state) => state.currentUser);
-  const currentUserEvents = useSelector((state) => state.currentUser.events);
   const dispatch = useDispatch();
 
   const signOut = () => {
@@ -48,7 +41,6 @@ export const Profile = (props) => {
     // If the uid to display is the current user, our job is easy
     if (props.route.params.uid === firebase.auth().currentUser.uid) {
       setUser(currentUser);
-      setUserEvents(currentUserEvents);
     }
     // Otherwise, we need to grab a different user and their events from firebase
     else {
@@ -59,34 +51,8 @@ export const Profile = (props) => {
         .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
         .get()
         .then((snapshot) => {
-          // if the user exists, change the user state
-          if (snapshot.exists) {
-            // Set user to display onscreen
-            setUser(snapshot.data());
-          } else {
-            console.log("User does not exist.");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      // This is essentially 'fetchUserEvents' from actions/index.js but doesn't change state of application
-      firebase
-        .firestore()
-        .collection("events")
-        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
-        .collection("userEvents") // fetch everything in the collection
-        .orderBy("creation", "asc") // ascending order by creation date
-        .get()
-        .then((snapshot) => {
-          // Iterate through everything in the snapshot and build a events array
-          let eventsArr = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            return { id, ...data }; // the object to place in the events array
-          });
-          setUserEvents(eventsArr);
+          if (snapshot.exists) setUser(snapshot.data());
+          else console.log("User does not exist.");
         })
         .catch((error) => {
           console.log(error);
@@ -95,7 +61,7 @@ export const Profile = (props) => {
   }, [props.route.params.uid]); // Only calls useEffect when uid changes (makes app faster)
 
   if (user === null) {
-    return <View />;
+    return <Text>User not found</Text>;
   }
 
   return (
@@ -146,13 +112,9 @@ export const Profile = (props) => {
         </View>
       </View>
 
-      {/* <Button style={{}} title="Sign Out" onPress={signOut}/> */}
-
-      {/* <View style={{padding: 15}}> */}
       <TouchableOpacity onPress={signOut} style={styles.signOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
-      {/* </View> */}
     </View>
   );
 };

@@ -7,8 +7,10 @@
 
 import React, { useState } from 'react';
 import { View, Button, TextInput, StyleSheet, Alert, KeyboardAvoidingView, } from 'react-native'
+
 import firebase from "firebase";
-import { FancyInput, fancyButton, FancyButton } from '../styling';
+
+import { FancyInput, FancyButton } from '../styling';
 
 const VALID_DOMAINS = ["vanderbilt.edu"];
 
@@ -23,7 +25,7 @@ export const Register = () => {
     // Saves the new user information to firebase
     const onSignUp = () => {
         const domain = state.email.split("@")[1];
-        if (VALID_DOMAINS.indexOf(domain) == -1 ){
+        if (VALID_DOMAINS.indexOf(domain) === -1 ){
             Alert.alert(
                 "Invalid email",
                 "Please use your school email to sign up.",
@@ -45,7 +47,7 @@ export const Register = () => {
                         eventsAttending: [],
                         eventsPosted: [],
                     })
-        }).catch((error) => {console.log(error)})
+        }).catch((error) => {console.log(error)});
     }
 
     // Displays to the screen
