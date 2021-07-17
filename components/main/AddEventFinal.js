@@ -12,11 +12,14 @@ const AddEventFinal = () => {
         startDateTime: useSelector(state => state.event.startDateTime),
         endDateTime: useSelector(state => state.event.endDateTime),
         location: useSelector(state => state.event.location),
+        attendees: [],
     };
 
     const onPress = async () => {
         const docRef = await firebase.firestore().collection('events').doc();
         eventData.ID = docRef.id;
+        eventData.creator = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+        eventData.attendees.push(firebase.auth().currentUser.uid);
         await docRef.set(eventData);
         console.log("Posted to firebase - " + eventData.ID);
     }

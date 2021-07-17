@@ -33,9 +33,11 @@ export const Register = () => {
         }
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((result) => {
+                let userID = firebase.auth().currentUser.uid;
                 firebase.firestore().collection("users")
-                    .doc(firebase.auth().currentUser.uid)
+                    .doc(userID)
                     .set({
+                        ID: userID,
                         name: state.name,
                         email: state.email,
                         bio: "",
