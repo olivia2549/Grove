@@ -18,8 +18,8 @@ const AddEventFinal = () => {
     const onPress = async () => {
         const docRef = await firebase.firestore().collection('events').doc();
         eventData.ID = docRef.id;
-        eventData.creator = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
-        eventData.attendees.push(firebase.auth().currentUser.uid);
+        eventData.creator = await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+        eventData.attendees.push(eventData.creator);
         await docRef.set(eventData);
         console.log("Posted to firebase - " + eventData.ID);
     }
