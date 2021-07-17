@@ -20,6 +20,133 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
+// function to provide details about each event/card that is present in the feed page
+export const EventDetails = ({navigation, route}) => {
+    // get the parameters
+    const event = route.params.event.item;
+    const start = parseDate(event.startDateTime.toDate());
+    const end = parseDate(event.endDateTime.toDate());
+
+    // title font size 
+    const [currentFont, setCurrentFont] = useState(50);
+
+    // gestureName is for knowing which gesture direction user executed
+    const [gestureName, setGestureName] = useState("none");
+
+    const onSwipeDown = (gestureState) =>{
+        navigation.goBack();
+    }
+
+    const config = {
+        velocityThreshold: 0.3,
+        directionalOffsetThreshold: 80
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            {/* <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{flex: 1}}
+                > */}
+            
+            <GestureRecognizer
+                onSwipeDown={(state) => onSwipeDown(state)}
+                config={config}
+                style={styles.topBar}
+                > 
+                {
+                    name.lines > 1 && console.log("too long!")
+                }
+                    <Text 
+                      adjustsFontSizeToFit
+                      style={ [styles.eventName, {fontSize: currentFont}]}
+                      onTextLayout={ (e) => {
+                          const { lines } = e.nativeEvent;
+                          if (lines.length > 1) {
+                              setCurrentFont(currentFont - 1);
+                          }
+                      }}
+                    >{event.name}</Text>
+            </GestureRecognizer>
+      
+            <ScrollView style={styles.scrollStyle}>
+                <View style={styles.rowFlexContainer}>
+                   {
+                        event.tags.map((tag) => 
+                            <View style={{height: windowHeight * 0.07, backgroundColor: "lightgrey", marginLeft: 15, borderRadius: 10, justifyContent: "center", padding: 13}}>
+                                <Text style={{color: "black", fontWeight: "bold", textAlign: "center", fontSize: windowWidth * 0.05}}>{tag}</Text>
+                            </View>
+                        )
+                    }
+                </View>
+                <View style={{padding: windowWidth * 0.05}}>
+                    <Text style={{fontSize: windowWidth * 0.07}}>{event.description}</Text>
+//                 <View style={styles.descriptionContainer}>
+//                     <Text style={styles.descriptionText}>{description}</Text>
+                </View>
+
+                <View style={styles.bigView}>
+                    <View style={rowFlexContainer}>
+                        <Text style={styles.whereWhen}>Where</Text>
+                        <View style={styles.locationView}>
+                            {/* this is hard coded, would need to be changed once we fetch info from the data */}
+                            <Text style={{marginLeft: windowWidth * 0.03, marginTop: windowWidth * 0.03, color:"black", fontSize: windowWidth * 0.05}}>{event.location}</Text>
+//                             <Text style={styles.locationText}>{location}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.timeView}>
+                        <Text style={styles.startText}>Starts</Text>
+                      
+                        <View style={styles.startView}>
+                            <Text style={styles.startDayText}>{start.day}</Text>
+                        </View>
+                        <View style={styles.startTimeView}>
+                            <Text style={startTimeText}>{start.ampmTime}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.timeView}>
+                        <Text  style={styles.endsText}>Ends</Text>
+
+                        <View style={styles.endDayView}>
+                            <Text style={styles.endDayText}>{end.day}</Text>
+                        </View>
+                        <View style={styles.endTimeView}>
+                            <Text style={styles.endTimeText}>{end.ampmTime}</Text>
+                        </View>
+                    </View>
+                </View>
+                
+                <View style={{justifyContent: "center", padding: windowWidth * 0.05}}>
+                    <Text style={{fontSize: windowWidth * 0.07, fontWeight: "bold", marginBottom: windowHeight * 0.01}}t>{event.attendees.length} people going</Text>
+                    
+
+                        <FancyInput
+                            placeholder="Search"
+                            onChangeText={console.log("search bar activated")}
+                        />  
+
+                </View>
+                
+//                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidContainer}>
+//                     <Text style={styles.peopleGoingText}t>{attendee.length} people going</Text>
+
+//                 </KeyboardAvoidingView>
+            </ScrollView>
+
+            <View style={styles.rowFlexContainer}>
+                <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>Share</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => console.log("i'm going")}  style={styles.fancyButtonContainer}>
+                    <Text style={styles.fancyButtonText}>I'm Going</Text>
+                </TouchableOpacity>
+            </View>
+
+            
+        </SafeAreaView>
+    );
+}
+
 const styles = StyleSheet.create({
     container: {
         // flexDirection: 'column',
@@ -202,122 +329,7 @@ const styles = StyleSheet.create({
 
 })
 
-// function to provide details about each event/card that is present in the feed page
-export const EventDetails = ({navigation, route}) => {
-    // get the parameters
-    const { name, description, starttime, endtime, location, attendee, tags } = route.params.post.item;
-    const start = parseDate(starttime.toDate());
-    const end = parseDate(endtime.toDate());
-
-    // title font size 
-    const [currentFont, setCurrentFont] = useState(50);
-
-    // gestureName is for knowing which gesture direction user executed
-    const [gestureName, setGestureName] = useState("none");
-
-    const onSwipeDown = (gestureState) =>{
-        navigation.goBack();
-    }
-
-    const config = {
-        velocityThreshold: 0.3,
-        directionalOffsetThreshold: 80
-    };
-
-    return (
-        <SafeAreaView style={styles.container}>
-            {/* <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={{flex: 1}}
-                > */}
-            
-            <GestureRecognizer
-                onSwipeDown={(state) => onSwipeDown(state)}
-                config={config}
-                style={styles.topBar}
-                > 
-                {
-                    name.lines > 1 && console.log("too long!")
-                }
-                    <Text 
-                        adjustsFontSizeToFit
-                        style={ [styles.eventName, {fontSize: currentFont}]}
-                        onTextLayout={ (e) => {
-                            const { lines } = e.nativeEvent;
-                            console.log(lines)
-                            if (lines.length > 1) {
-                                setCurrentFont(currentFont - 1);
-                            }
-                        }}
-                        >{name}</Text>
-            </GestureRecognizer>
-      
-            <ScrollView style={styles.scrollStyle}>
-                <View style={styles.rowFlexContainer}>
-                   {
-                        tags.map((tag) => 
-                            <View style={styles.tagBox}>
-                                <Text style={styles.tagText}>{tag}</Text>
-                            </View>
-                        )
-                    }
-                </View>
-                <View style={styles.descriptionContainer}>
-                    <Text style={styles.descriptionText}>{description}</Text>
-                </View>
-
-                <View style={styles.bigView}>
-                    <View style={rowFlexContainer}>
-                        <Text style={styles.whereWhen}>Where</Text>
-                        <View style={styles.locationView}>
-                            {/* this is hard coded, would need to be changed once we fetch info from the data */}
-                            <Text style={styles.locationText}>{location}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.timeView}>
-                        <Text style={styles.startText}>Starts</Text>
-                      
-                        <View style={styles.startView}>
-                            <Text style={styles.startDayText}>{start.day}</Text>
-                        </View>
-                        <View style={styles.startTimeView}>
-                            <Text style={startTimeText}>{start.ampmTime}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.timeView}>
-                        <Text  style={styles.endsText}>Ends</Text>
-
-                        <View style={styles.endDayView}>
-                            <Text style={styles.endDayText}>{end.day}</Text>
-                        </View>
-                        <View style={styles.endTimeView}>
-                            <Text style={styles.endTimeText}>{end.ampmTime}</Text>
-                        </View>
-                    </View>
-                </View>
-                
-                
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidContainer}>
-                    <Text style={styles.peopleGoingText}t>{attendee.length} people going</Text>
-
-                </KeyboardAvoidingView>
-            </ScrollView>
-
-            <View style={styles.rowFlexContainer}>
-                <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
-                    <Text style={styles.fancyButtonText}>Share</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("i'm going")}  style={styles.fancyButtonContainer}>
-                    <Text style={styles.fancyButtonText}>I'm Going</Text>
-                </TouchableOpacity>
-            </View>
-
-            
-        </SafeAreaView>
-    );
-}
-
-
-
 export default EventDetails;
+
+
  

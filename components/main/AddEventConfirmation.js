@@ -5,15 +5,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 const AddEventConfirmation = () => {
     // an object to hold the event data as key and value pairs
     const eventData = {
-        name: useSelector(state => state.event.eventName),
-        description: useSelector(state => state.event.eventDescription),
-        tags: useSelector(state => state.event.eventTags),
-        starttime: useSelector(state => state.event.eventStartTime),
-        endtime: useSelector(state => state.event.eventEndTime),
-        location: useSelector(state => state.event.eventLocation),
+        name: useSelector(state => state.event.name),
+        description: useSelector(state => state.event.description),
+        tags: useSelector(state => state.event.tags),
+        startDateTime: useSelector(state => state.event.startDateTime),
+        endDateTime: useSelector(state => state.event.endDateTime),
+        location: useSelector(state => state.event.location),
     };
-
-    console.log(eventData.starttime);
 
     return (
         <View style={{ marginTop: 50, marginLeft: 15 }}>
@@ -36,10 +34,10 @@ const AddEventConfirmation = () => {
                 }
             </View>
             <Text>
-                {`Event Start Time: ${eventData.starttime}`}
+                {`Event Start Time: ${eventData.startDateTime}`}
             </Text>
             <Text>
-                {`Event End Time: ${eventData.endtime}`}
+                {`Event End Time: ${eventData.endDateTime}`}
             </Text>
         </View>
     )

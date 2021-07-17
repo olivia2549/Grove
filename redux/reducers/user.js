@@ -7,6 +7,7 @@
 
 const initialState = {
     currentUser: null,
+    events: []
 }
 
 /**
@@ -23,6 +24,11 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 currentUser: action.currentUser
+            }
+        case 'USER_POSTS_STATE_CHANGE':
+            return {
+                ...state,
+                events: action.events
             }
         case 'CLEAR_DATA':
             return initialState;

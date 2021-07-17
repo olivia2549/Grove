@@ -31,6 +31,128 @@ require("firebase/firestore");
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
+export const Profile = (props) => {
+    const [userEvents, setUserEvents] = useState([]);
+    const [user, setUser] = useState(null);
+    const currentUser = useSelector((state) => state.currentUser);
+    const currentUserEvents = useSelector(state => state.currentUser.events);
+    const dispatch = useDispatch();
+
+    const signOut = () => {
+        firebase.auth().signOut();
+        dispatch(clearData());
+    };
+
+    // Load user, and if different than current user, fetch from database
+    useEffect(() => {
+        // If the uid to display is the current user, our job is easy
+        if (props.route.params.uid === firebase.auth().currentUser.uid) {
+            setUser(currentUser);
+            setUserEvents(currentUserEvents);
+        }
+        // Otherwise, we need to grab a different user and their events from firebase
+        else {
+            // This is essentially 'fetchUser' from actions/index.js but doesn't change state of application
+            firebase.firestore()
+                .collection("users")
+                .doc(props.route.params.uid)    // This time, grab the uid from what was passed in as a props param
+                .get()
+                .then((snapshot) => {
+                    // if the user exists, change the user state
+                    if (snapshot.exists) {
+                        // Set user to display onscreen
+                        setUser(snapshot.data());
+                    }
+                    else {
+                        console.log("User does not exist.")
+                    }
+                })
+                .catch((error) => {console.log(error)})
+
+            // This is essentially 'fetchUserEvents' from actions/index.js but doesn't change state of application
+            firebase.firestore()
+                .collection("events")
+                .doc(props.route.params.uid)    // This time, grab the uid from what was passed in as a props param
+                .collection("userEvents")    // fetch everything in the collection
+                .orderBy("creation", "asc") // ascending order by creation date
+                .get()
+                .then((snapshot) => {
+                    // Iterate through everything in the snapshot and build a events array
+                    let eventsArr = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        const id = doc.id;
+                        return { id, ...data }  // the object to place in the events array
+                    });
+                    setUserEvents(eventsArr);
+                })
+                .catch((error) => {console.log(error)})
+        }
+    }, [props.route.params.uid]);    // Only calls useEffect when uid changes (makes app faster)
+
+  if (user === null) {
+    return <View />;
+  }
+
+  return (
+    <View style={styles.screenContainer}>
+      <View style={styles.userNameContainer}>
+        <Text style={styles.userNameText}>{user.name}</Text>
+      </View>
+
+      <View style={styles.profileBackground}>
+        <Image
+          source={require("../../assets/profileicon.jpg")}
+          style={styles.profilePic}
+        />
+      </View>
+
+      <View style={styles.infoView}>
+        <View style={styles.containerInfo}>
+          <Text style={styles.userEmail}>{user.email}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => console.log("Tryna add some good friends")}
+          style={styles.addFriend}
+        >
+          <Text style={styles.addFriendText}>Add Friend</Text>
+        </TouchableOpacity>
+        <View style={styles.lockContainer}>
+          <Image
+            source={require("../../assets/lock_outline.png")}
+            style={styles.lockIcon}
+          />
+          <Text style={styles.lockIconText}>
+            Follow this account to see their events
+          </Text>
+        </View>
+        <View style={styles.containerGallery}>
+          <FlatList
+            numColumns={3}
+            horizontal={false}
+            data={userPosts}
+            renderItem={({ item }) => (
+              <View style={styles.containerImage}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: item.downloadURL }}
+                />
+              </View>
+            )}
+          />
+        </View>
+      </View>
+
+      {/* <Button style={{}} title="Sign Out" onPress={signOut}/> */}
+
+      {/* <View style={{padding: 15}}> */}
+      <TouchableOpacity onPress={signOut} style={styles.signOut}>
+        <Text style={styles.signOutText}>Sign Out</Text>
+      </TouchableOpacity>
+      {/* </View> */}
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   containerInfo: {
     margin: 20,
@@ -146,132 +268,5 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * 0.031,
   },
 });
-
-export const Profile = (props) => {
-  const [userPosts, setUserPosts] = useState([]);
-  const [user, setUser] = useState(null);
-  const currentUser = useSelector((state) => state.currentUser);
-  const currentUserPosts = useSelector((state) => state.currentUser.posts);
-  const dispatch = useDispatch();
-
-  const signOut = () => {
-    firebase.auth().signOut();
-    dispatch(clearData());
-  };
-
-  // Load user, and if different than current user, fetch from database
-  useEffect(() => {
-    // If the uid to display is the current user, our job is easy
-    if (props.route.params.uid === firebase.auth().currentUser.uid) {
-      setUser(currentUser);
-      setUserPosts(currentUserPosts);
-    }
-    // Otherwise, we need to grab a different user and their posts from firebase
-    else {
-      // This is essentially 'fetchUser' from actions/index.js but doesn't change state of application
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
-        .get()
-        .then((snapshot) => {
-          // if the user exists, change the user state
-          if (snapshot.exists) {
-            // Set user to display onscreen
-            setUser(snapshot.data());
-          } else {
-            console.log("User does not exist.");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      // This is essentially 'fetchUserPosts' from actions/index.js but doesn't change state of application
-      firebase
-        .firestore()
-        .collection("posts")
-        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
-        .collection("userPosts") // fetch everything in the collection
-        .orderBy("creation", "asc") // ascending order by creation date
-        .get()
-        .then((snapshot) => {
-          // Iterate through everything in the snapshot and build a posts array
-          let postsArr = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            return { id, ...data }; // the object to place in the posts array
-          });
-          setUserPosts(postsArr);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [props.route.params.uid]); // Only calls useEffect when uid changes (makes app faster)
-
-  if (user === null) {
-    return <View />;
-  }
-
-  return (
-    <View style={styles.screenContainer}>
-      <View style={styles.userNameContainer}>
-        <Text style={styles.userNameText}>{user.name}</Text>
-      </View>
-
-      <View style={styles.profileBackground}>
-        <Image
-          source={require("../../assets/profileicon.jpg")}
-          style={styles.profilePic}
-        />
-      </View>
-
-      <View style={styles.infoView}>
-        <View style={styles.containerInfo}>
-          <Text style={styles.userEmail}>{user.email}</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() => console.log("Tryna add some good friends")}
-          style={styles.addFriend}
-        >
-          <Text style={styles.addFriendText}>Add Friend</Text>
-        </TouchableOpacity>
-        <View style={styles.lockContainer}>
-          <Image
-            source={require("../../assets/lock_outline.png")}
-            style={styles.lockIcon}
-          />
-          <Text style={styles.lockIconText}>
-            Follow this account to see their events
-          </Text>
-        </View>
-        <View style={styles.containerGallery}>
-          <FlatList
-            numColumns={3}
-            horizontal={false}
-            data={userPosts}
-            renderItem={({ item }) => (
-              <View style={styles.containerImage}>
-                <Image
-                  style={styles.image}
-                  source={{ uri: item.downloadURL }}
-                />
-              </View>
-            )}
-          />
-        </View>
-      </View>
-
-      {/* <Button style={{}} title="Sign Out" onPress={signOut}/> */}
-
-      {/* <View style={{padding: 15}}> */}
-      <TouchableOpacity onPress={signOut} style={styles.signOut}>
-        <Text style={styles.signOutText}>Sign Out</Text>
-      </TouchableOpacity>
-      {/* </View> */}
-    </View>
-  );
-};
 
 export default Profile;

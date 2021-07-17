@@ -5,16 +5,16 @@
  * Event reducer; stores state about an event
  */
 import { EVENT_NAME_STATE_CHANGE, EVENT_DESCRIPTION_STATE_CHANGE, EVENT_TAGS_STATE_CHANGE, 
-    EVENT_ENDTIME_STATE_CHANGE, EVENT_STARTTIME_STATE_CHANGE, 
-    EVENT_STARTDATE_STATE_CHANGE, EVENT_ENDDATE_STATE_CHANGE } from "../constants";
+    EVENT_END_TIME_STATE_CHANGE, EVENT_START_TIME_STATE_CHANGE, 
+    EVENT_START_DATE_STATE_CHANGE, EVENT_END_DATE_STATE_CHANGE } from "../constants";
 
 const initialState = {
-    eventName: "",
-    eventDescription: "",
-    eventTags: [],
-    eventStartTime: new Date(),
-    eventEndTime: new Date(),
-    eventLocation: "",
+    name: "",
+    description: "",
+    tags: [],
+    startDateTime: new Date(),
+    endDateTime: new Date(),
+    location: "",
 }
 
 /**
@@ -30,28 +30,28 @@ export const eventReducer = (state = initialState, action) => {
         case 'EVENT_NAME_STATE_CHANGE':
             return {
                 ...state,
-                eventName: action.eventName,
+                name: action.name,
             }
         case 'EVENT_DESCRIPTION_STATE_CHANGE':
             return {
                 ...state,
-                eventDescription: action.eventDescription
+                description: action.description
             }
         case 'EVENT_TAGS_STATE_CHANGE':
             return {
                 ...state,
-                eventTags: action.eventTags
+                tags: action.tags
             }
         case 'EVENT_LOCATION_STATE_CHANGE':
             return {
                 ...state,
-                eventLocation: action.eventLocation
+                location: action.location
             }
-        case 'EVENT_STARTTIME_STATE_CHANGE':
+        case 'EVENT_START_TIME_STATE_CHANGE':
             var newDate = new Date(
-                state.eventStartTime.getFullYear(),
-                state.eventStartTime.getMonth(),
-                state.eventStartTime.getDate(),
+                state.startDateTime.getFullYear(),
+                state.startDateTime.getMonth(),
+                state.startDateTime.getDate(),
                 action.startTime.getHours(),
                 action.startTime.getMinutes(),
                 action.startTime.getSeconds(),
@@ -60,53 +60,53 @@ export const eventReducer = (state = initialState, action) => {
 
             return {
                 ...state,
-                eventStartTime: newDate,
+                startDateTime: newDate,
             }
-        case 'EVENT_ENDTIME_STATE_CHANGE':
+        case 'EVENT_END_TIME_STATE_CHANGE':
             newDate = new Date(
-                state.eventEndTime.getFullYear(),
-                state.eventEndTime.getMonth(),
-                state.eventEndTime.getDate(),
+                state.endDateTime.getFullYear(),
+                state.endDateTime.getMonth(),
+                state.endDateTime.getDate(),
                 action.endTime.getHours(),
                 action.endTime.getMinutes(),
                 action.endTime.getSeconds(),
                 action.endTime.getMilliseconds()
             );
             
-            const startDate = state.eventEndTime.getDate();
+            const startDate = state.endDateTime.getDate();
             return {
                 ...state,
-                eventEndTime: newDate,
+                endDateTime: newDate,
             }
-        case 'EVENT_STARTDATE_STATE_CHANGE':
+        case 'EVENT_START_DATE_STATE_CHANGE':
             newDate = new Date(
                 action.startDate.getFullYear(),
                 action.startDate.getMonth(),
                 action.startDate.getDate(),
-                state.eventStartTime.getHours(),
-                state.eventStartTime.getMinutes(),
-                state.eventStartTime.getSeconds(),
-                state.eventStartTime.getMilliseconds(),
+                state.startDateTime.getHours(),
+                state.startDateTime.getMinutes(),
+                state.startDateTime.getSeconds(),
+                state.startDateTime.getMilliseconds(),
             );    
 
             return {
                 ...state,
-                eventStartTime: newDate,
+                startDateTime: newDate,
             }
-        case 'EVENT_ENDDATE_STATE_CHANGE':
+        case 'EVENT_END_DATE_STATE_CHANGE':
             newDate = new Date(
                 action.endDate.getFullYear(),
                 action.endDate.getMonth(),
                 action.endDate.getDate(),
-                state.eventEndTime.getHours(),
-                state.eventEndTime.getMinutes(),
-                state.eventEndTime.getSeconds(),
-                state.eventEndTime.getMilliseconds(),
+                state.endDateTime.getHours(),
+                state.endDateTime.getMinutes(),
+                state.endDateTime.getSeconds(),
+                state.endDateTime.getMilliseconds(),
             );    
 
             return {
                 ...state,
-                eventEndTime: newDate
+                endDateTime: newDate
             }
         default:
             return state;

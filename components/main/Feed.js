@@ -14,23 +14,23 @@ import firebase from "firebase";
 
 import { Card } from './Card';
 
-// function to filter the posts
+// function to filter the events
 // there will be card components within the view. The card components will be clickable
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
     const navigation = useNavigation();
-    const [posts, setPosts] = useState([]);
+    const [events, setEvents] = useState([]);
 
     // this continuously checks for updates from the db
-    // firebase.firestore().collection('posts').onSnapshot(snapshot => {
+    // firebase.firestore().collection('events').onSnapshot(snapshot => {
     //     let changes = snapshot.docChanges();
     //     changes.forEach(async change => {
-    //         let temp = posts;
+    //         let temp = events;
     //         if (change.type === 'added') {
     //             temp.push(change.doc.data());
-    //             setPosts(temp);
+    //             setEvents(temp);
     //         } else if (change.type === 'removed') {
-    //             setPosts(temp.filter(post => post.id !== change.doc.data().id));
+    //             setEvents(temp.filter(event => event.id !== change.doc.data().id));
     //         }
     //     });
     // });
@@ -38,40 +38,29 @@ const Feed = () => {
 
     // this only fetches once
     useEffect(() => {
-        firebase.firestore().collection('posts').get().then(snapshot => {
+        firebase.firestore().collection('events').get().then(snapshot => {
             const temp = [];
             snapshot.forEach(doc => {
                 temp.push(doc.data());
             })
-            setPosts(temp);
-            console.log(posts);
+            setEvents(temp);
         });
     }, []);
 
-
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: "#FFF"}}>
-            <View style={{margin: 5}}>
-                <View style={{margin: 5, flexDirection: 'row'}}>
-                    <Text style={{fontSize: 40}}>Grove</Text>
-                    {/* <TouchableOpacity style={{color: 'lightgreen', }}>
-                        <Text>Hi</Text>
-                    </TouchableOpacity> */}
-                </View>
-                <FancyInput placeholder="Search..."/>
-            </View>
-            <View style={{justifyContent: "center", margin: 10}}>
-                {posts.length == 0 ?
+        <View style={{backgroundColor: "#fff"}}>
+            <View style={{justifyContent: "center", margin: 15}}>
+                {events.length == 0 ?
                     <Text>Nothing to show</Text> :
                     <FlatList
-                        data={posts}
-                        renderItem={(post) => (
+                        data={events}
+                        renderItem={(event) => (
                             // when the card is pressed, we head to EventDetails page
                             <TouchableOpacity onPress={() => navigation.navigate("EventDetails", {
-                                post: post
+                                event: event
                             })}>
                                 <Card
-                                    post={post.item}
+                                    event={event.item}
                                 />
                             </TouchableOpacity>
                         )}
