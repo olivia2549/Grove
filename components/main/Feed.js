@@ -6,8 +6,9 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, FlatList, Text, TouchableOpacity, Button } from "react-native";
+import { View, FlatList, Text, TouchableOpacity, Button, SafeAreaView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { FancyInput } from "../styling";
 
 import firebase from "firebase";
 
@@ -67,7 +68,7 @@ const Feed = () => {
                     />}
             </View>
 
-        </View>
+        </SafeAreaView>
     );
 }
 

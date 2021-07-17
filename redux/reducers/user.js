@@ -23,8 +23,7 @@ export const userReducer = (state = initialState, action) => {
         case 'USER_STATE_CHANGE':   // This one of the actions
             return {
                 ...state,
-                name: action.currentUser.name,
-                email: action.currentUser.email
+                currentUser: action.currentUser
             }
         case 'USER_POSTS_STATE_CHANGE':
             return {
@@ -33,7 +32,6 @@ export const userReducer = (state = initialState, action) => {
             }
         case 'CLEAR_DATA':
             return initialState;
-
         default:
             return state;
     }
