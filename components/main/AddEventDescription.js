@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { addEventDescription, addEventTags } from "../../redux/actions";
 
-const AddEventDescription = ({ route }) => {
+const AddEventDescription = ( ) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 

@@ -62,7 +62,7 @@ export const EventDetails = ({navigation, route}) => {
             firebase.firestore().collection("events")
                 .doc(event.id)
                 .update({
-                    attendee: firebase.firestore.FieldValue.arrayRemove(event)
+                    attendees: firebase.firestore.FieldValue.arrayRemove(event)
                 })
         }
     };
