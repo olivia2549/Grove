@@ -6,7 +6,20 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Animated, Button,Platform, KeyboardAvoidingView
+import { 
+    View, 
+    Text, 
+    TextInput, 
+    SafeAreaView, 
+    StyleSheet, 
+    TouchableOpacity, 
+    Dimensions, 
+    ScrollView, 
+    Animated, 
+    Button, 
+    Platform, 
+    KeyboardAvoidingView, 
+    Share,
  } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
@@ -16,6 +29,27 @@ import firebase from "firebase";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
+
+
+    const onShare = async () => {
+      try {
+        const result = await Share.share({
+          message:
+            '*User* is inviting you to *event*. Check it out on Grove! *link*',
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    }
 
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({navigation, route}) => {
@@ -148,7 +182,7 @@ export const EventDetails = ({navigation, route}) => {
             </ScrollView>
 
             <View style={{ flexDirection: "row"}}>
-                <TouchableOpacity onPress={() => console.log("share")} style={styles.fancyButtonContainer}>
+                <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
                     <Text style={styles.fancyButtonText}>Share</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={onGoing}  style={styles.fancyButtonContainer}>

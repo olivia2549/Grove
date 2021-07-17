@@ -129,7 +129,7 @@ export const Profile = (props) => {
           <FlatList
             numColumns={3}
             horizontal={false}
-            data={userPosts}
+            // data={userPosts}
             renderItem={({ item }) => (
               <View style={styles.containerImage}>
                 <Image
