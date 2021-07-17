@@ -83,11 +83,8 @@ export const addEventLocation = (evLocation) => {
     })
 }
 
-
-// EXTRA
-
 /**
- * fetchUser - WE DONT USE THIS FORNOW
+ * fetchUser
  *
  * Grabs user information from firebase
  */
@@ -100,38 +97,23 @@ export const fetchUser = () => {
             .then((snapshot) => {
                 // if the user exists, change the user state
                 if (snapshot.exists) {
+                    const user = snapshot.data();
                     // dispatch the action 'USER_STATE_CHANGE' to the reducer
-                    dispatch({type: USER_STATE_CHANGE, currentUser: snapshot.data()})
+                    dispatch({
+                        type: USER_STATE_CHANGE,
+                        name: user.name,
+                        email: user.email,
+                        year: user.year,
+                        major: user.major,
+                        bio: user.bio,
+                        friends: user.friends,
+                        eventsPosted: user.eventsPosted,
+                        eventsAttending: user.eventsAttending,
+                    })
                 }
                 else {
                     console.log("User does not exist.")
                 }
-            })
-            .catch((error) => {console.log(error)})
-    })
-}
-
-/**
- * fetchUser - WE DON'T USE THIS FOR NOW
- *
- * Grabs user information from firebase
- */
-export const fetchUserEvents = () => {
-    return ((dispatch) => {  // makes a call to the database
-        firebase.firestore()
-            .collection("events")
-            .doc(firebase.auth().currentUser.uid)
-            .collection("userPosts")    // fetch everything in the collection
-            .orderBy("creation", "asc") // ascending order by creation date
-            .get()
-            .then((snapshot) => {
-                // Iterate through everything in the snapshot and build a posts array
-                let postsArr = snapshot.docs.map(doc => {
-                    const data = doc.data();
-                    const id = doc.id;
-                    return { id, ...data }  // the object to place in the posts array
-                });
-                dispatch({type: USER_POSTS_STATE_CHANGE, posts: postsArr});
             })
             .catch((error) => {console.log(error)})
     })
