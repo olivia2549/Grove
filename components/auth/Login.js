@@ -28,8 +28,7 @@ export const Login = () => {
 
     // Displays to the screen
     return (
-        <View>
-        {/*// <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>*/}
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
             <FancyInput
                 placeholder="email"
                 onChangeText={(email) => setState({
@@ -44,8 +43,7 @@ export const Login = () => {
                     password: password})}
             />
             <FancyButton title="Sign In" onPress={() => onSignUp()}/>
-        {/*// </KeyboardAvoidingView>*/}
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
