@@ -20,11 +20,7 @@ import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import SearchScreen from './main/Search'
 
-/**
- * EmptyScreen
- * Dummy component to satisfy TabScreen and allow route to come from App.js instead
- * @returns {null}
- */
+// Dummy component to satisfy TabScreen and allow route to come from App.js instead
 const EmptyScreen = () => {
     return null;
 }

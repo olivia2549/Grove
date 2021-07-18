@@ -1,8 +1,16 @@
-import React, {useState} from 'react';
-import {View, Button, Text, Platform, TextInput} from 'react-native';
-import { useDispatch } from 'react-redux';
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * AddEventDate.js
+ * User adds new event date
+ */
+
+import React from 'react';
+import {View, Button, Text} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { addEndDateTime, addEventLocation, addStartDateTime } from '../../redux/actions';
+import { useDispatch } from 'react-redux';
 import { useNavigation } from "@react-navigation/native";
 
 const AddEventDate = () => {
@@ -17,7 +25,6 @@ const AddEventDate = () => {
 
     const onChange = (ev, selectedDate, id, dateOrTime) => {
         const currentDate = selectedDate || defaultDate;
-        console.log(currentDate);
         if (id === "Starts") {
             if (dateOrTime === "date") {
                 start.date = currentDate.getDate();

@@ -35,10 +35,12 @@ export const EventDetails = ({ navigation, route }) => {
     // title font size
     const [currentFont, setCurrentFont] = useState(50);
 
+    // Goes back to feed when user swipes down from top
     const onSwipeDown = (gestureState) => {
         navigation.goBack();
     };
 
+    // When the "i'm going" button is pressed
     const onGoing = () => {
         setGoingBtnSelected(!goingBtnSelected);
         goingBtnSelected
@@ -87,11 +89,6 @@ export const EventDetails = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            {/* <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={{flex: 1}}
-                > */}
-
             <GestureRecognizer
                 onSwipeDown={(state) => onSwipeDown(state)}
                 config={config}
@@ -299,9 +296,7 @@ export const EventDetails = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     container: {
-        // flexDirection: 'column',
         flex: 1,
-        // justifyContent: "center",
     },
     topBar: {
         backgroundColor: "#5DB075",
@@ -328,7 +323,6 @@ const styles = StyleSheet.create({
     scrollable: {
         flex: 7,
     },
-
     // for Share and I'm Going Buttons
     buttonContainer: {
         flexDirection: "row",
@@ -366,7 +360,6 @@ const styles = StyleSheet.create({
         fontSize: windowWidth * 0.06,
         fontWeight: "bold",
         marginTop: 3,
-        // marginBottom: windowHeight * 0.015,
     },
 });
 

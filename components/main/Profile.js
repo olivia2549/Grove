@@ -139,13 +139,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "white",
   },
-
   // view
   infoView: {
     flex: Platform.OS === "ios" ? 5 : 6,
     backgroundColor: "white",
   },
-
   // user's name
   userNameContainer: {
     flex: 2,
@@ -159,7 +157,6 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: Platform.OS === "ios" ? 0 : 30,
   },
-
   // profile pic
   profileBackground: {
     width: 110,
@@ -177,14 +174,12 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 0,
   },
-
   // user info
   userEmail: {
     marginLeft: 20,
     fontSize: windowWidth * 0.045,
     fontWeight: "400",
   },
-
   // add friend
   addFriend: {
     flex: 1 / 8,
@@ -200,7 +195,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: windowWidth * 0.04,
   },
-
   // locked
   lockContainer: {
     marginTop: 25,
@@ -218,7 +212,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 2,
   },
-
   //sign out
   signOut: {
     flex: 1 / 3,

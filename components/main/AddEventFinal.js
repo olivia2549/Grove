@@ -1,7 +1,15 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from "@react-navigation/native";
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * AddEventFinal.js
+ * User posts event
+ */
+
+import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
+
+import { useSelector } from 'react-redux';
+
 import firebase from "firebase";
 
 export const AddEventFinal = () => {
@@ -15,6 +23,7 @@ export const AddEventFinal = () => {
         attendees: [],
     };
 
+    // New event gets added to firebase
     const onPress = async () => {
         const docRef = await firebase.firestore().collection('events').doc();
         eventData.ID = docRef.id;

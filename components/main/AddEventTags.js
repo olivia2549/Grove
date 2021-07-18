@@ -1,16 +1,24 @@
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * AddEventTags.js
+ * User adds new event tags
+ */
+
+import React, { useState } from "react";
+
 import {
-  Button,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Dimensions,
   StyleSheet,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { addEventDescription, addEventTags } from "../../redux/actions";
+import { addEventTags } from "../../redux/actions";
+
 import { FancyButtonButLower } from "../styling";
 
 const windowHeight = Dimensions.get("window").height;
@@ -60,13 +68,7 @@ export const AddEventTags = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        // justifyContent: "flex-start",
-      }}
-    >
+    <View style={{ flex: 1, alignItems: "center" }}>
       <View style={styles.topBar}>
         <Text style={styles.titleText}>Add Tags</Text>
       </View>
@@ -95,26 +97,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   content: {
     flex: 7,
     justifyContent: "center",
     marginTop: windowHeight * 0.1,
   },
-
   keyBoardAvoid: {
-    // justifyContent: "center",
-    // flex: 1,
     marginTop: windowHeight * 0.25,
   },
-
   textInput: {
     fontSize: windowWidth * 0.08,
     marginLeft: windowWidth * 0.05,
     marginBottom: 20,
     marginTop: windowHeight * 0.012,
   },
-
   topBar: {
     backgroundColor: "#5DB075",
     height: "20%",
@@ -124,7 +120,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1,
   },
-
   titleText: {
     color: "#ffffff",
     fontWeight: "600",
@@ -132,7 +127,6 @@ const styles = StyleSheet.create({
     padding: 25,
     fontSize: windowWidth * 0.12,
   },
-
   eachTag: {
     borderRadius: 5,
     padding: windowWidth * 0.04,
@@ -140,13 +134,11 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.4,
     justifyContent: "center",
   },
-
   tagText: {
     textAlign: "center",
     fontWeight: "500",
     fontSize: windowWidth * 0.05,
   },
-
   tagsFormat: {
     justifyContent: "center",
     flexDirection: "row",

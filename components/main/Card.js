@@ -2,22 +2,16 @@
  * Copyright Grove, @2021 - All rights reserved
  *
  * Card.js
- * Displays main feed
+ * This is the card component for the events in the feed
  */
-// this is the card component for the events in the feed
 
-import React, {useEffect, useState} from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Container } from "../styling";
-import { useNavigation } from '@react-navigation/native';
-
-import EventDetails from './EventDetails'
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 export const Card = (props) => {
     const event = props.event;
     const start = parseDate(event.startDateTime.toDate());
     const end = parseDate(event.endDateTime.toDate());
-    const navigation = useNavigation();
 
     const Tag = (props) => {
         return (
@@ -26,15 +20,6 @@ export const Card = (props) => {
             </View>
         )
     }
-
-    const OpenEventDetails = () => {
-        return (
-            <EventDetails
-                eventName={event.name}
-            />
-        )
-    }
-
 
     return (
       <View style={styles.card}>
