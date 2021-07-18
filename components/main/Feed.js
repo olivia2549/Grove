@@ -34,6 +34,25 @@ const Feed = () => {
         wait(2000).then(() => setRefreshing(false));
       }, []);
 
+      //returns events user searched for
+      const searchEvents = (search) => {
+            firebase.firestore()
+                .collection("events")
+                .orderBy('nameLowerCase')
+                .startAt(search)
+                .endAt(search + '\uf8ff')
+                // .where('name', '>=', search) // username == search, or has search contents plus more chars
+                .get()
+                .then((snapshot) => {
+                    let eventsArr = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        const id = doc.id;
+                        return {id, ...data}  // the object to place in the users array
+                    });
+                    setEvents(eventsArr);
+                })
+    }
+
     // this continuously checks for updates from the db
     // firebase.firestore().collection('events').onSnapshot(snapshot => {
     //     let changes = snapshot.docChanges();
@@ -56,12 +75,14 @@ const Feed = () => {
                 temp.push(doc.data());
             })
             setEvents(temp);
-            removeEventListener();
         });
     }, []);
 
     return (
         <View style={{backgroundColor: "#fff"}}>
+            <View style={{marginTop: 30}}>
+                <FancyInput placeholder="Search..." onChangeText={(search) => {searchEvents(search)}}/>
+            </View>
             <View style={{justifyContent: "center", margin: 15}}>
                 {events.length == 0 ?
                     <Text>Nothing to show</Text> :
