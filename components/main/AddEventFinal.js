@@ -29,6 +29,7 @@ export const AddEventFinal = () => {
         eventData.ID = docRef.id;
         eventData.creator = await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
         eventData.attendees.push(eventData.creator);
+        eventData.nameLowercase = eventData.name.toLowerCase();
         await docRef.set(eventData);
         console.log("Posted to firebase - " + eventData.ID);
     }

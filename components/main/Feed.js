@@ -36,9 +36,10 @@ const Feed = () => {
 
       //returns events user searched for
       const searchEvents = (search) => {
+            search = search.toLowerCase();
             firebase.firestore()
                 .collection("events")
-                .orderBy('nameLowerCase')
+                .orderBy('nameLowercase')
                 .startAt(search)
                 .endAt(search + '\uf8ff')
                 // .where('name', '>=', search) // username == search, or has search contents plus more chars
