@@ -1,12 +1,12 @@
-import React, {useRef, useState} from "react";
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, KeyboardAvoidingView,} from "react-native";
-import styled from "styled-components";
+/**
+ * Copyright Grove, @2021 - All rights reserved
+ *
+ * styling.js
+ * Contains styles used across multiple components
+ */
 
-// export const Container = (props) => (
-//   <View style={{...styles.screenContainer, ...props.style}}>
-//     {props.children}
-//   </View>
-// );
+import React from "react";
+import { View, StyleSheet, Text, TouchableOpacity, TextInput } from "react-native";
 
 export const FancyButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.fancyButtonContainer}>
@@ -31,8 +31,7 @@ export const FancyInput = ({ placeholder, onChangeText, secureTextEntry }) => (
   />
   </View>
   
-)
-
+);
 
 const styles = StyleSheet.create({
   screenContainer: {

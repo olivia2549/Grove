@@ -5,8 +5,8 @@
  * This page is where the user navigates to log in
  */
 
-import React, {useState, useEffect} from "react";
-import { View, Button, TextInput, StyleSheet, KeyboardAvoidingView, } from "react-native"
+import React, { useState } from "react";
+import { StyleSheet, KeyboardAvoidingView } from "react-native"
 import { FancyButton, FancyInput, } from "../styling";
 
 import firebase from "firebase";
@@ -16,7 +16,7 @@ export const Login = () => {
     const [state, setState] = useState({
         email: "",
         password: "",
-    })
+    });
 
     // Use firebase to sign in an existing user
     const onSignUp = () => {

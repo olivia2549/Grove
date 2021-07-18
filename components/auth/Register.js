@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Button, TextInput, StyleSheet, Alert, KeyboardAvoidingView, } from 'react-native'
+import { StyleSheet, Alert, KeyboardAvoidingView } from 'react-native'
 
 import firebase from "firebase";
 
@@ -20,10 +20,12 @@ export const Register = () => {
         email: "",
         password: "",
         name: ""
-    })
+    });
 
     // Saves the new user information to firebase
     const onSignUp = () => {
+        // Validates the email is from a valid domain
+        // TODO: send email to validate
         const domain = state.email.split("@")[1];
         if (VALID_DOMAINS.indexOf(domain) === -1 ){
             Alert.alert(
@@ -33,6 +35,7 @@ export const Register = () => {
             );
             return;
         }
+        // Store new user in users collection in firebase
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((result) => {
                 firebase.firestore().collection("users")
@@ -74,9 +77,6 @@ export const Register = () => {
             />
             <FancyButton title="Get Started" onPress={() => onSignUp()}/>
         </KeyboardAvoidingView>
-        // <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
-           
-        // {/* </KeyboardAvoidingView> */}
     );
 };
 

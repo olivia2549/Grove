@@ -35,8 +35,7 @@ const Feed = () => {
     //     });
     // });
 
-
-    // this only fetches once
+    // Fetches each event in the database (just once)
     useEffect(() => {
         firebase.firestore().collection('events').get().then(snapshot => {
             const temp = [];

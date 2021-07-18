@@ -5,9 +5,8 @@
  * This page is the first to show up before the user logs in
  */
 
-import React, {useEffect} from "react";
-import { View, Button, StyleSheet, TouchableOpacity, Text, Image, TextInput, } from "react-native"
-import firebase from "firebase";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import { FancyButton, } from "../styling";
 
 // 'navigation' gives us access to the route from App.js

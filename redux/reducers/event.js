@@ -4,9 +4,16 @@
  * Reducers/event.js
  * Event reducer; stores state about an event
  */
-import { EVENT_NAME_STATE_CHANGE, EVENT_DESCRIPTION_STATE_CHANGE, EVENT_TAGS_STATE_CHANGE, 
-    EVENT_END_TIME_STATE_CHANGE, EVENT_START_TIME_STATE_CHANGE, 
-    EVENT_START_DATE_STATE_CHANGE, EVENT_END_DATE_STATE_CHANGE } from "../constants";
+
+import {
+    EVENT_NAME_STATE_CHANGE,
+    EVENT_DESCRIPTION_STATE_CHANGE,
+    EVENT_TAGS_STATE_CHANGE,
+    EVENT_END_TIME_STATE_CHANGE,
+    EVENT_START_TIME_STATE_CHANGE,
+    EVENT_START_DATE_STATE_CHANGE,
+    EVENT_END_DATE_STATE_CHANGE
+} from "../constants";
 
 const initialState = {
     name: "",
@@ -18,11 +25,10 @@ const initialState = {
 }
 
 /**
- * userReducer
+ * eventReducer
  *
  * @param state - null by default
  * @param action - reducer needs to take in an action so it knows what to execute
- * @returns {{currentUser}|null}
  */
 export const eventReducer = (state = initialState, action) => {
     // Changes the state (aka the event)

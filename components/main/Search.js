@@ -2,12 +2,12 @@
  * Copyright Grove, @2021 - All rights reserved
  *
  * Search.js
- * Allows for Search functionality
+ * User sees who friended them and searches for new friends
  */
 
 import React, { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, TextInput, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { FancyInput } from "../styling";
 
 import firebase from "firebase";
@@ -17,14 +17,9 @@ export const Search = () => {
     const navigation = useNavigation();
     const [users, setUsers] = useState([]);
 
-    /**
-     * fetchUsers
-     *
-     * Grab users that match a search
-     * @param search - user input
-     */
+    // Grab users that match a search
     const fetchUsers = (search) => {
-        if (search.length != 0) {
+        if (search.length !== 0) {
             firebase.firestore()
                 .collection("users")
                 .orderBy('name')
@@ -36,18 +31,12 @@ export const Search = () => {
                     let usersArr = snapshot.docs.map(doc => {
                         const data = doc.data();
                         const id = doc.id;
-                        return { id, ...data }  // the object to place in the users array
+                        return {id, ...data}  // the object to place in the users array
                     });
                     setUsers(usersArr);
                 })
-            }
-        // else {
-        //     suggestUsers
-        // }
+        }
     }
-
-    // const suggestUsers = () => {
-    // }
 
     return (
         <View style={{padding: 40}}>

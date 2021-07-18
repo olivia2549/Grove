@@ -1,8 +1,8 @@
 /**
  * Copyright Grove, @2021 - All rights reserved
  *
- * Profile.js
- * Create/edit user profile
+ * ProfileFollowing.js
+ * Profile page for someone you're following
  */
 
 import React, { useState, useEffect } from "react";
@@ -12,16 +12,14 @@ import {
   Text,
   Image,
   FlatList,
-  Button,
   TouchableOpacity,
   Platform,
   Dimensions,
-  Switch,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 
-// firbase imports
+// firebase imports
 import firebase from "firebase";
 import {
   USER_POSTS_STATE_CHANGE,
