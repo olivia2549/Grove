@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import { View, FlatList, Text, TouchableOpacity, Button, SafeAreaView } from "react-native";
+import { View, FlatList, Text, TouchableOpacity, RefreshControl, Button, SafeAreaView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { FancyInput } from "../styling";
 
@@ -14,12 +14,25 @@ import firebase from "firebase";
 
 import { Card } from './Card';
 
+//waiting for feed to refresh
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
 // function to filter the events
 // there will be card components within the view. The card components will be clickable
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
     const navigation = useNavigation();
     const [events, setEvents] = useState([]);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    //refreshes feed if pulled up
+    const onRefresh = React.useCallback(() => {
+        //TODO - reload new data from firebase
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+      }, []);
 
     // this continuously checks for updates from the db
     // firebase.firestore().collection('events').onSnapshot(snapshot => {
@@ -43,6 +56,7 @@ const Feed = () => {
                 temp.push(doc.data());
             })
             setEvents(temp);
+            removeEventListener();
         });
     }, []);
 
@@ -53,6 +67,12 @@ const Feed = () => {
                     <Text>Nothing to show</Text> :
                     <FlatList
                         data={events}
+                        refreshControl={
+                            <RefreshControl
+                              refreshing={refreshing}
+                              onRefresh={onRefresh}
+                            />
+                          }
                         renderItem={(event) => (
                             // when the card is pressed, we head to EventDetails page
                             <TouchableOpacity onPress={() => navigation.navigate("EventDetails", {
