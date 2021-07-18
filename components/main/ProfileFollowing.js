@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   Platform,
   Dimensions,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -122,6 +123,7 @@ export const ProfileFollowing = (props) => {
         <Text style={styles.userNameText}>{user.name}</Text>
       </View>
 
+      {/* Profile Picture */}
       <View style={styles.profileBackground}>
         <Image
           source={require("../../assets/profileicon.jpg")}
@@ -130,30 +132,50 @@ export const ProfileFollowing = (props) => {
       </View>
 
       <View style={styles.infoView}>
+        {/* User Info */}
         <View style={styles.containerInfo}>
           <Text style={styles.userEmail}>{user.email}</Text>
         </View>
+
+        {/* Friends Button */}
         <TouchableOpacity style={styles.alreadyFriend}>
           <Text style={styles.alreadyFriendText}>Friends</Text>
         </TouchableOpacity>
 
+        {/* Toggle Button */}
         <TouchableOpacity
           style={[styles.toggleContainer, { justifyContent: toggleSide }]}
           onPress={flipToggle}
+          activeOpacity="0.77"
         >
+          {/* upcoming events pressed */}
           {upComingEvents && (
-            <View style={styles.upcomingEventsContainer}>
-              <Text style={styles.toggleText}>Upcoming Events</Text>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.upcomingEventsContainer}>
+                <Text style={styles.toggleText}>Upcoming Events</Text>
+              </View>
+              <View style={styles.eventsAddedGreyTextContainer}>
+                <Text style={styles.eventsAddedGreyText}>Events Attended</Text>
+              </View>
             </View>
           )}
 
+          {/* events attended pressed */}
           {eventsAttended && (
-            <View style={styles.eventsAddedContainer}>
-              <Text style={styles.toggleText}>Events Attended</Text>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.upcomingEventsGreyTextContainer}>
+                <Text style={styles.upcomingEventsGreyText}>
+                  Upcoming Events
+                </Text>
+              </View>
+              <View style={styles.eventsAddedContainer}>
+                <Text style={styles.toggleText}>Events Attended</Text>
+              </View>
             </View>
           )}
         </TouchableOpacity>
 
+        {/* List of events */}
         <View style={styles.containerGallery}>
           {/* <FlatList
             data={currentUserEvents}
@@ -272,7 +294,7 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * 0.045,
   },
 
-  // toggle button
+  /* toggle button */
   toggleContainer: {
     flex: 1 / 8,
     flexDirection: "row",
@@ -284,20 +306,48 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: "grey",
   },
+
+  // when upcoming button is clicked
   upcomingEventsContainer: {
-    flex: 1 / 2,
+    flex: 1,
     backgroundColor: "white",
     borderRadius: 30,
     height: "97%",
     justifyContent: "center",
+    // flexDirection: "row",
   },
+  eventsAddedGreyTextContainer: {
+    flex: 1,
+    height: "97%",
+    justifyContent: "center",
+  },
+  eventsAddedGreyText: {
+    color: "#BDBDBD",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.043,
+    textAlign: "center",
+  },
+
+  // when events added button is clicked
   eventsAddedContainer: {
-    flex: 1 / 2,
+    flex: 1,
     backgroundColor: "white",
     borderRadius: 30,
     height: "97%",
     justifyContent: "center",
   },
+  upcomingEventsGreyTextContainer: {
+    flex: 1,
+    height: "97%",
+    justifyContent: "center",
+  },
+  upcomingEventsGreyText: {
+    color: "#BDBDBD",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.043,
+    textAlign: "center",
+  },
+
   toggleText: {
     textAlign: "center",
     fontWeight: "500",
