@@ -34,11 +34,7 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export const ProfileFollowing = (props) => {
-  const [userEvents, setUserEvents] = useState([]);
-  const [user, setUser] = useState(null);
-  const currentUser = useSelector((state) => state.currentUser);
-  const currentUserEvents = useSelector((state) => state.currentUser.events);
-  const dispatch = useDispatch();
+  const user = props.userRef.get().then(doc => doc.data());
 
   // for the switch
   const [upComingEvents, setUpComingEvents] = useState(true);
@@ -49,61 +45,6 @@ export const ProfileFollowing = (props) => {
     firebase.auth().signOut();
     dispatch(clearData());
   };
-
-  // Load user, and if different than current user, fetch from database
-  useEffect(() => {
-    // If the uid to display is the current user, our job is easy
-    if (props.route.params.uid === firebase.auth().currentUser.uid) {
-      setUser(currentUser);
-      setUserEvents(currentUserEvents);
-    }
-    // Otherwise, we need to grab a different user and their events from firebase
-    else {
-      // This is essentially 'fetchUser' from actions/index.js but doesn't change state of application
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
-        .get()
-        .then((snapshot) => {
-          // if the user exists, change the user state
-          if (snapshot.exists) {
-            // Set user to display onscreen
-            setUser(snapshot.data());
-          } else {
-            console.log("User does not exist.");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      // This is essentially 'fetchUserEvents' from actions/index.js but doesn't change state of application
-      firebase
-        .firestore()
-        .collection("events")
-        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
-        .collection("userEvents") // fetch everything in the collection
-        .orderBy("creation", "asc") // ascending order by creation date
-        .get()
-        .then((snapshot) => {
-          // Iterate through everything in the snapshot and build a events array
-          let eventsArr = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            return { id, ...data }; // the object to place in the events array
-          });
-          setUserEvents(eventsArr);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [props.route.params.uid]); // Only calls useEffect when uid changes (makes app faster)
-
-  if (user === null) {
-    return <View />;
-  }
 
   const flipToggle = () => {
     console.log("here");
@@ -170,7 +111,7 @@ export const ProfileFollowing = (props) => {
           /> */}
 
           <FlatList
-            data={userEvents}
+            data={user.eventsAttending}
             renderItem={(event) => (
               // when the card is pressed, we head to EventDetails page
               <TouchableOpacity

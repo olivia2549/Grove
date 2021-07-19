@@ -9,10 +9,15 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 
 import { useSelector } from 'react-redux';
+import { useNavigation } from "@react-navigation/native";
 
 import firebase from "firebase";
 
+import Main from "../Main";
+
 export const AddEventFinal = () => {
+    const navigation = useNavigation();
+
     var eventData = {
         name: useSelector(state => state.event.name),
         description: useSelector(state => state.event.description),
@@ -31,6 +36,7 @@ export const AddEventFinal = () => {
         eventData.attendees.push(eventData.creator);
         await docRef.set(eventData);
         console.log("Posted to firebase - " + eventData.ID);
+        navigation.navigate("Main");
     }
 
     return (

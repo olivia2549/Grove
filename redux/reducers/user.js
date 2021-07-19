@@ -6,6 +6,7 @@
  */
 
 const initialState = {
+    ID: null,
     name: "",
     email: "",
     year: -1,
@@ -29,6 +30,7 @@ export const userReducer = (state = initialState, action) => {
         case 'USER_STATE_CHANGE':   // This one of the actions
             return {
                 ...state,
+                ID: action.ID,
                 name: action.name,
                 email: action.email,
                 year: action.year,

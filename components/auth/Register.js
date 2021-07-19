@@ -12,7 +12,7 @@ import firebase from "firebase";
 
 import { FancyInput, FancyButton } from '../styling';
 
-const VALID_DOMAINS = ["vanderbilt.edu"];
+const VALID_DOMAINS = ["vanderbilt.edu", "Vanderbilt.edu"];
 
 export const Register = () => {
     // The information we need for user registration
@@ -41,6 +41,7 @@ export const Register = () => {
                 firebase.firestore().collection("users")
                     .doc(firebase.auth().currentUser.uid)
                     .set({
+                        ID: firebase.auth().currentUser.uid,
                         name: state.name,
                         email: state.email,
                         bio: "",
@@ -50,7 +51,7 @@ export const Register = () => {
                         eventsAttending: [],
                         eventsPosted: [],
                     })
-        }).catch((error) => {console.log(error)});
+        }).catch((error) => {Alert.alert(error)});
     }
 
     // Displays to the screen

@@ -5,7 +5,7 @@
  * Create/edit user profile
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -21,53 +21,74 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearData } from "../../redux/actions";
 
 import firebase from "firebase";
+import ProfileFollowing from "./ProfileFollowing";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const Profile = (props) => {
-  const [user, setUser] = useState(null);
-  const currentUser = useSelector((state) => state.currentUser);
+export const Profile = ( {route} ) => {
   const dispatch = useDispatch();
+
+  const userDisplayingID = route.params.uid;  // user to display
+  const userDisplayingRef = firebase.firestore().collection("users").doc(userDisplayingID);
+  const [userDisplaying, setUserDisplaying] = useState({});
+
+  useEffect(() => {
+    // Grabs the user to display
+    firebase.firestore().collection("users").doc(userDisplayingID).get().then(doc => {
+      setUserDisplaying(doc.data());
+    });
+  },[]);
+
+  const currentUserID = useSelector((state) => state.currentUser.ID);
+  const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
 
   const signOut = () => {
     firebase.auth().signOut();
     dispatch(clearData());
   };
 
-  // Load user, and if different than current user, fetch from database
-  useEffect(() => {
-    // If the uid to display is the current user, our job is easy
-    if (props.route.params.uid === firebase.auth().currentUser.uid) {
-      setUser(currentUser);
-    }
-    // Otherwise, we need to grab a different user and their events from firebase
-    else {
-      // This is essentially 'fetchUser' from actions/index.js but doesn't change state of application
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(props.route.params.uid) // This time, grab the uid from what was passed in as a props param
-        .get()
-        .then((snapshot) => {
-          if (snapshot.exists) setUser(snapshot.data());
-          else console.log("User does not exist.");
-        })
-        .catch((error) => {
-          console.log(error);
+  // Adds a friend
+  const addFriend = () => {
+    // add searched person to the current user's friends list
+    firebase.firestore().collection("users")
+        .doc(currentUserID)
+        .update({
+          friends: firebase.firestore.FieldValue.arrayUnion(userDisplayingRef)
         });
-    }
-  }, [props.route.params.uid]); // Only calls useEffect when uid changes (makes app faster)
+    // add current user to the searched person's friend list
+    firebase.firestore().collection("users")
+        .doc(userDisplayingID)
+        .update({
+          friends: firebase.firestore.FieldValue.arrayUnion(currentUserRef)
+        });
+  };
 
-  if (user === null) {
-    return <Text>User not found</Text>;
-  }
+  // const checkFriends = () => {
+  //   // Figures out if one user is friends with another
+  //   console.log("user inside: ", userDisplaying);
+  //   const friendList = userDisplaying.friends;
+  //   if (friendList.length === 0) return false;
+  //   friendList.forEach(friend => {
+  //     if (friend.data().ID === currentUserID) {
+  //       console.log("friend found");
+  //       return true;
+  //     }
+  //   })
+  //   return false;
+  // }
+
+  // if the current user is friends with the person they searched, show ProfileFollowing component
+  // if (checkFriends()) {
+  //   console.log("rendering profile following...");
+  //   return <ProfileFollowing user={userDisplaying}/>
+  // }
 
   return (
     <View style={styles.screenContainer}>
       <View style={styles.userNameContainer}>
-        <Text style={styles.userNameText}>{user.name}</Text>
+        <Text style={styles.userNameText}>{userDisplaying.name}</Text>
       </View>
 
       <View style={styles.profileBackground}>
@@ -79,10 +100,10 @@ export const Profile = (props) => {
 
       <View style={styles.infoView}>
         <View style={styles.containerInfo}>
-          <Text style={styles.userEmail}>{user.email}</Text>
+          <Text style={styles.userEmail}>{userDisplaying.email}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => console.log("Tryna add some good friends")}
+          onPress={addFriend}
           style={styles.addFriend}
         >
           <Text style={styles.addFriendText}>Add Friend</Text>

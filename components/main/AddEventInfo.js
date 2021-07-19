@@ -29,7 +29,7 @@ import {
 import { AddEventTags } from "./AddEventTags";
 
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -78,12 +78,11 @@ export const AddEventInfo = () => {
                 Alert.alert("Please add a name for this event.");
                 nameRef.current.focus();
               } else {
-                descriptionRef.current.focus();
+                locationRef.current.focus();
                 dispatch(addEventName(name));
               }
             }}
             defaultValue={name}
-            selectTextOnFocus={true}
             style={styles.textInput}
           />
 
@@ -102,17 +101,16 @@ export const AddEventInfo = () => {
             onChangeText={(text) => {
               setLocation(text);
             }}
-            returnKeyType="done"
+            returnKeyType="next"
             onSubmitEditing={() => {
               if (location === "") {
                 Alert.alert("Please add a location for this event.");
                 locationRef.current.focus();
               } else {
                 dispatch(addEventLocation(location));
-                navigation.navigate("AddEventTags");
+                descriptionRef.current.focus();
               }
             }}
-            selectTextOnFocus={true}
             value={location}
             style={styles.textInput}
           />
@@ -130,18 +128,17 @@ export const AddEventInfo = () => {
             onChangeText={(text) => {
               setDescription(text);
             }}
-            returnKeyType="next"
+            returnKeyType="done"
             blurOnSubmit={false}
             onSubmitEditing={() => {
               if (description === "") {
                 Alert.alert("Please add a description for this event.");
                 descriptionRef.current.focus();
               } else {
-                locationRef.current.focus();
+                navigation.navigate("AddEventTags");
                 dispatch(addEventDescription(description));
               }
             }}
-            selectTextOnFocus={true}
             value={description}
             multiline={true}
             allowFontScaling={true}

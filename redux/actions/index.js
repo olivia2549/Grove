@@ -100,6 +100,7 @@ export const fetchUser = () => {
                     // dispatch the action 'USER_STATE_CHANGE' to the reducer
                     dispatch({
                         type: USER_STATE_CHANGE,
+                        ID: user.ID,
                         name: user.name,
                         email: user.email,
                         year: user.year,
