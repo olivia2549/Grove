@@ -5,6 +5,11 @@
  * User reducer; stores state about the user
  */
 
+import {
+    USER_STATE_CHANGE,
+    USER_FRIENDS_STATE_CHANGE
+} from "../constants";
+
 const initialState = {
     ID: null,
     name: "",
@@ -36,9 +41,13 @@ export const userReducer = (state = initialState, action) => {
                 year: action.year,
                 major: action.major,
                 bio: action.bio,
-                friends: action.friends,
                 eventsPosted: action.eventsPosted,
                 eventsAttending: action.eventsAttending,
+            }
+        case 'USER_FRIENDS_STATE_CHANGE':
+            return {
+                ...state,
+                friends: action.friends,
             }
         case 'CLEAR_DATA':
             return initialState;

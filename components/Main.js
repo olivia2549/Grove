@@ -7,7 +7,7 @@
 
 import React, { useEffect } from "react";
 
-import { fetchUser } from "../redux/actions";
+import {fetchUser, fetchUserFriends} from "../redux/actions";
 import { useDispatch } from "react-redux";
 
 import firebase from "firebase";
@@ -32,6 +32,7 @@ export const Main = () => {
     // We need to grab this user and their events from firebase, and store in redux
     useEffect(() => {
         dispatch(fetchUser());
+        dispatch(fetchUserFriends());
     }, []);
 
     // Displays to the screen

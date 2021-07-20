@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { StyleSheet, Alert, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Alert, View, KeyboardAvoidingView } from 'react-native'
 
 import firebase from "firebase";
 
@@ -47,7 +47,6 @@ export const Register = () => {
                         bio: "",
                         year: -1,
                         major: "",
-                        friends: [],
                         eventsAttending: [],
                         eventsPosted: [],
                     })
@@ -56,7 +55,8 @@ export const Register = () => {
 
     // Displays to the screen
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
+        <View>
+        {/*// <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>*/}
              <FancyInput
                 placeholder="Full name"
                 onChangeText={(name) => setState({
@@ -77,7 +77,8 @@ export const Register = () => {
                     password: password})}
             />
             <FancyButton title="Get Started" onPress={() => onSignUp()}/>
-        </KeyboardAvoidingView>
+        {/*// </KeyboardAvoidingView>*/}
+        </View>
     );
 };
 
