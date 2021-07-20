@@ -17,48 +17,63 @@ import {
 } from "react-native";
 
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 import firebase from "firebase";
 
+import Main from "../Main";
 import { FancyButtonButLower, FancyInput } from "../styling";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export const AddEventFinal = () => {
+  const navigation = useNavigation();
+
   const [users, setUsers] = useState([]);
+
+  var eventData = {
+    name: useSelector(state => state.event.name),
+    description: useSelector(state => state.event.description),
+    tags: useSelector(state => state.event.tags),
+    startDateTime: useSelector(state => state.event.startDateTime),
+    endDateTime: useSelector(state => state.event.endDateTime),
+    location: useSelector(state => state.event.location),
+    attendees: [],
+  };
 
   // Grab users that match a search
   const fetchUsers = (search) => {
     if (search.length !== 0) {
       firebase
-        .firestore()
-        .collection("users")
-        .orderBy("name")
-        .startAt(search)
-        .endAt(search + "\uf8ff")
-        // .where('name', '>=', search) // username == search, or has search contents plus more chars
-        .get()
-        .then((snapshot) => {
-          let usersArr = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            return { id, ...data }; // the object to place in the users array
+          .firestore()
+          .collection("users")
+          .orderBy("name")
+          .startAt(search)
+          .endAt(search + "\uf8ff")
+          // .where('name', '>=', search) // username == search, or has search contents plus more chars
+          .get()
+          .then((snapshot) => {
+            let usersArr = snapshot.docs.map((doc) => {
+              const data = doc.data();
+              const id = doc.id;
+              return {id, ...data}; // the object to place in the users array
+            });
+            setUsers(usersArr);
           });
-          setUsers(usersArr);
-        });
     }
-  };
+  }
 
-  var eventData = {
-    name: useSelector((state) => state.event.name),
-    description: useSelector((state) => state.event.description),
-    tags: useSelector((state) => state.event.tags),
-    startDateTime: useSelector((state) => state.event.startDateTime),
-    endDateTime: useSelector((state) => state.event.endDateTime),
-    location: useSelector((state) => state.event.location),
-    attendees: [],
-  };
+    // New event gets added to firebase
+    // const onPress = async () => {
+    //     const docRef = await firebase.firestore().collection('events').doc();
+    //     eventData.ID = docRef.id;
+    //     eventData.creator = await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+    //     eventData.attendees.push(eventData.creator);
+    //     await docRef.set(eventData);
+    //     console.log("Posted to firebase - " + eventData.ID);
+    //     navigation.navigate("Main");
+    // }
 
   // New event gets added to firebase
   const onPress = async () => {
@@ -72,6 +87,7 @@ export const AddEventFinal = () => {
     eventData.nameLowercase = eventData.name.toLowerCase();
     await docRef.set(eventData);
     console.log("Posted to firebase - " + eventData.ID);
+    navigation.navigate("Main");
   };
 
   return (

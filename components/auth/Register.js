@@ -6,13 +6,13 @@
  */
 
 import React, { useState } from 'react';
-import { StyleSheet, Alert, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Alert, View, KeyboardAvoidingView } from 'react-native'
 
 import firebase from "firebase";
 
 import { FancyInput, FancyButton } from '../styling';
 
-const VALID_DOMAINS = ["vanderbilt.edu"];
+const VALID_DOMAINS = ["vanderbilt.edu", "Vanderbilt.edu"];
 
 export const Register = () => {
     // The information we need for user registration
@@ -38,26 +38,25 @@ export const Register = () => {
         // Store new user in users collection in firebase
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((result) => {
-                let userID = firebase.auth().currentUser.uid;
                 firebase.firestore().collection("users")
                     .doc(userID)
                     .set({
-                        ID: userID,
+                        ID: firebase.auth().currentUser.uid,
                         name: state.name,
                         email: state.email,
                         bio: "",
                         year: -1,
                         major: "",
-                        friends: [],
                         eventsAttending: [],
                         eventsPosted: [],
                     })
-        }).catch((error) => {console.log(error)});
+        }).catch((error) => {Alert.alert(error)});
     }
 
     // Displays to the screen
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
+        <View>
+        {/*// <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>*/}
              <FancyInput
                 placeholder="Full name"
                 onChangeText={(name) => setState({
@@ -78,7 +77,8 @@ export const Register = () => {
                     password: password})}
             />
             <FancyButton title="Get Started" onPress={() => onSignUp()}/>
-        </KeyboardAvoidingView>
+        {/*// </KeyboardAvoidingView>*/}
+        </View>
     );
 };
 

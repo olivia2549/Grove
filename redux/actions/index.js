@@ -16,6 +16,7 @@ import {
     EVENT_LOCATION_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
     USER_STATE_CHANGE,
+    USER_FRIENDS_STATE_CHANGE
 } from "../constants/index";
 
 import firebase from "firebase";
@@ -100,6 +101,7 @@ export const fetchUser = () => {
                     // dispatch the action 'USER_STATE_CHANGE' to the reducer
                     dispatch({
                         type: USER_STATE_CHANGE,
+                        ID: user.ID,
                         name: user.name,
                         email: user.email,
                         year: user.year,
@@ -115,5 +117,20 @@ export const fetchUser = () => {
                 }
             })
             .catch((error) => {console.log(error)})
+    })
+}
+
+// When the friends list changes, firebase recognizes this and updates redux
+export const fetchUserFriends = () => {
+    return ((dispatch) => {
+        firebase.firestore().collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("friends")
+            .onSnapshot(snapshot => {
+                let friends = snapshot.docs.map(doc => {
+                    return doc.id;
+                })
+                dispatch({type: USER_FRIENDS_STATE_CHANGE, friends});
+            })
     })
 }
