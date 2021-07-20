@@ -64,24 +64,11 @@ export const AddEventFinal = () => {
     }
   }
 
-    // New event gets added to firebase
-    // const onPress = async () => {
-    //     const docRef = await firebase.firestore().collection('events').doc();
-    //     eventData.ID = docRef.id;
-    //     eventData.creator = await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
-    //     eventData.attendees.push(eventData.creator);
-    //     await docRef.set(eventData);
-    //     console.log("Posted to firebase - " + eventData.ID);
-    //     navigation.navigate("Main");
-    // }
-
   // New event gets added to firebase
   const onPress = async () => {
     const docRef = await firebase.firestore().collection("events").doc();
     eventData.ID = docRef.id;
-    eventData.creator = await firebase
-      .firestore()
-      .collection("users")
+    eventData.creator = await firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid);
     eventData.attendees.push(eventData.creator);
     eventData.nameLowercase = eventData.name.toLowerCase();
