@@ -66,13 +66,13 @@ export const AddEventInfo = () => {
         >
           {/* NAME */}
           <View style={styles.textBox}>
-            <Text style={styles.textBoxText}>Name</Text>
+            <Text style={styles.textBoxText}>Event Name</Text>
           </View>
           <View style={styles.underline} />
           <TextInput
             id="nameInput"
             name="nameInput"
-            placeholder="Name..."
+            placeholder="Event Name..."
             ref={nameRef}
             onChangeText={(text) => {
               setName(text);

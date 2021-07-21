@@ -19,6 +19,8 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
+import { InviteFriends } from "./InviteFriends";
+
 import { FancyButtonButLower } from "../styling";
 import firebase from "firebase";
 
@@ -50,7 +52,15 @@ const AddEventConfirmation = () => {
     await docRef.set(eventData);
     console.log("Posted to firebase - " + eventData.ID);
     Alert.alert("Event posted");
-    navigation.navigate("AddEventFinal");
+    navigation.navigate("InviteFriends", {
+      name: eventData.name,
+      description: eventData.description,
+      tags: eventData.tags,
+      startDateTime: eventData.startDateTime,
+      endDateTime: eventData.endDateTime,
+      location: eventData.location,
+      attendees: eventData.attendees,
+    });
   };
 
   // for start and end time translation
