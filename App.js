@@ -50,6 +50,7 @@ import AddEventTags from './components/main/AddEventTags';
 import AddEventDate from './components/main/AddEventDate';
 import AddEventConfirmation from './components/main/AddEventConfirmation';
 import InviteFriends from "./components/main/InviteFriends";
+import ProfileUser from "./components/main/ProfileUser";
 import EventDetails from './components/main/EventDetails';
 import Notifications from './components/main/Notifications';
 

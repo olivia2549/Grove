@@ -29,73 +29,24 @@ require("firebase/firestore");
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const Profile = ({ route }) => {
+export const Profile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const userDisplayingID = route.params.uid; // user to display
-  const [userDisplaying, setUserDisplaying] = useState({});
-
-  const currentUserID = useSelector((state) => state.currentUser.ID);
-
-  const friends = useSelector((state) => state.currentUser.friends);
-  const [isFriend, setIsFriend] = useState(false);
-
-  const currentUserEvents = useSelector(
-    (state) => state.currentUser.eventsPosted
-  );
+  const currentUser = useSelector((state) => state.currentUser);
+  const currentUserEvents = useSelector(state => state.currentUser.eventsPosted);
 
   // for the toggle (a person you're following)
   const [upComingEvents, setUpComingEvents] = useState(true);
   const [eventsAttended, setEventsAttended] = useState(false);
   const [toggleSide, setToggleSide] = useState("flex-start");
 
-  useEffect(
-    () => {
-      const fetchUserToDisplay = async () => {
-        const user = await firebase
-          .firestore()
-          .collection("users")
-          .doc(userDisplayingID)
-          .get();
-        setUserDisplaying(user.data());
-      };
-      fetchUserToDisplay();
-      friends.indexOf(userDisplayingID) > -1
-        ? setIsFriend(true)
-        : setIsFriend(false);
-    },
-    [route.params.uid],
-    [friends]
-  ); // only gets called if userToDisplay or friends changes
-
   const signOut = () => {
     firebase.auth().signOut();
     dispatch(clearUserData());
   };
 
-  // Adds a friend
-  const addFriend = () => {
-    // add searched person to the current user's friends list
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUserID)
-      .collection("friends")
-      .doc(userDisplayingID)
-      .set({});
-    // add current user to the searched person's friend list
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(userDisplayingID)
-      .collection("friends")
-      .doc(currentUserID)
-      .set({});
-  };
-
   const flipToggle = () => {
-    console.log("here");
     if (upComingEvents) {
       setToggleSide("flex-end");
     } else if (eventsAttended) {
@@ -105,98 +56,10 @@ export const Profile = ({ route }) => {
     setEventsAttended(!eventsAttended);
   };
 
-  const ProfileFollowing = () => {
-    return (
-      <View>
-        {/* Friends Button */}
-        <TouchableOpacity style={styles.alreadyFriend}>
-          <Text style={styles.alreadyFriendText}>Friends</Text>
-        </TouchableOpacity>
-
-        {/* Toggle Button */}
-        <TouchableOpacity
-          style={[styles.toggleContainer, { justifyContent: toggleSide }]}
-          onPress={flipToggle}
-          activeOpacity="0.77"
-        >
-          {/* upcoming events pressed */}
-          {upComingEvents && (
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={styles.upcomingEventsContainer}>
-                <Text style={styles.toggleText}>Upcoming Events</Text>
-              </View>
-              <View style={styles.eventsAddedGreyTextContainer}>
-                <Text style={styles.eventsAddedGreyText}>Events Attended</Text>
-              </View>
-            </View>
-          )}
-
-          {/* events attended pressed */}
-          {eventsAttended && (
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={styles.upcomingEventsGreyTextContainer}>
-                <Text style={styles.upcomingEventsGreyText}>
-                  Upcoming Events
-                </Text>
-              </View>
-              <View style={styles.eventsAddedContainer}>
-                <Text style={styles.toggleText}>Events Attended</Text>
-              </View>
-            </View>
-          )}
-        </TouchableOpacity>
-
-        {/* List of events */}
-        <View style={styles.containerGallery}>
-          <FlatList
-            data={currentUserEvents}
-            renderItem={(event) => (
-              // when the card is pressed, we head to EventDetails page
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("EventDetails", {
-                    event: event,
-                  })
-                }
-              >
-                <Card event={event.item} />
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      </View>
-    );
-  };
-
-  const ProfileNotFollowing = () => {
-    if (userDisplayingID !== currentUserID) {
-      return (
-        <View>
-          <TouchableOpacity onPress={addFriend} style={styles.addFriend}>
-            <Text style={styles.addFriendText}>Add Friend</Text>
-          </TouchableOpacity>
-
-          <View style={styles.lockContainer}>
-            <Image
-              source={require("../../assets/lock_outline.png")}
-              style={styles.lockIcon}
-            />
-            <Text style={styles.lockIconText}>
-              Follow this account to see their events
-            </Text>
-          </View>
-        </View>
-      );
-    } else {
-      return <View />;
-    }
-  };
-
   return (
     <View style={styles.screenContainer}>
       <View style={styles.userNameContainer}>
-        <Text style={styles.userNameText}>{userDisplaying.name}</Text>
+        <Text style={styles.userNameText}>{currentUser.name}</Text>
       </View>
 
       <View style={styles.profileBackground}>
@@ -208,16 +71,12 @@ export const Profile = ({ route }) => {
 
       <View style={styles.infoView}>
         <View style={styles.containerInfo}>
-          <Text style={styles.userEmail}>{userDisplaying.email}</Text>
+          <Text style={styles.userEmail}>{currentUser.email}</Text>
         </View>
 
-        {isFriend ? <ProfileFollowing /> : <ProfileNotFollowing />}
-
-        {userDisplayingID === currentUserID && (
-          <TouchableOpacity onPress={signOut} style={styles.signOut}>
-            <Text style={styles.signOutText}>Sign Out</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity onPress={signOut} style={styles.signOut}>
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
