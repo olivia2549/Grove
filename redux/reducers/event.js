@@ -22,6 +22,7 @@ const initialState = {
     startDateTime: new Date(),
     endDateTime: new Date(),
     location: "",
+    attendees: []
 }
 
 /**

@@ -54,7 +54,6 @@ export const Profile = ( {route} ) => {
       setUserDisplaying(user.data());
     }
     fetchUserToDisplay();
-
     friends.indexOf(userDisplayingID) > -1 ? setIsFriend(true) : setIsFriend(false);
   }, [route.params.uid], [friends]); // only gets called if userToDisplay or friends changes
 

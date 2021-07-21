@@ -81,16 +81,14 @@ const AddEventConfirmation = () => {
     <View style={styles.container}>
       <View style={styles.topBar}>
         <Text style={styles.titleText}>
-          {/* {eventData.name} */}
-          TITLE
+           {eventData.name}
         </Text>
       </View>
 
       <View style={styles.content}>
         <View style={styles.descriptionContainer}>
           <Text style={styles.descriptionText}>
-            {/* {eventData.description} */}
-            This is where the description goes for this event.
+             {eventData.description}
           </Text>
         </View>
 
