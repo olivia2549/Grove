@@ -47,6 +47,13 @@ export const AddEventInfo = () => {
   const [location, setLocation] = useState("");
   const locationRef = useRef(null);
 
+  const onSubmit = () => {
+    dispatch(addEventName(name));
+    dispatch(addEventLocation(location));
+    dispatch(addEventDescription(description));
+    navigation.navigate("AddEventTags");
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -78,7 +85,6 @@ export const AddEventInfo = () => {
                 Alert.alert("Please add a name for this event.");
                 nameRef.current.focus();
               } else {
-                dispatch(addEventName(name));
                 locationRef.current.focus();
               }
             }}
@@ -107,7 +113,6 @@ export const AddEventInfo = () => {
                 Alert.alert("Please add a location for this event.");
                 locationRef.current.focus();
               } else {
-                dispatch(addEventLocation(location));
                 descriptionRef.current.focus();
               }
             }}
@@ -131,14 +136,11 @@ export const AddEventInfo = () => {
             returnKeyType="done"
             blurOnSubmit={false}
             onSubmitEditing={() => {
-              console.log("submitting...");
               if (description === "") {
                 Alert.alert("Please add a description for this event.");
                 descriptionRef.current.focus();
               } else {
-                console.log(description);
-                dispatch(addEventDescription(description));
-                navigation.navigate("AddEventTags");
+                onSubmit();
               }
             }}
             value={description}
@@ -152,7 +154,7 @@ export const AddEventInfo = () => {
         <FancyButtonButLower
           title="Next"
           onPress={() => {
-            navigation.navigate("AddEventTags");
+            onSubmit();
           }}
         />
       </View>

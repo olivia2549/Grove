@@ -6,7 +6,7 @@
  */
 
 import {
-    CLEAR_DATA,
+    CLEAR_USER_DATA,
     EVENT_NAME_STATE_CHANGE,
     EVENT_DESCRIPTION_STATE_CHANGE,
     EVENT_START_TIME_STATE_CHANGE,
@@ -22,13 +22,13 @@ import {
 import firebase from "firebase";
 
 /**
- * clearData
+ * clearUserData
  *
- * Deletes everything from redux store
+ * Deletes user from redux store when they sign out
  */
-export const clearData = () => {
+export const clearUserData = () => {
     return ((dispatch) => {
-        dispatch({type: CLEAR_DATA})
+        dispatch({type: CLEAR_USER_DATA})
     })
 }
 

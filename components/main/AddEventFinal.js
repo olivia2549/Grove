@@ -35,23 +35,20 @@ export const AddEventFinal = () => {
   const [friendsToDisplay, setFriendsToDisplay] = useState([]);
   const [allFriends, setAllFriends] = useState([]);
 
+  // Get the user data for each friend to display
   useEffect(() => {
-    friends.forEach(friend => {
-      firebase.firestore().collection("users")
-          .doc(friend)
-          .orderBy("name")
-          .get()
-          .then(snapshot => {
-            let friendsArr = snapshot.docs.map(doc => {
-              const data = doc.data();
-              const id = doc.id;
-              return {id, ...data}  // the object to place in the users array
-            });
-            setAllFriends(friendsArr);
-            setFriendsToDisplay(friendsArr);
-          })
-    })
-  }, [friends])
+    const fetchFriends = async () => {
+      const docs = await firebase.firestore().collection("users").get();
+
+      let friendsArr = [];
+      docs.forEach(doc => {
+        const id = doc.id;
+        if (friends.indexOf(id) > -1) friendsArr.push(doc.data());
+      });
+      setFriendsToDisplay(friendsArr);
+    }
+    fetchFriends();
+  }, [friends]);
 
   const fetchFriends = (search) => {
     if (search.length !== 0) {
@@ -74,29 +71,6 @@ export const AddEventFinal = () => {
     }
     else setFriendsToDisplay(allFriends);
   }
-
-  var eventData = {
-    name: useSelector(state => state.event.name),
-    description: useSelector(state => state.event.description),
-    tags: useSelector(state => state.event.tags),
-    startDateTime: useSelector(state => state.event.startDateTime),
-    endDateTime: useSelector(state => state.event.endDateTime),
-    location: useSelector(state => state.event.location),
-    attendees: [],
-  };
-
-  // New event gets added to firebase
-  const onPress = async () => {
-    const docRef = await firebase.firestore().collection("events").doc();
-    eventData.ID = docRef.id;
-    eventData.creator = await firebase.firestore().collection("users")
-      .doc(firebase.auth().currentUser.uid);
-    eventData.attendees.push(eventData.creator);
-    eventData.nameLowercase = eventData.name.toLowerCase();
-    await docRef.set(eventData);
-    console.log("Posted to firebase - " + eventData.ID);
-    navigation.navigate("Main");
-  };
 
   return (
     <View style={styles.container}>
@@ -145,7 +119,7 @@ export const AddEventFinal = () => {
       </View>
 
       <View style={{ bottom: windowWidth * 0.1 }}>
-        <FancyButtonButLower title="Post Event" onPress={onPress} />
+        <FancyButtonButLower title="Done" onPress={() => navigation.navigate("Main")} />
       </View>
     </View>
   );

@@ -7,7 +7,8 @@
 
 import {
     USER_STATE_CHANGE,
-    USER_FRIENDS_STATE_CHANGE
+    USER_FRIENDS_STATE_CHANGE,
+    CLEAR_USER_DATA,
 } from "../constants";
 
 const initialState = {
@@ -49,7 +50,7 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 friends: action.friends,
             }
-        case 'CLEAR_DATA':
+        case 'CLEAR_USER_DATA':
             return initialState;
         default:
             return state;
