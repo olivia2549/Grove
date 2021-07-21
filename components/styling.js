@@ -6,7 +6,13 @@
  */
 
 import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
 export const FancyButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.fancyButtonContainer}>
@@ -15,7 +21,10 @@ export const FancyButton = ({ onPress, title }) => (
 );
 
 export const FancyButtonButLower = ({ onPress, title }) => (
-  <TouchableOpacity onPress={onPress} style={styles.fancyButtonButLowerContainer}>
+  <TouchableOpacity
+    onPress={onPress}
+    style={styles.fancyButtonButLowerContainer}
+  >
     <Text style={styles.fancyButtonText}>{title}</Text>
   </TouchableOpacity>
 );
@@ -23,21 +32,22 @@ export const FancyButtonButLower = ({ onPress, title }) => (
 export const FancyInput = ({ placeholder, onChangeText, secureTextEntry }) => (
   <View style={styles.inputView}>
     <TextInput
-    style={styles.TextInput}
-    placeholder={placeholder}
-    placeholderTextColor="#003f5c"
-    onChangeText={onChangeText}
-    secureTextEntry={secureTextEntry}
-  />
+      style={styles.TextInput}
+      placeholder={placeholder}
+      placeholderTextColor="#003f5c"
+      onChangeText={onChangeText}
+      secureTextEntry={secureTextEntry}
+    />
   </View>
-  
 );
+
+export const ProfileComponent = ({ onPress, title }) => <View></View>;
 
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     justifyContent: "center",
-    padding: 16
+    padding: 16,
   },
   fancyButtonContainer: {
     elevation: 8,
@@ -58,24 +68,24 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginLeft: 15,
     marginRight: 15,
-    marginTop: 40
+    marginTop: 40,
   },
   fancyButtonText: {
-      fontSize: 18,
-      color: "#fff",
-      fontWeight: "bold",
-      alignSelf: "center",
-      textTransform: "uppercase"
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
   },
   image: {
-      marginBottom: 40,
-      height: 400,
+    marginBottom: 40,
+    height: 400,
   },
   inputView: {
     backgroundColor: "#F6F6F6",
     height: 45,
     marginBottom: 20,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     borderRadius: 8,
   },
   TextInput: {
