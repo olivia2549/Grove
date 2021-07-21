@@ -37,6 +37,4 @@ export const InviteOthers = () => {
       );
 }
 
-
-
 export default InviteOthers;

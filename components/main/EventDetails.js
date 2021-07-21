@@ -15,7 +15,6 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  Share,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { parseDate } from "./Card";
