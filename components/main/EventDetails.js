@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { parseDate } from "./Card";
+import { InviteFriends } from "./InviteFriends";
 import firebase from "firebase";
 import { FancyInput } from "../styling";
 import { useNavigation } from '@react-navigation/native';
@@ -195,7 +196,15 @@ export const EventDetails = ({ navigation, route }) => {
       </ScrollView>
 
       <View style={styles.rowFlexContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("InviteOthers")} style={styles.fancyButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("InviteFriends", {
+          name: event.name,
+          description: event.description,
+          tags: event.tags,
+          startDateTime: event.startDateTime,
+          endDateTime: event.endDateTime,
+          location: event.location,
+          attendees: event.attendees,
+        })} style={styles.fancyButtonContainer}>
           <Text style={styles.fancyButtonText}>Invite</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onGoing} style={[styles.fancyButtonContainer, {backgroundColor: interestedColor, flex: 2/3}]}>

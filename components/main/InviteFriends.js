@@ -1,7 +1,7 @@
 /**
  * Copyright Grove, @2021 - All rights reserved
  *
- * AddEventFinal.js
+ * InviteFriends.js
  * User posts event
  */
 
@@ -13,7 +13,8 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  FlatList, Image, Button,
+  FlatList, Image, Button, Share,
+    TextInput
 } from "react-native";
 
 import { useSelector } from "react-redux";
@@ -27,18 +28,25 @@ import { FancyButtonButLower, FancyInput } from "../styling";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const AddEventFinal = () => {
+export const InviteFriends = ( { route } ) => {
   const navigation = useNavigation();
 
-  const [users, setUsers] = useState([]);
   const friends = useSelector(state => state.currentUser.friends);
   const [friendsToDisplay, setFriendsToDisplay] = useState([]);
   const [allFriends, setAllFriends] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const eventName = route.params.name;
+  const userName = useSelector(state => state.currentUser.name);
 
   // Get the user data for each friend to display
   useEffect(() => {
     const fetchFriends = async () => {
-      const docs = await firebase.firestore().collection("users").get();
+      const docs = await firebase.firestore().collection("users")
+          .orderBy("name")
+          .startAt(search)
+          .endAt(search + "\uf8ff") // last letter; includes everything in search so far
+          .get();
 
       let friendsArr = [];
       docs.forEach(doc => {
@@ -48,29 +56,27 @@ export const AddEventFinal = () => {
       setFriendsToDisplay(friendsArr);
     }
     fetchFriends();
-  }, [friends]);
+  }, [search]);
 
-  const fetchFriends = (search) => {
-    if (search.length !== 0) {
-      friends.forEach(friend => {
-        firebase.firestore().collection("users")
-            .doc(friend)
-            .orderBy("name")
-            .startAt(search)
-            .endAt(search + '\uf8ff')   // last letter; includes everything in search so far
-            .get()
-            .then((snapshot) => {
-              let friendsArr = snapshot.docs.map(doc => {
-                const data = doc.data();
-                const id = doc.id;
-                return {id, ...data}  // the object to place in the users array
-              });
-              setFriendsToDisplay(friendsArr);
-            })
-      })
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+            `${userName} is inviting you to ${eventName}. Check it out on Grove! *link*`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
     }
-    else setFriendsToDisplay(allFriends);
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -80,14 +86,12 @@ export const AddEventFinal = () => {
 
       <View style={styles.content}>
         <View style={{ paddingHorizontal: 10 }}>
-          <FancyInput
+          <TextInput
             placeholder="Search..."
-            onChangeText={(search) => {
-              fetchFriends(search)
-            }}
+            returnKeyType="search"
+            onChangeText={search => {setSearch(search)}}
           />
         </View>
-
         <View style={{ paddingHorizontal: 10 }}>
           <Text style={{ fontSize: windowWidth * 0.07, fontWeight: "bold" }}>
             Suggested
@@ -118,8 +122,8 @@ export const AddEventFinal = () => {
         />
       </View>
 
-      <View style={{ bottom: windowWidth * 0.1 }}>
-        <FancyButtonButLower title="Done" onPress={() => navigation.navigate("Main")} />
+      <View style={{flex: 1, justifyContent: 'flex-end'}}>
+        <FancyButtonButLower title="share" onPress={onShare} />
       </View>
     </View>
   );
@@ -162,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddEventFinal;
+export default InviteFriends;
