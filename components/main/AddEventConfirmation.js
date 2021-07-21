@@ -52,14 +52,8 @@ const AddEventConfirmation = () => {
     await docRef.set(eventData);
     console.log("Posted to firebase - " + eventData.ID);
     Alert.alert("Event posted");
-    navigation.navigate("InviteFriends", {
-      name: eventData.name,
-      description: eventData.description,
-      tags: eventData.tags,
-      startDateTime: eventData.startDateTime,
-      endDateTime: eventData.endDateTime,
-      location: eventData.location,
-      attendees: eventData.attendees,
+    navigation.navigate("Main", {
+      //TODO - navigate to EventDetails => Auto open invite
     });
   };
 

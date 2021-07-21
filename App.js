@@ -92,20 +92,28 @@ export const App = () => {
         );
     }
 
+    const MainWithEvents = () => {
+        return(
+            <Stack.Navigator mode='modal' initialRouteName='Main' screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Main" component={MainScreen}/>
+                <Stack.Screen name="EventDetails" component={EventDetails}/>
+                <Stack.Screen name="InviteFriends" component={InviteFriends}/>
+            </Stack.Navigator>
+        );
+    }
+
     return (
         // Provider allows us to access the redux store data in our app
         <Provider store={store}>
             <NavigationContainer>
-                <Stack.Navigator mode='modal' initialRouteName='Main' screenOptions={{
+                <Stack.Navigator mode='modal' initialRouteName='MainWithEvents' screenOptions={{
                     headerShown: false
                 }} >
-                    <Stack.Screen name="Main" component={MainScreen}/>
-                    <Stack.Screen name="EventDetails" component={EventDetails}/>
+                    <Stack.Screen name="MainWithEvents" component={MainWithEvents}/>
                     <Stack.Screen name="AddEventInfo" component={AddEventInfo}/>
                     <Stack.Screen name="AddEventTags" component={AddEventTags}/>
                     <Stack.Screen name="AddEventDate" component={AddEventDate}/>
                     <Stack.Screen name="AddEventConfirmation" component={AddEventConfirmation}/>
-                    <Stack.Screen name="InviteFriends" component={InviteFriends}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
