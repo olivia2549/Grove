@@ -5,7 +5,7 @@
  * User posts event
  */
 
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  FlatList,
+  FlatList, Image, Button,
 } from "react-native";
 
 import { useSelector } from "react-redux";
@@ -31,6 +31,49 @@ export const AddEventFinal = () => {
   const navigation = useNavigation();
 
   const [users, setUsers] = useState([]);
+  const friends = useSelector(state => state.currentUser.friends);
+  const [friendsToDisplay, setFriendsToDisplay] = useState([]);
+  const [allFriends, setAllFriends] = useState([]);
+
+  useEffect(() => {
+    friends.forEach(friend => {
+      firebase.firestore().collection("users")
+          .doc(friend)
+          .orderBy("name")
+          .get()
+          .then(snapshot => {
+            let friendsArr = snapshot.docs.map(doc => {
+              const data = doc.data();
+              const id = doc.id;
+              return {id, ...data}  // the object to place in the users array
+            });
+            setAllFriends(friendsArr);
+            setFriendsToDisplay(friendsArr);
+          })
+    })
+  }, [friends])
+
+  const fetchFriends = (search) => {
+    if (search.length !== 0) {
+      friends.forEach(friend => {
+        firebase.firestore().collection("users")
+            .doc(friend)
+            .orderBy("name")
+            .startAt(search)
+            .endAt(search + '\uf8ff')   // last letter; includes everything in search so far
+            .get()
+            .then((snapshot) => {
+              let friendsArr = snapshot.docs.map(doc => {
+                const data = doc.data();
+                const id = doc.id;
+                return {id, ...data}  // the object to place in the users array
+              });
+              setFriendsToDisplay(friendsArr);
+            })
+      })
+    }
+    else setFriendsToDisplay(allFriends);
+  }
 
   var eventData = {
     name: useSelector(state => state.event.name),
@@ -41,28 +84,6 @@ export const AddEventFinal = () => {
     location: useSelector(state => state.event.location),
     attendees: [],
   };
-
-  // Grab users that match a search
-  const fetchUsers = (search) => {
-    if (search.length !== 0) {
-      firebase
-          .firestore()
-          .collection("users")
-          .orderBy("name")
-          .startAt(search)
-          .endAt(search + "\uf8ff")
-          // .where('name', '>=', search) // username == search, or has search contents plus more chars
-          .get()
-          .then((snapshot) => {
-            let usersArr = snapshot.docs.map((doc) => {
-              const data = doc.data();
-              const id = doc.id;
-              return {id, ...data}; // the object to place in the users array
-            });
-            setUsers(usersArr);
-          });
-    }
-  }
 
   // New event gets added to firebase
   const onPress = async () => {
@@ -88,7 +109,7 @@ export const AddEventFinal = () => {
           <FancyInput
             placeholder="Search..."
             onChangeText={(search) => {
-              fetchUsers(search);
+              fetchFriends(search)
             }}
           />
         </View>
@@ -99,20 +120,27 @@ export const AddEventFinal = () => {
           </Text>
         </View>
         <FlatList
-          numColumns={1}
-          horizontal={false}
-          data={users}
-          renderItem={(
-            { item } // Allows you to render a text item for each user
-          ) => (
-            <Text
-              onPress={() => {
-                navigation.navigate("Profile", { uid: item.id });
-              }}
-            >
-              {item.name}
-            </Text>
-          )}
+            numColumns={1}
+            horizontal={false}
+            data={friendsToDisplay}
+            renderItem={({item}) => (   // Allows you to render a text item for each user
+                <View style={styles.userCellContainer}>
+                  <TouchableOpacity
+                      onPress={() => {
+                        // TODO: invite the friend
+                      }}
+                  >
+                    <Image
+                        source={require("../../assets/profileicon.jpg")}
+                        style={styles.profilePic}
+                    />
+                    <Text style={styles.userName}>{item.name}</Text>
+                    <Button
+                        title="invite friend"
+                    />
+                  </TouchableOpacity>
+                </View>
+            )}
         />
       </View>
 
@@ -147,6 +175,16 @@ const styles = StyleSheet.create({
     top: "20%",
     padding: 25,
     fontSize: windowWidth * 0.12,
+  },
+  profilePic: {
+    width: 40,
+    height: 40,
+    borderRadius: 400 / 2,
+  },
+  userName: {
+    flexDirection: "column",
+    justifyContent: "center",
+    marginLeft: 5,
   },
 });
 
