@@ -130,6 +130,7 @@ export const fetchUserFriends = () => {
                 let friends = snapshot.docs.map(doc => {
                     return doc.id;
                 })
+                console.log("friends state change");
                 dispatch({type: USER_FRIENDS_STATE_CHANGE, friends});
             })
     })

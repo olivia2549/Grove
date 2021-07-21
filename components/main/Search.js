@@ -17,6 +17,7 @@ export const Search = () => {
     const navigation = useNavigation();
     const [usersToDisplay, setUsersToDisplay] = useState([]);
     const [isFriend, setIsFriend] = useState(false);
+    const [search, setSearch] = useState("");
 
     // Initially show all the users in the database sorted by name
     // TODO: sort users using a suggestion algorithm
@@ -24,7 +25,7 @@ export const Search = () => {
         firebase.firestore().collection("users")
             .orderBy("name")
             .get()
-            .then((snapshot) => {
+            .then(snapshot => {
                 let usersArr = snapshot.docs.map(doc => {
                     const data = doc.data();
                     const id = doc.id;
@@ -35,33 +36,32 @@ export const Search = () => {
     }, []);
 
     // Grab users that match a search
-    const fetchUsers = (search) => {
-        if (search.length !== 0) {
-            firebase.firestore()
+    useEffect(() => {
+        const fetchUserToDisplay = async() => {
+            const docs = await firebase.firestore()
                 .collection("users")
                 .orderBy("name")
                 .startAt(search)
                 .endAt(search + '\uf8ff')   // last letter; includes everything in search so far
-                .get()
-                .then((snapshot) => {
-                    let usersArr = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        if (id === firebase.firestore().currentUser.uid) {
-                            console.log("skippped ", id);
-                            return;
-                        }  // skip showing current user in search
-                        return {id, ...data}  // the object to place in the users array
-                    });
-                    setUsersToDisplay(usersArr);
-                })
+                .get();
+
+            let usersArr = [];
+            docs.forEach(doc => {
+                const data = doc.data();
+                const id = doc.id;
+                if (id === firebase.auth().currentUser.uid) {
+                    return;
+                }
+                usersArr.push(data);
+            })
+            setUsersToDisplay(usersArr);
         }
-        // TODO: If everything in the search bar gets deleted, show all users
-    }
+        fetchUserToDisplay();
+    }, [search]);
 
     return (
         <View style={{padding: 40}}>
-            <FancyInput placeholder="Search..." onChangeText={(search) => {fetchUsers(search)}}/>
+            <FancyInput placeholder="Search..." onChangeText={search => {setSearch(search)}}/>
             <FlatList
                 numColumns={1}
                 horizontal={false}

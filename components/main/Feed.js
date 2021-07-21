@@ -85,7 +85,7 @@ const Feed = () => {
                 <FancyInput placeholder="Search..." onChangeText={(search) => {searchEvents(search)}}/>
             </View>
             <View style={{justifyContent: "center", margin: 15}}>
-                {events.length == 0 ?
+                {events.length === 0 ?
                     <Text>Nothing to show</Text> :
                     <FlatList
                         data={events}

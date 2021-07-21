@@ -78,8 +78,8 @@ export const AddEventInfo = () => {
                 Alert.alert("Please add a name for this event.");
                 nameRef.current.focus();
               } else {
-                locationRef.current.focus();
                 dispatch(addEventName(name));
+                locationRef.current.focus();
               }
             }}
             defaultValue={name}
@@ -131,12 +131,14 @@ export const AddEventInfo = () => {
             returnKeyType="done"
             blurOnSubmit={false}
             onSubmitEditing={() => {
+              console.log("submitting...");
               if (description === "") {
                 Alert.alert("Please add a description for this event.");
                 descriptionRef.current.focus();
               } else {
-                navigation.navigate("AddEventTags");
+                console.log(description);
                 dispatch(addEventDescription(description));
+                navigation.navigate("AddEventTags");
               }
             }}
             value={description}
