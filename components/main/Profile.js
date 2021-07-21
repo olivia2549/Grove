@@ -318,18 +318,18 @@ const styles = StyleSheet.create({
   },
   //sign out
   signOut: {
-    flex: 1 / 9,
+    flex: 1 / 12,
     marginHorizontal: 12,
     marginLeft: 18,
     marginBottom: 6,
     backgroundColor: "#5DB075",
-    borderRadius: 20,
+    borderRadius: 10,
     justifyContent: "center",
   },
   signOutText: {
     textAlign: "center",
     color: "white",
-    fontSize: windowWidth * 0.05,
+    fontSize: windowWidth * 0.045,
   },
   // add friend
   alreadyFriend: {
