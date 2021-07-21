@@ -50,6 +50,7 @@ import AddEventTags from './components/main/AddEventTags';
 import AddEventDate from './components/main/AddEventDate';
 import AddEventConfirmation from './components/main/AddEventConfirmation';
 import InviteFriends from "./components/main/InviteFriends";
+import ProfileUser from "./components/main/ProfileUser";
 import EventDetails from './components/main/EventDetails';
 import Notifications from './components/main/Notifications';
 
@@ -106,6 +107,7 @@ export const App = () => {
                     <Stack.Screen name="AddEventDate" component={AddEventDate}/>
                     <Stack.Screen name="AddEventConfirmation" component={AddEventConfirmation}/>
                     <Stack.Screen name="InviteFriends" component={InviteFriends}/>
+                    <Stack.Screen name="ProfileUser" component={ProfileUser}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>

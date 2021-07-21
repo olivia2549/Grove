@@ -86,7 +86,7 @@ export const Main = () => {
                     tabPress: ev => {
                         ev.preventDefault();    // Allows us to override what happens when tab clicked
                         // Routes to the Add stack screen in App.js, which comes from AddEventInfo.js component
-                        navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid});
+                        navigation.navigate("Profile");
                     }
                 })}
                 options={{
