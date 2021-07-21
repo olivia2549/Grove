@@ -99,7 +99,7 @@ export const Search = () => {
           <View style={styles.userCellContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Profile", { uid: item.ID });
+                navigation.navigate("ProfileUser", { uid: item.ID });
               }}
               style={{
                 flexDirection: "row",
