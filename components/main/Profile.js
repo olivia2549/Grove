@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   View,
@@ -29,33 +29,45 @@ require("firebase/firestore");
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const Profile = ( {route} ) => {
+export const Profile = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const userDisplayingID = route.params.uid;  // user to display
+  const userDisplayingID = route.params.uid; // user to display
   const [userDisplaying, setUserDisplaying] = useState({});
 
   const currentUserID = useSelector((state) => state.currentUser.ID);
 
-  const friends = useSelector(state => state.currentUser.friends);
+  const friends = useSelector((state) => state.currentUser.friends);
   const [isFriend, setIsFriend] = useState(false);
 
-  const currentUserEvents = useSelector((state) => state.currentUser.eventsPosted);
+  const currentUserEvents = useSelector(
+    (state) => state.currentUser.eventsPosted
+  );
 
   // for the toggle (a person you're following)
   const [upComingEvents, setUpComingEvents] = useState(true);
   const [eventsAttended, setEventsAttended] = useState(false);
   const [toggleSide, setToggleSide] = useState("flex-start");
 
-  useEffect(() => {
-    const fetchUserToDisplay = async() => {
-      const user = await firebase.firestore().collection("users").doc(userDisplayingID).get();
-      setUserDisplaying(user.data());
-    }
-    fetchUserToDisplay();
-    friends.indexOf(userDisplayingID) > -1 ? setIsFriend(true) : setIsFriend(false);
-  }, [route.params.uid], [friends]); // only gets called if userToDisplay or friends changes
+  useEffect(
+    () => {
+      const fetchUserToDisplay = async () => {
+        const user = await firebase
+          .firestore()
+          .collection("users")
+          .doc(userDisplayingID)
+          .get();
+        setUserDisplaying(user.data());
+      };
+      fetchUserToDisplay();
+      friends.indexOf(userDisplayingID) > -1
+        ? setIsFriend(true)
+        : setIsFriend(false);
+    },
+    [route.params.uid],
+    [friends]
+  ); // only gets called if userToDisplay or friends changes
 
   const signOut = () => {
     firebase.auth().signOut();
@@ -65,17 +77,21 @@ export const Profile = ( {route} ) => {
   // Adds a friend
   const addFriend = () => {
     // add searched person to the current user's friends list
-    firebase.firestore().collection("users")
-        .doc(currentUserID)
-        .collection("friends")
-        .doc(userDisplayingID)
-        .set({});
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUserID)
+      .collection("friends")
+      .doc(userDisplayingID)
+      .set({});
     // add current user to the searched person's friend list
-    firebase.firestore().collection("users")
-        .doc(userDisplayingID)
-        .collection("friends")
-        .doc(currentUserID)
-        .set({});
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userDisplayingID)
+      .collection("friends")
+      .doc(currentUserID)
+      .set({});
   };
 
   const flipToggle = () => {
@@ -91,93 +107,89 @@ export const Profile = ( {route} ) => {
 
   const ProfileFollowing = () => {
     return (
-        <View>
-          {/* Friends Button */}
-          <TouchableOpacity style={styles.alreadyFriend}>
-            <Text style={styles.alreadyFriendText}>Friends</Text>
-          </TouchableOpacity>
+      <View>
+        {/* Friends Button */}
+        <TouchableOpacity style={styles.alreadyFriend}>
+          <Text style={styles.alreadyFriendText}>Friends</Text>
+        </TouchableOpacity>
 
-          {/* Toggle Button */}
-          <TouchableOpacity
-              style={[styles.toggleContainer, { justifyContent: toggleSide }]}
-              onPress={flipToggle}
-              activeOpacity="0.77"
-          >
-            {/* upcoming events pressed */}
-            {upComingEvents && (
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                  <View style={styles.upcomingEventsContainer}>
-                    <Text style={styles.toggleText}>Upcoming Events</Text>
-                  </View>
-                  <View style={styles.eventsAddedGreyTextContainer}>
-                    <Text style={styles.eventsAddedGreyText}>Events Attended</Text>
-                  </View>
-                </View>
+        {/* Toggle Button */}
+        <TouchableOpacity
+          style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+          onPress={flipToggle}
+          activeOpacity="0.77"
+        >
+          {/* upcoming events pressed */}
+          {upComingEvents && (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.upcomingEventsContainer}>
+                <Text style={styles.toggleText}>Upcoming Events</Text>
+              </View>
+              <View style={styles.eventsAddedGreyTextContainer}>
+                <Text style={styles.eventsAddedGreyText}>Events Attended</Text>
+              </View>
+            </View>
+          )}
+
+          {/* events attended pressed */}
+          {eventsAttended && (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.upcomingEventsGreyTextContainer}>
+                <Text style={styles.upcomingEventsGreyText}>
+                  Upcoming Events
+                </Text>
+              </View>
+              <View style={styles.eventsAddedContainer}>
+                <Text style={styles.toggleText}>Events Attended</Text>
+              </View>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        {/* List of events */}
+        <View style={styles.containerGallery}>
+          <FlatList
+            data={currentUserEvents}
+            renderItem={(event) => (
+              // when the card is pressed, we head to EventDetails page
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EventDetails", {
+                    event: event,
+                  })
+                }
+              >
+                <Card event={event.item} />
+              </TouchableOpacity>
             )}
-
-            {/* events attended pressed */}
-            {eventsAttended && (
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                  <View style={styles.upcomingEventsGreyTextContainer}>
-                    <Text style={styles.upcomingEventsGreyText}>
-                      Upcoming Events
-                    </Text>
-                  </View>
-                  <View style={styles.eventsAddedContainer}>
-                    <Text style={styles.toggleText}>Events Attended</Text>
-                  </View>
-                </View>
-            )}
-          </TouchableOpacity>
-
-          {/* List of events */}
-          <View style={styles.containerGallery}>
-            <FlatList
-                data={currentUserEvents}
-                renderItem={(event) => (
-                    // when the card is pressed, we head to EventDetails page
-                    <TouchableOpacity
-                        onPress={() =>
-                            navigation.navigate("EventDetails", {
-                              event: event,
-                            })
-                        }
-                    >
-                      <Card event={event.item} />
-                    </TouchableOpacity>
-                )}
-                showsVerticalScrollIndicator={false}
-            />
-          </View>
-    </View>
-    )
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+      </View>
+    );
   };
 
   const ProfileNotFollowing = () => {
     if (userDisplayingID !== currentUserID) {
       return (
-          <View>
-            <TouchableOpacity
-                onPress={addFriend}
-                style={styles.addFriend}
-            >
-              <Text style={styles.addFriendText}>Add Friend</Text>
-            </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={addFriend} style={styles.addFriend}>
+            <Text style={styles.addFriendText}>Add Friend</Text>
+          </TouchableOpacity>
 
-            <View style={styles.lockContainer}>
-              <Image
-                  source={require("../../assets/lock_outline.png")}
-                  style={styles.lockIcon}
-              />
-              <Text style={styles.lockIconText}>
-                Follow this account to see their events
-              </Text>
-            </View>
+          <View style={styles.lockContainer}>
+            <Image
+              source={require("../../assets/lock_outline.png")}
+              style={styles.lockIcon}
+            />
+            <Text style={styles.lockIconText}>
+              Follow this account to see their events
+            </Text>
           </View>
-      )
-    }
-    else {
-      return <View/>;
+        </View>
+      );
+    } else {
+      return <View />;
     }
   };
 
@@ -199,20 +211,14 @@ export const Profile = ( {route} ) => {
           <Text style={styles.userEmail}>{userDisplaying.email}</Text>
         </View>
 
-        {isFriend ?
-            <ProfileFollowing/>
-            :
-            <ProfileNotFollowing/>
-        }
+        {isFriend ? <ProfileFollowing /> : <ProfileNotFollowing />}
 
-        {
-          (userDisplayingID === currentUserID) &&
-              <TouchableOpacity onPress={signOut} style={styles.signOut}>
-                <Text style={styles.signOutText}>Sign Out</Text>
-              </TouchableOpacity>
-        }
+        {userDisplayingID === currentUserID && (
+          <TouchableOpacity onPress={signOut} style={styles.signOut}>
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+        )}
       </View>
-
     </View>
   );
 };
@@ -279,7 +285,7 @@ const styles = StyleSheet.create({
   },
   // add friend
   addFriend: {
-    flex: 1 / 8,
+    flex: 2,
     marginHorizontal: windowWidth * 0.028,
     marginTop: 8,
     height: "7%",
@@ -290,7 +296,8 @@ const styles = StyleSheet.create({
   addFriendText: {
     textAlign: "center",
     color: "white",
-    fontSize: windowWidth * 0.04,
+    fontSize: windowWidth * 0.045,
+    padding: 8,
   },
   // locked
   lockContainer: {
@@ -311,22 +318,22 @@ const styles = StyleSheet.create({
   },
   //sign out
   signOut: {
-    flex: 1 / 3,
+    flex: 1 / 12,
     marginHorizontal: 12,
     marginLeft: 18,
     marginBottom: 6,
     backgroundColor: "#5DB075",
-    borderRadius: 20,
+    borderRadius: 10,
     justifyContent: "center",
   },
   signOutText: {
     textAlign: "center",
     color: "white",
-    fontSize: windowWidth * 0.031,
+    fontSize: windowWidth * 0.045,
   },
   // add friend
   alreadyFriend: {
-    flex: 1 / 10,
+    flex: 2,
     marginHorizontal: windowWidth * 0.028,
     marginTop: 8,
     height: "7%",
@@ -338,10 +345,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#666666",
     fontSize: windowWidth * 0.045,
+    padding: 10,
   },
   /* toggle button */
   toggleContainer: {
-    flex: 1 / 8,
+    flex: 2,
     flexDirection: "row",
     marginHorizontal: windowWidth * 0.028,
     marginTop: 22,
@@ -358,6 +366,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: "97%",
     justifyContent: "center",
+    padding: 8,
     // flexDirection: "row",
   },
   eventsAddedGreyTextContainer: {
@@ -378,6 +387,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: "97%",
     justifyContent: "center",
+    padding: 8,
   },
   upcomingEventsGreyTextContainer: {
     flex: 1,
