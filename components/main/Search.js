@@ -70,7 +70,7 @@ export const Search = () => {
                     <View style={styles.userCellContainer}>
                         <TouchableOpacity
                             // onPress={navigation.navigate("Profile", {uid: item.id})}
-                            onPress={() => { navigation.navigate("Profile", {uid: item.id}) }}
+                            onPress={() => { navigation.navigate("Profile", {uid: item.ID}) }}
                         >
                             <Image
                                 source={require("../../assets/profileicon.jpg")}
