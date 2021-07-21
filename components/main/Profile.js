@@ -59,7 +59,7 @@ export const Profile = ( {route} ) => {
 
   const signOut = () => {
     firebase.auth().signOut();
-    dispatch(clearData());
+    dispatch(clearUserData());
   };
 
   // Adds a friend

@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  Alert,
   Button,
   StyleSheet,
   Dimensions,
@@ -19,6 +20,7 @@ import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import { FancyButtonButLower } from "../styling";
+import firebase from "firebase";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -34,6 +36,21 @@ const AddEventConfirmation = () => {
     startDateTime: useSelector((state) => state.event.startDateTime),
     endDateTime: useSelector((state) => state.event.endDateTime),
     location: useSelector((state) => state.event.location),
+    attendees: useSelector(state => state.event.attendees),
+  };
+
+  // New event gets added to firebase
+  const onSubmit = async () => {
+    const docRef = await firebase.firestore().collection("events").doc();
+    eventData.ID = docRef.id;
+    eventData.creator = await firebase.firestore().collection("users")
+        .doc(firebase.auth().currentUser.uid);
+    eventData.attendees.push(eventData.creator);
+    eventData.nameLowercase = eventData.name.toLowerCase();
+    await docRef.set(eventData);
+    console.log("Posted to firebase - " + eventData.ID);
+    Alert.alert("Event posted");
+    navigation.navigate("AddEventFinal");
   };
 
   // for start and end time translation
@@ -152,9 +169,9 @@ const AddEventConfirmation = () => {
 
       <View style={{ bottom: windowWidth * 0.1 }}>
         <FancyButtonButLower
-          title="Looks Good!"
+          title="Post Event"
           onPress={() => {
-            navigation.navigate("AddEventFinal");
+            onSubmit();
           }}
         />
       </View>

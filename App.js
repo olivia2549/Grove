@@ -96,9 +96,9 @@ export const App = () => {
         // Provider allows us to access the redux store data in our app
         <Provider store={store}>
             <NavigationContainer>
-                <Stack.Navigator mode="modal" initialRouteName='Main' screenOptions={{
+                <Stack.Navigator mode='modal' initialRouteName='Main' screenOptions={{
                     headerShown: false
-                }} > 
+                }} >
                     <Stack.Screen name="Main" component={MainScreen}/>
                     <Stack.Screen name="EventDetails" component={EventDetails}/>
                     <Stack.Screen name="AddEventInfo" component={AddEventInfo}/>
@@ -110,7 +110,6 @@ export const App = () => {
             </NavigationContainer>
         </Provider>
     )
-
 }
 
 const styles = StyleSheet.create({

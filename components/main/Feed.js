@@ -5,7 +5,7 @@
  * Displays main feed
  */
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, FlatList, Text, TouchableOpacity, RefreshControl, Button, SafeAreaView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { FancyInput } from "../styling";
@@ -25,10 +25,10 @@ const wait = (timeout) => {
 const Feed = () => {
     const navigation = useNavigation();
     const [events, setEvents] = useState([]);
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     //refreshes feed if pulled up
-    const onRefresh = React.useCallback(() => {
+    const onRefresh = useCallback(() => {
         //TODO - reload new data from firebase
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
