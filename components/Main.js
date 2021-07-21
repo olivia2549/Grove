@@ -19,6 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import SearchScreen from './main/Search'
+import NotificationsScreen from "./main/Notifications";
 
 // Dummy component to satisfy TabScreen and allow route to come from App.js instead
 const EmptyScreen = () => {
@@ -64,6 +65,20 @@ export const Main = () => {
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons name="plus-box" color={color} size={26}/>
                         )
+                }}
+            />
+            <Tab.Screen name="Notifications" component={NotificationsScreen}
+                listeners={({ navigation }) => ({   // Listens for a tab press
+                    tabPress: ev => {
+                        ev.preventDefault();    // Allows us to override what happens when tab clicked
+                        // Routes to the Add stack screen in App.js, which comes from AddEventInfo.js component
+                        navigation.navigate("Notifications");
+                    }
+                })}
+                options={{
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="bell" color={color} size={26}/>
+                    )
                 }}
             />
             <Tab.Screen name="Profile" component={ProfileScreen}
