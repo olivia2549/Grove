@@ -15,35 +15,36 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  Share,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { parseDate } from "./Card";
 import firebase from "firebase";
 import { FancyInput } from "../styling";
+import { useNavigation } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const onShare = async () => {
-  try {
-    const result = await Share.share({
-      message:
-        "*User* is inviting you to *event*. Check it out on Grove! *link*",
-    });
-    if (result.action === Share.sharedAction) {
-      if (result.activityType) {
-        // shared with activity type of result.activityType
-      } else {
-        // shared
-      }
-    } else if (result.action === Share.dismissedAction) {
-      // dismissed
-    }
-  } catch (error) {
-    alert(error.message);
-  }
-};
+// const onShare = async () => {
+//   try {
+//     const result = await Share.share({
+//       message:
+//         "*User* is inviting you to *event*. Check it out on Grove! *link*",
+//     });
+//     if (result.action === Share.sharedAction) {
+//       if (result.activityType) {
+//         // shared with activity type of result.activityType
+//       } else {
+//         // shared
+//       }
+//     } else if (result.action === Share.dismissedAction) {
+//       // dismissed
+//     }
+//   } catch (error) {
+//     alert(error.message);
+//   }
+// };
+
 
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
@@ -51,8 +52,9 @@ export const EventDetails = ({ navigation, route }) => {
   const event = route.params.event.item;
   const start = parseDate(event.startDateTime.toDate());
   const end = parseDate(event.endDateTime.toDate());
-  const [goingBtnText, setGoingBtnText] = useState("i'm going");
+  const [goingBtnText, setGoingBtnText] = useState("interested");
   const [goingBtnSelected, setGoingBtnSelected] = useState(false);
+  const [interestedColor, setInterestedColor] = useState("#5DB075")
 
   // title font size
   const [currentFont, setCurrentFont] = useState(50);
@@ -66,8 +68,8 @@ export const EventDetails = ({ navigation, route }) => {
   const onGoing = () => {
     setGoingBtnSelected(!goingBtnSelected);
     goingBtnSelected
-      ? setGoingBtnText("i'm not going")
-      : setGoingBtnText("i'm going");
+      ? setInterestedColor("#5DB075")
+      : setInterestedColor("#A9A9A9"); //Not sure if I did the colors right -DG
     if (goingBtnSelected) {
       console.log("adding event to users...");
       firebase
@@ -193,10 +195,10 @@ export const EventDetails = ({ navigation, route }) => {
       </ScrollView>
 
       <View style={styles.rowFlexContainer}>
-        <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
-          <Text style={styles.fancyButtonText}>Share</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("InviteOthers")} style={styles.fancyButtonContainer}>
+          <Text style={styles.fancyButtonText}>Invite</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onGoing} style={styles.fancyButtonContainer}>
+        <TouchableOpacity onPress={onGoing} style={[styles.fancyButtonContainer, {backgroundColor: interestedColor, flex: 2/3}]}>
           <Text style={styles.fancyButtonText}>{goingBtnText}</Text>
         </TouchableOpacity>
       </View>
@@ -246,10 +248,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     paddingVertical: 16,
     paddingHorizontal: 32,
-    marginBottom: 8,
-    marginLeft: 15,
-    marginRight: 15,
-    flex: 1,
+    marginBottom: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    flex: 1/3,
     justifyContent: "center",
   },
   fancyButtonText: {
