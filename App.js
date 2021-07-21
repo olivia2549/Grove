@@ -51,6 +51,7 @@ import AddEventDate from './components/main/AddEventDate';
 import AddEventConfirmation from './components/main/AddEventConfirmation';
 import AddEventFinal from "./components/main/AddEventFinal";
 import EventDetails from './components/main/EventDetails';
+import Notifications from './components/main/Notifications';
 
 const Stack = createStackNavigator();
 

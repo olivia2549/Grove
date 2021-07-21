@@ -80,13 +80,16 @@ const Feed = () => {
     }, []);
 
     return (
-        <View style={{backgroundColor: "#fff"}}>
-            <View style={{marginTop: 30}}>
+        <SafeAreaView style={{backgroundColor: "#fff", flex: 1}}>
+            {/* <View style={{marginTop: 30}}>
                 <FancyInput placeholder="Search..." onChangeText={(search) => {searchEvents(search)}}/>
+            </View> */}
+            <View style={{alignItems: 'center'}}>
+                <Text style={{fontSize: 32, fontWeight: 'bold'}}>Events</Text>
             </View>
             <View style={{justifyContent: "center", margin: 15}}>
                 {events.length == 0 ?
-                    <Text>Nothing to show</Text> :
+                    <Text>Loading...</Text> :
                     <FlatList
                         data={events}
                         refreshControl={
@@ -108,7 +111,7 @@ const Feed = () => {
                         showsVerticalScrollIndicator={false}
                     />}
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
