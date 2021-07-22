@@ -85,6 +85,26 @@ export const Search = () => {
     fetchUserToDisplay();
   }, [search]);
 
+  //returns events user searched for
+  //   const searchEvents = (search) => {
+  //         search = search.toLowerCase();
+  //         firebase.firestore()
+  //             .collection("events")
+  //             .orderBy('nameLowercase')
+  //             .startAt(search)
+  //             .endAt(search + '\uf8ff')
+  //             // .where('name', '>=', search) // username == search, or has search contents plus more chars
+  //             .get()
+  //             .then((snapshot) => {
+  //                 let eventsArr = snapshot.docs.map(doc => {
+  //                     const data = doc.data();
+  //                     const id = doc.id;
+  //                     return {id, ...data}  // the object to place in the users array
+  //                 });
+  //                 setEvents(eventsArr);
+  //             })
+  // }
+
   // Adds a friend
   const addFriend = (id) => {
     // add searched person to the current user's outgoingRequests list

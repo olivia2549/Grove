@@ -17,7 +17,7 @@ import { Card } from './Card';
 //waiting for feed to refresh
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
-  }
+}
 
 // function to filter the events
 // there will be card components within the view. The card components will be clickable
@@ -27,31 +27,49 @@ const Feed = () => {
     const [events, setEvents] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
+    // Fetches each event in the database (when page first loads)
+    useEffect(() => {
+        firebase.firestore().collection('events').get().then(snapshot => {
+            const temp = [];
+            snapshot.forEach(doc => {
+                temp.push(doc.data());
+            })
+            setEvents(temp);
+        });
+    }, []);
+
     //refreshes feed if pulled up
     const onRefresh = useCallback(() => {
-        //TODO - reload new data from firebase
-        setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
-      }, []);
+        firebase.firestore().collection('events').get().then(snapshot => {
+            const temp = [];
+            snapshot.forEach(doc => {
+                temp.push(doc.data());
+            })
+            setEvents(temp);
+        });
 
-      //returns events user searched for
-      const searchEvents = (search) => {
-            search = search.toLowerCase();
-            firebase.firestore()
-                .collection("events")
-                .orderBy('nameLowercase')
-                .startAt(search)
-                .endAt(search + '\uf8ff')
-                // .where('name', '>=', search) // username == search, or has search contents plus more chars
-                .get()
-                .then((snapshot) => {
-                    let eventsArr = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        return {id, ...data}  // the object to place in the users array
-                    });
-                    setEvents(eventsArr);
-                })
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+    }, []);
+
+    //returns events user searched for
+    const searchEvents = (search) => {
+        search = search.toLowerCase();
+        firebase.firestore()
+            .collection("events")
+            .orderBy('nameLowercase')
+            .startAt(search)
+            .endAt(search + '\uf8ff')
+            // .where('name', '>=', search) // username == search, or has search contents plus more chars
+            .get()
+            .then((snapshot) => {
+                let eventsArr = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    return {id, ...data}  // the object to place in the users array
+                });
+                setEvents(eventsArr);
+            })
     }
 
     // this continuously checks for updates from the db
@@ -68,17 +86,6 @@ const Feed = () => {
     //     });
     // });
 
-    // Fetches each event in the database (just once)
-    useEffect(() => {
-        firebase.firestore().collection('events').get().then(snapshot => {
-            const temp = [];
-            snapshot.forEach(doc => {
-                temp.push(doc.data());
-            })
-            setEvents(temp);
-        });
-    }, []);
-
     return (
         <SafeAreaView style={{backgroundColor: "#fff", flex: 1}}>
             {/* <View style={{marginTop: 30}}>
@@ -94,10 +101,10 @@ const Feed = () => {
                         data={events}
                         refreshControl={
                             <RefreshControl
-                              refreshing={refreshing}
-                              onRefresh={onRefresh}
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
                             />
-                          }
+                        }
                         renderItem={(event) => (
                             // when the card is pressed, we head to EventDetails page
                             <TouchableOpacity onPress={() => navigation.navigate("EventDetails", {

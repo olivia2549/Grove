@@ -22,6 +22,7 @@ import { InviteFriends } from "./InviteFriends";
 import firebase from "firebase";
 import { FancyInput } from "../styling";
 import { useNavigation } from '@react-navigation/native';
+import {useSelector} from "react-redux";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -53,8 +54,9 @@ export const EventDetails = ({ navigation, route }) => {
   const event = route.params.event.item;
   const start = parseDate(event.startDateTime.toDate());
   const end = parseDate(event.endDateTime.toDate());
-  const [goingBtnText, setGoingBtnText] = useState("interested");
-  const [goingBtnSelected, setGoingBtnSelected] = useState(false);
+
+  const currentUserID = useSelector(state => state.currentUser.ID);
+
   const [interestedColor, setInterestedColor] = useState("#5DB075")
 
   // title font size
@@ -65,46 +67,16 @@ export const EventDetails = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  // When the "i'm going" button is pressed
-  const onGoing = () => {
-    setGoingBtnSelected(!goingBtnSelected);
-    goingBtnSelected
-      ? setInterestedColor("#5DB075")
-      : setInterestedColor("#A9A9A9"); //Not sure if I did the colors right -DG
-    if (goingBtnSelected) {
-      console.log("adding event to users...");
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(firebase.auth().currentUser.uid)
-        .update({
-          eventsAttending: firebase.firestore.FieldValue.arrayUnion(event.id),
-        });
-      // TODO: make this work right
-      firebase
+  // When the "i'm interested" button is pressed
+  const onInterested = () => {
+    // add current user to "attendees" collection
+    firebase
         .firestore()
         .collection("events")
-        .doc(event.id)
-        .update({
-          attendee: firebase.firestore.FieldValue.arrayUnion(event),
-        });
-    } else {
-      console.log("removing event from users...");
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(firebase.auth().currentUser.uid)
-        .update({
-          eventsAttending: firebase.firestore.FieldValue.arrayRemove(event),
-        });
-      firebase
-        .firestore()
-        .collection("events")
-        .doc(event.id)
-        .update({
-          attendee: firebase.firestore.FieldValue.arrayRemove(event),
-        });
-    }
+        .doc()
+        .collection("attendees")
+        .doc(currentUserID)
+        .set({});
   };
 
   const config = {
@@ -196,6 +168,7 @@ export const EventDetails = ({ navigation, route }) => {
       </ScrollView>
 
       <View style={styles.rowFlexContainer}>
+        {/*Invite button*/}
         <TouchableOpacity onPress={() => navigation.navigate("InviteFriends", {
           name: event.name,
           description: event.description,
@@ -207,7 +180,11 @@ export const EventDetails = ({ navigation, route }) => {
         })} style={styles.fancyButtonContainer}>
           <Text style={styles.fancyButtonText}>Invite</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onGoing} style={[styles.fancyButtonContainer, {backgroundColor: interestedColor, flex: 2/3}]}>
+
+        {/*I'm Interested button*/}
+        <TouchableOpacity
+            onPress={onInterested}
+            style={[styles.fancyButtonContainer, {backgroundColor: interestedColor, flex: 2/3}]}>
           <Text style={styles.fancyButtonText}>{goingBtnText}</Text>
         </TouchableOpacity>
       </View>

@@ -2,7 +2,7 @@
  * Copyright Grove, @2021 - All rights reserved
  *
  * ProfileUser.js
- * Profile page for someone you're following
+ * Profile page for someone you searched
  */
 
 import React, { useState, useEffect } from "react";
@@ -18,19 +18,14 @@ import {
     TouchableWithoutFeedback,
 } from "react-native";
 
-import { useSelector, useDispatch } from "react-redux";
-
 // firebase imports
 import firebase from "firebase";
-import {
-    USER_POSTS_STATE_CHANGE,
-    USER_STATE_CHANGE,
-} from "../../redux/constants";
-import {clearData, fetchUserOutgoingRequests} from "../../redux/actions";
-import {Card} from "./Card";
 require("firebase/firestore");
 
-// toggle button
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserOutgoingRequests } from "../../redux/actions";
+
+import {Card} from "./Card";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;

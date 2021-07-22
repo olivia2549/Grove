@@ -18,7 +18,7 @@ export const Notifications = () => {
         dispatch(fetchUserIncomingRequests());
     }, []);
 
-    // Fetch the notifications from the incomingRequests state
+    // Fetch the new notifications from the incomingRequests state when incomingRequests changes
     useEffect(() => {
         const fetchRequests = async () => {
             const docs = await firebase.firestore().collection("users")

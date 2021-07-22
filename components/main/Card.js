@@ -32,7 +32,7 @@ export const Card = (props) => {
           </View>
           <View style={styles.peopleGoingAndTagsContainer}>
               <View style={styles.peopleGoingContainer}>
-                  <Text style={styles.peopleGoing}>{event.attendees.length} people going</Text>
+                  {/*<Text style={styles.peopleGoing}>{event.attendees.length} people going</Text>*/}
               </View>
               <View style={styles.tagsContainer}>
                   {(event.tags[0] != null) && <Tag tag={event.tags[0]}/>}

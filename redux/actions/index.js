@@ -23,11 +23,8 @@ import {
 
 import firebase from "firebase";
 
-/**
- * clearUserData
- *
- * Deletes user from redux store when they sign out
- */
+
+// Deletes user from redux store when they sign out
 export const clearUserData = () => {
     return ((dispatch) => {
         dispatch({type: CLEAR_USER_DATA})
