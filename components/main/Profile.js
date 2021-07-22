@@ -21,7 +21,7 @@ import {
 import { Card } from "./Card";
 
 import { useSelector, useDispatch } from "react-redux";
-import { clearData } from "../../redux/actions";
+import { clearUserData } from "../../redux/actions";
 
 import firebase from "firebase";
 require("firebase/firestore");

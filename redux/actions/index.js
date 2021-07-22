@@ -16,7 +16,9 @@ import {
     EVENT_LOCATION_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
     USER_STATE_CHANGE,
-    USER_FRIENDS_STATE_CHANGE
+    USER_FRIENDS_STATE_CHANGE,
+    USER_INCOMING_REQUESTS_STATE_CHANGE,
+    USER_OUTGOING_REQUESTS_STATE_CHANGE,
 } from "../constants/index";
 
 import firebase from "firebase";
@@ -117,6 +119,36 @@ export const fetchUser = () => {
                 }
             })
             .catch((error) => {console.log(error)})
+    })
+}
+
+export const fetchUserIncomingRequests = () => {
+    return ((dispatch) => {
+        firebase.firestore().collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("incomingRequests")
+            .onSnapshot(snapshot => {
+                let incomingRequests = snapshot.docs.map(doc => {
+                    return doc.id;
+                })
+                console.log("incoming requests state change for ", firebase.auth().currentUser.uid);
+                dispatch({type: USER_INCOMING_REQUESTS_STATE_CHANGE, incomingRequests});
+            })
+    })
+}
+
+export const fetchUserOutgoingRequests = () => {
+    return ((dispatch) => {
+        firebase.firestore().collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("outgoingRequests")
+            .onSnapshot(snapshot => {
+                let outgoingRequests = snapshot.docs.map(doc => {
+                    return doc.id;
+                })
+                console.log("outgoing requests state change for ", firebase.auth().currentUser.uid);
+                dispatch({type: USER_OUTGOING_REQUESTS_STATE_CHANGE, outgoingRequests});
+            })
     })
 }
 
