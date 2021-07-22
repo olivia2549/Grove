@@ -5,15 +5,41 @@
  * This is the card component for the events in the feed
  */
 
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, StyleSheet } from "react-native";
+import firebase from "firebase";
 
 export const Card = (props) => {
-    const event = props.event;
-    const start = parseDate(event.startDateTime.toDate());
-    const end = parseDate(event.endDateTime.toDate());
+    const eventDisplayingID = props.id;
+    const [eventDisplaying, setEventDisplaying] = useState({});
+    const [attendees, setAttendees] = useState([]);
 
-    // TODO: Fetch attendees from redux and make sure front end updates
+    // TODO: Fetch attendees and event, and make sure front end updates
+    useEffect(() => {
+        const fetchEventToDisplay = async () => {
+            const user = await firebase.firestore().collection("events")
+                .doc(eventDisplayingID)
+                .get();
+            setEventDisplaying(user.data());
+        };
+        const fetchAttendees = async () => {
+            const docs = await firebase.firestore().collection("events")
+                .doc(eventDisplayingID)
+                .collection("attendees")
+                .get();
+
+            let attendeesArr = [];
+            docs.forEach(doc => {
+                attendeesArr.push(doc.data());
+            });
+            setAttendees(attendeesArr);
+        }
+        fetchEventToDisplay();
+        fetchAttendees();
+    }, [props.id]);
+
+    const start = parseDate(eventDisplaying.startDateTime.toDate());
+    const end = parseDate(eventDisplaying.endDateTime.toDate());
 
     const Tag = (props) => {
         return (
@@ -26,7 +52,7 @@ export const Card = (props) => {
     return (
       <View style={styles.card}>
           <View style={styles.eventDetails}>
-              <Text style={styles.eventName}>{event.name}</Text>
+              <Text style={styles.eventName}>{eventDisplaying.name}</Text>
               <View style={styles.eventDate}>
                   <Text style={styles.eventDay}>{start.day}</Text>
                   <Text style={styles.eventTime}>{`${start.ampmTime} - ${end.ampmTime}`}</Text>
@@ -34,12 +60,12 @@ export const Card = (props) => {
           </View>
           <View style={styles.peopleGoingAndTagsContainer}>
               <View style={styles.peopleGoingContainer}>
-                  {/*<Text style={styles.peopleGoing}>{event.attendees.length} people going</Text>*/}
+                  <Text style={styles.peopleGoing}>{attendees.length} people going</Text>
               </View>
               <View style={styles.tagsContainer}>
-                  {(event.tags[0] != null) && <Tag tag={event.tags[0]}/>}
-                  {(event.tags[1] != null) && <Tag tag={event.tags[1]}/>}
-                  {(event.tags[2] != null) && <Tag tag={event.tags[2]}/>}
+                  {(eventDisplaying.tags[0] != null) && <Tag tag={eventDisplaying.tags[0]}/>}
+                  {(eventDisplaying.tags[1] != null) && <Tag tag={eventDisplaying.tags[1]}/>}
+                  {(eventDisplaying.tags[2] != null) && <Tag tag={eventDisplaying.tags[2]}/>}
             </View>
         </View>
     </View>

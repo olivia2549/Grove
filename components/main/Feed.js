@@ -95,7 +95,7 @@ const Feed = () => {
                 <Text style={{fontSize: 32, fontWeight: 'bold'}}>Events</Text>
             </View>
             <View style={{justifyContent: "center", margin: 15}}>
-                {events.length == 0 ?
+                {events.length === 0 ?
                     <Text>Loading...</Text> :
                     <FlatList
                         data={events}
@@ -108,10 +108,10 @@ const Feed = () => {
                         renderItem={(event) => (
                             // when the card is pressed, we head to EventDetails page
                             <TouchableOpacity onPress={() => navigation.navigate("EventDetails", {
-                                event: event
+                                ID: event.ID
                             })}>
                                 <Card
-                                    event={event.item}
+                                    id={event.ID}
                                 />
                             </TouchableOpacity>
                         )}

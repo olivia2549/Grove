@@ -5,7 +5,7 @@
  * Displays the details of an event
  */
 
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -50,19 +50,43 @@ const windowWidth = Dimensions.get("window").width;
 
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
-  // get the parameters
-  const event = route.params.event.item;
-  const start = parseDate(event.startDateTime.toDate());
-  const end = parseDate(event.endDateTime.toDate());
-
   const currentUserID = useSelector(state => state.currentUser.ID);
+
+  const eventDisplayingID = route.params.ID;
+  const [eventDisplaying, setEventDisplaying] = useState({});
+  const [attendees, setAttendees] = useState([]);
+
+  // TODO: Fetch attendees and event, and make sure front end updates
+  useEffect(() => {
+    const fetchEventToDisplay = async () => {
+      const user = await firebase.firestore().collection("events")
+          .doc(eventDisplayingID)
+          .get();
+      setEventDisplaying(user.data());
+    };
+    const fetchAttendees = async () => {
+      const docs = await firebase.firestore().collection("events")
+          .doc(eventDisplayingID)
+          .collection("attendees")
+          .get();
+
+      let attendeesArr = [];
+      docs.forEach(doc => {
+        attendeesArr.push(doc.data());
+      });
+      setAttendees(attendeesArr);
+    }
+    fetchEventToDisplay();
+    fetchAttendees();
+  }, [route.params.ID]);
+
+  // const start = parseDate(eventDisplaying.startDateTime.toDate());
+  // const end = parseDate(eventDisplaying.endDateTime.toDate());
 
   const [interestedColor, setInterestedColor] = useState("#5DB075")
 
   // title font size
   const [currentFont, setCurrentFont] = useState(50);
-
-  // TODO: Fetch attendees from redux and make sure front end updates
 
   // Goes back to feed when user swipes down from top
   const onSwipeDown = (gestureState) => {
@@ -75,7 +99,7 @@ export const EventDetails = ({ navigation, route }) => {
     firebase
         .firestore()
         .collection("events")
-        .doc(event.ID)
+        .doc(eventDisplaying.ID)
         .collection("attendees")
         .doc(currentUserID)
         .set({});
@@ -108,21 +132,21 @@ export const EventDetails = ({ navigation, route }) => {
             }
           }}
         >
-          {event.name}
+          {eventDisplaying.name}
         </Text>
       </GestureRecognizer>
 
       {/* <ScrollView style={styles.scrollStyle}> */}
       <ScrollView style={{ flex: Platform.OS === "ios" ? 0 : 7 }}>
         <View style={styles.rowFlexContainer}>
-          {event.tags.map((tag) => (
+          {eventDisplaying.tags.map((tag) => (
             <View style={styles.tagBox}>
               <Text style={styles.tagText}>{tag}</Text>
             </View>
           ))}
         </View>
         <View style={styles.descriptionContainer}>
-          <Text style={styles.descriptionText}>{event.description}</Text>
+          <Text style={styles.descriptionText}>{eventDisplaying.description}</Text>
         </View>
 
         <View style={styles.bigView}>
@@ -131,7 +155,7 @@ export const EventDetails = ({ navigation, route }) => {
             <Text style={styles.whereWhen}>Where</Text>
             <View style={styles.locationView}>
               {/* this is hard coded, would need to be changed once we fetch info from the data */}
-              <Text style={styles.locationText}>{event.location}</Text>
+              <Text style={styles.locationText}>{eventDisplaying.location}</Text>
             </View>
           </View>
 
@@ -164,7 +188,7 @@ export const EventDetails = ({ navigation, route }) => {
           style={styles.keyboardAvoidContainer}
         >
           <Text style={styles.peopleGoingText}>
-            {event.attendees.length} people going
+            {attendees.length} people going
           </Text>
         </KeyboardAvoidingView>
       </ScrollView>
@@ -172,13 +196,7 @@ export const EventDetails = ({ navigation, route }) => {
       <View style={styles.rowFlexContainer}>
         {/*Invite button*/}
         <TouchableOpacity onPress={() => navigation.navigate("InviteFriends", {
-          name: event.name,
-          description: event.description,
-          tags: event.tags,
-          startDateTime: event.startDateTime,
-          endDateTime: event.endDateTime,
-          location: event.location,
-          attendees: event.attendees,
+          ID: eventDisplayingID,
         })} style={styles.fancyButtonContainer}>
           <Text style={styles.fancyButtonText}>Invite</Text>
         </TouchableOpacity>
