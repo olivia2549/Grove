@@ -26,7 +26,7 @@ import {
     USER_POSTS_STATE_CHANGE,
     USER_STATE_CHANGE,
 } from "../../redux/constants";
-import { clearData } from "../../redux/actions";
+import {clearData, fetchUserOutgoingRequests} from "../../redux/actions";
 import {Card} from "./Card";
 require("firebase/firestore");
 
@@ -44,7 +44,8 @@ export const ProfileUser = ( {route} ) => {
     const [userDisplaying, setUserDisplaying] = useState({});
 
     const friends = useSelector(state => state.currentUser.friends);
-    const [isFriend, setIsFriend] = useState(false);
+
+    const outgoingRequests = useSelector(state => state.currentUser.outgoingRequests);
 
     // for the switch
     const [upComingEvents, setUpComingEvents] = useState(true);
@@ -59,30 +60,27 @@ export const ProfileUser = ( {route} ) => {
             setUserDisplaying(user.data());
         };
         fetchUserToDisplay();
-        friends.indexOf(userDisplayingID) > -1
-            ? setIsFriend(true)
-            : setIsFriend(false);
-        }, [route.params.uid], [friends]
-    ); // only gets called if userToDisplay or friends changes
+    }, [route.params.uid]);
 
     // Adds a friend
-    const addFriend = () => {
-        // add searched person to the current user's friends list
+    const addFriend = (id) => {
+        // add searched person to the current user's outgoingRequests list
         firebase
             .firestore()
             .collection("users")
             .doc(currentUserID)
-            .collection("friends")
-            .doc(userDisplayingID)
+            .collection("outgoingRequests")
+            .doc(id)
             .set({});
-        // add current user to the searched person's friend list
+        // add current user to the searched person's incomingRequests list
         firebase
             .firestore()
             .collection("users")
-            .doc(userDisplayingID)
-            .collection("friends")
+            .doc(id)
+            .collection("incomingRequests")
             .doc(currentUserID)
             .set({});
+        dispatch(fetchUserOutgoingRequests());
     };
 
     const flipToggle = () => {
@@ -164,12 +162,18 @@ export const ProfileUser = ( {route} ) => {
         );
     };
 
-    const ProfileNotFollowing = () => {
+    const ProfileNotFollowing = (props) => {
         return (
             <View>
-                <TouchableOpacity onPress={addFriend} style={styles.addFriend}>
-                    <Text style={styles.addFriendText}>Add Friend</Text>
-                </TouchableOpacity>
+                {
+                    props.requested
+                    ?   <View>
+                            <Text>Requested</Text>
+                        </View>
+                    :   <TouchableOpacity onPress={() => {addFriend(userDisplayingID)}} style={styles.addFriend}>
+                            <Text style={styles.addFriendText}>Add Friend</Text>
+                        </TouchableOpacity>
+                }
 
                 <View style={styles.lockContainer}>
                     <Image
@@ -203,8 +207,18 @@ export const ProfileUser = ( {route} ) => {
                 <View style={styles.containerInfo}>
                     <Text style={styles.userEmail}>{userDisplaying.email}</Text>
                 </View>
-
-                {isFriend ? <ProfileFollowing/> : <ProfileNotFollowing />}
+                {
+                    friends.indexOf(userDisplayingID) > -1 &&
+                        <ProfileFollowing/>
+                }
+                {
+                    outgoingRequests.indexOf(userDisplayingID) > -1 &&
+                        <ProfileNotFollowing requested={true}/>
+                }
+                {
+                    friends.indexOf(userDisplayingID) === -1 && outgoingRequests.indexOf(userDisplayingID) === -1 &&
+                        <ProfileNotFollowing requested={false}/>
+                }
             </View>
         </View>
     );

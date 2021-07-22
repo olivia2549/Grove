@@ -8,6 +8,8 @@
 import {
     USER_STATE_CHANGE,
     USER_FRIENDS_STATE_CHANGE,
+    USER_INCOMING_REQUESTS_STATE_CHANGE,
+    USER_OUTGOING_REQUESTS_STATE_CHANGE,
     CLEAR_USER_DATA,
 } from "../constants";
 
@@ -19,6 +21,8 @@ const initialState = {
     major: "",
     bio: "",
     friends: [],
+    incomingRequests: [],
+    outgoingRequests: [],
     eventsPosted: [],
     eventsAttending: [],
 }
@@ -49,6 +53,16 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 friends: action.friends,
+            }
+        case 'USER_INCOMING_REQUESTS_STATE_CHANGE':
+            return {
+                ...state,
+                incomingRequests: action.incomingRequests,
+            }
+        case 'USER_OUTGOING_REQUESTS_STATE_CHANGE':
+            return {
+                ...state,
+                outgoingRequests: action.outgoingRequests,
             }
         case 'CLEAR_USER_DATA':
             return initialState;

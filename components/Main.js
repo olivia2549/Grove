@@ -7,7 +7,7 @@
 
 import React, { useEffect } from "react";
 
-import {fetchUser, fetchUserFriends} from "../redux/actions";
+import {fetchUser, fetchUserFriends, fetchUserIncomingRequests, fetchUserOutgoingRequests} from "../redux/actions";
 import { useDispatch } from "react-redux";
 
 import firebase from "firebase";
@@ -34,6 +34,8 @@ export const Main = () => {
     useEffect(() => {
         dispatch(fetchUser());
         dispatch(fetchUserFriends());
+        dispatch(fetchUserIncomingRequests());
+        dispatch(fetchUserOutgoingRequests());
     }, []);
 
     // Displays to the screen

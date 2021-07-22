@@ -20,6 +20,8 @@ import {
 import { FancyInput } from "../styling";
 
 import firebase from "firebase";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchUserOutgoingRequests} from "../../redux/actions";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -27,13 +29,19 @@ const windowWidth = Dimensions.get("window").width;
 
 export const Search = () => {
   const navigation = useNavigation();
-  const [usersToDisplay, setUsersToDisplay] = useState([]);
-  const [isFriend, setIsFriend] = useState(false);
-  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const currentUserID = useSelector(state => state.currentUser.ID);
 
-  // Initially show all the users in the database sorted by name
-  // TODO: sort users using a suggestion algorithm
+  const [search, setSearch] = useState("");
+  const [usersToDisplay, setUsersToDisplay] = useState([]);
+
+  const friends = useSelector(state => state.currentUser.friends);
+
+  const outgoingRequests = useSelector(state => state.currentUser.outgoingRequests);
+
   useEffect(() => {
+    // Initially show all the users in the database sorted by name
+    // TODO: sort users using a suggestion algorithm
     firebase
       .firestore()
       .collection("users")
@@ -47,6 +55,9 @@ export const Search = () => {
         });
         setUsersToDisplay(usersArr);
       });
+
+    // Fetch outgoingRequests
+    dispatch(fetchUserOutgoingRequests());
   }, []);
 
   // Grab users that match a search
@@ -73,6 +84,27 @@ export const Search = () => {
     };
     fetchUserToDisplay();
   }, [search]);
+
+  // Adds a friend
+  const addFriend = (id) => {
+    // add searched person to the current user's outgoingRequests list
+    firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUserID)
+        .collection("outgoingRequests")
+        .doc(id)
+        .set({});
+    // add current user to the searched person's incomingRequests list
+    firebase
+        .firestore()
+        .collection("users")
+        .doc(id)
+        .collection("incomingRequests")
+        .doc(currentUserID)
+        .set({});
+    dispatch(fetchUserOutgoingRequests());
+  };
 
   return (
     <View style={styles.container}>
@@ -116,12 +148,25 @@ export const Search = () => {
                 />
                 <Text style={styles.userName}>{item.name}</Text>
               </View>
-              <TouchableOpacity style={styles.addFriendButton}>
-                <Text style={styles.addFriendText}>Add Friend</Text>
-              </TouchableOpacity>
+              {
+                friends.indexOf(item.ID) > -1 &&
+                  <View style={styles.alreadyFriendsUntouchable}>
+                    <Text style={styles.alreadyFriendsText}>Friends</Text>
+                  </View>
+              }
+              {
+                outgoingRequests.indexOf(item.ID) > -1 &&
+                  <View style={styles.alreadyFriendsUntouchable}>
+                    <Text style={styles.alreadyFriendsText}>Requested</Text>
+                  </View>
+              }
+              { friends.indexOf(item.ID) === -1 && outgoingRequests.indexOf(item.ID) === -1 &&
+                  <TouchableOpacity style={styles.addFriendButton} onPress={() => {addFriend(item.ID)}}>
+                    <Text style={styles.addFriendText}>Add Friend</Text>
+                  </TouchableOpacity>
+              }
               {/* <Button style={{ borderRadius: 20 }} title="add friend" /> */}
             </TouchableOpacity>
-
             <View style={styles.underline} />
           </View>
         )}
@@ -157,7 +202,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
   },
-
+  alreadyFriendsUntouchable: {
+    justifyContent: "flex-end",
+    padding: 11,
+    height: windowHeight * 0.04,
+    backgroundColor: "lightgray",
+    borderRadius: 10,
+  },
+  alreadyFriendsText: {
+    textAlign: "center",
+    color: "black",
+  },
   userCellContainer: {
     margin: 5,
     flex: 1,
