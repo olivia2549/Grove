@@ -30,6 +30,8 @@ const windowWidth = Dimensions.get("window").width;
 const AddEventConfirmation = () => {
   const navigation = useNavigation();
 
+  const currentUserID = useSelector(state => state.currentUser.ID);
+
   // Grabs event data from redux, stores as an object
   const eventData = {
     name: useSelector((state) => state.event.name),
@@ -47,6 +49,11 @@ const AddEventConfirmation = () => {
     eventData.ID = docRef.id;
     eventData.creator = await firebase.firestore().collection("users")
         .doc(firebase.auth().currentUser.uid);
+    await firebase.firestore().collection("events")
+        .doc(eventData.ID)
+        .collection("attendees")
+        .doc(currentUserID)
+        .set({});
     eventData.attendees.push(eventData.creator);
     eventData.nameLowercase = eventData.name.toLowerCase();
     await docRef.set(eventData);

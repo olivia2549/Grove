@@ -16,6 +16,7 @@ import {
 } from "../constants";
 
 const initialState = {
+    ID: "",
     name: "",
     description: "",
     tags: [],

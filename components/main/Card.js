@@ -5,13 +5,15 @@
  * This is the card component for the events in the feed
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 export const Card = (props) => {
     const event = props.event;
     const start = parseDate(event.startDateTime.toDate());
     const end = parseDate(event.endDateTime.toDate());
+
+    // TODO: Fetch attendees from redux and make sure front end updates
 
     const Tag = (props) => {
         return (

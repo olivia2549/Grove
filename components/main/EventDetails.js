@@ -62,6 +62,8 @@ export const EventDetails = ({ navigation, route }) => {
   // title font size
   const [currentFont, setCurrentFont] = useState(50);
 
+  // TODO: Fetch attendees from redux and make sure front end updates
+
   // Goes back to feed when user swipes down from top
   const onSwipeDown = (gestureState) => {
     navigation.goBack();
@@ -73,7 +75,7 @@ export const EventDetails = ({ navigation, route }) => {
     firebase
         .firestore()
         .collection("events")
-        .doc()
+        .doc(event.ID)
         .collection("attendees")
         .doc(currentUserID)
         .set({});
