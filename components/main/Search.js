@@ -20,8 +20,8 @@ import {
 import { FancyInput } from "../styling";
 
 import firebase from "firebase";
-import {useDispatch, useSelector} from "react-redux";
-import {fetchUserOutgoingRequests} from "../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserOutgoingRequests } from "../../redux/actions";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -30,14 +30,16 @@ const windowWidth = Dimensions.get("window").width;
 export const Search = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const currentUserID = useSelector(state => state.currentUser.ID);
+  const currentUserID = useSelector((state) => state.currentUser.ID);
 
   const [search, setSearch] = useState("");
   const [usersToDisplay, setUsersToDisplay] = useState([]);
 
-  const friends = useSelector(state => state.currentUser.friends);
+  const friends = useSelector((state) => state.currentUser.friends);
 
-  const outgoingRequests = useSelector(state => state.currentUser.outgoingRequests);
+  const outgoingRequests = useSelector(
+    (state) => state.currentUser.outgoingRequests
+  );
 
   useEffect(() => {
     // Initially show all the users in the database sorted by name
@@ -109,20 +111,20 @@ export const Search = () => {
   const addFriend = (id) => {
     // add searched person to the current user's outgoingRequests list
     firebase
-        .firestore()
-        .collection("users")
-        .doc(currentUserID)
-        .collection("outgoingRequests")
-        .doc(id)
-        .set({});
+      .firestore()
+      .collection("users")
+      .doc(currentUserID)
+      .collection("outgoingRequests")
+      .doc(id)
+      .set({});
     // add current user to the searched person's incomingRequests list
     firebase
-        .firestore()
-        .collection("users")
-        .doc(id)
-        .collection("incomingRequests")
-        .doc(currentUserID)
-        .set({});
+      .firestore()
+      .collection("users")
+      .doc(id)
+      .collection("incomingRequests")
+      .doc(currentUserID)
+      .set({});
     dispatch(fetchUserOutgoingRequests());
   };
 
@@ -159,34 +161,38 @@ export const Search = () => {
                 flex: 1,
               }}
             >
-              <View
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
                 <Image
                   source={require("../../assets/profileicon.jpg")}
                   style={styles.profilePic}
                 />
                 <Text style={styles.userName}>{item.name}</Text>
               </View>
-              {
-                friends.indexOf(item.ID) > -1 &&
-                  <View style={styles.alreadyFriendsUntouchable}>
-                    <Text style={styles.alreadyFriendsText}>Friends</Text>
-                  </View>
-              }
-              {
-                outgoingRequests.indexOf(item.ID) > -1 &&
-                  <View style={styles.alreadyFriendsUntouchable}>
-                    <Text style={styles.alreadyFriendsText}>Requested</Text>
-                  </View>
-              }
-              { friends.indexOf(item.ID) === -1 && outgoingRequests.indexOf(item.ID) === -1 &&
-                  <TouchableOpacity style={styles.addFriendButton} onPress={() => {addFriend(item.ID)}}>
+
+              {friends.indexOf(item.ID) > -1 && (
+                <View style={styles.alreadyFriendsUntouchable}>
+                  <Text style={styles.alreadyFriendsText}>Friends</Text>
+                </View>
+              )}
+              {outgoingRequests.indexOf(item.ID) > -1 && (
+                <View style={styles.alreadyFriendsUntouchable}>
+                  <Text style={styles.alreadyFriendsText}>Requested</Text>
+                </View>
+              )}
+              {friends.indexOf(item.ID) === -1 &&
+                outgoingRequests.indexOf(item.ID) === -1 && (
+                  <TouchableOpacity
+                    style={styles.addFriendButton}
+                    onPress={() => {
+                      addFriend(item.ID);
+                    }}
+                  >
                     <Text style={styles.addFriendText}>Add Friend</Text>
                   </TouchableOpacity>
-              }
+                )}
               {/* <Button style={{ borderRadius: 20 }} title="add friend" /> */}
             </TouchableOpacity>
+
             <View style={styles.underline} />
           </View>
         )}
@@ -212,22 +218,26 @@ const styles = StyleSheet.create({
   },
 
   addFriendButton: {
-    justifyContent: "flex-end",
+    justifyContent: "center",
     padding: 11,
-    height: windowHeight * 0.04,
+    height: 40,
     backgroundColor: "#5DB075",
     borderRadius: 10,
+    position: "absolute",
+    right: 10,
   },
   addFriendText: {
     textAlign: "center",
     color: "white",
   },
   alreadyFriendsUntouchable: {
-    justifyContent: "flex-end",
+    justifyContent: "center",
     padding: 11,
-    height: windowHeight * 0.04,
+    height: 40,
     backgroundColor: "lightgray",
     borderRadius: 10,
+    position: "absolute",
+    right: 10,
   },
   alreadyFriendsText: {
     textAlign: "center",
@@ -248,18 +258,20 @@ const styles = StyleSheet.create({
   userName: {
     flexDirection: "column",
     justifyContent: "center",
-    marginLeft: 5,
+    marginLeft: 10,
+    // marginTop: 10,
     fontWeight: "bold",
-    fontSize: windowWidth * 0.042,
+    // fontSize: windowWidth * 0.042,
+    fontSize: 20,
   },
 
   underline: {
     borderBottomWidth: 1,
-    width: "92%",
+    width: "92.5%",
     borderBottomColor: "#E8E8E8",
     marginTop: 5,
     alignItems: "center",
-    marginLeft: windowWidth * 0.022,
+    marginLeft: windowWidth * 0.028,
   },
 });
 
