@@ -3,6 +3,10 @@
  *
  * AddEventInfo.js
  * User adds new event name, description, and location
+ * 
+ * Improvements
+ * - make description text smaller/able to hold more info. Potentially need to put it on a separate screen.
+ * - don't allow events or locations with no input (by clicking away on screen)
  */
 
 import React, { useState, useRef } from "react";
@@ -74,6 +78,7 @@ export const AddEventInfo = () => {
             name="nameInput"
             placeholder="Event Name..."
             ref={nameRef}
+            maxLength={ 40 }
             onChangeText={(text) => {
               setName(text);
             }}
@@ -104,6 +109,7 @@ export const AddEventInfo = () => {
             placeholder="Location..."
             ref={locationRef}
             blurOnSubmit={false}
+            maxLength={ 30 }
             onChangeText={(text) => {
               setLocation(text);
             }}
@@ -130,6 +136,7 @@ export const AddEventInfo = () => {
             name="descriptionInput"
             placeholder="Description..."
             ref={descriptionRef}
+            maxLength={ 60 }
             onChangeText={(text) => {
               setDescription(text);
             }}
@@ -167,7 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   keyBoardAvoid: {
-    marginTop: windowHeight * 0.25,
+    marginTop: windowHeight * 0.22,
   },
   textInput: {
     fontSize: windowWidth * 0.08,
