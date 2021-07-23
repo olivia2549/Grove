@@ -44,6 +44,7 @@ if (firebase.apps.length === 0) {
 import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
+import VerifyEmailScreen from './components/auth/VerifyEmail';
 import MainScreen from './components/Main';
 import AddEventInfo from './components/main/AddEventInfo';
 import AddEventTags from './components/main/AddEventTags';
@@ -61,7 +62,7 @@ export const App = () => {
     let [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
+        firebase.auth().onAuthStateChanged(user => {
             if (!user) {    // user not logged in
                 setLoggedIn(false);
                 setIsLoaded(true);
@@ -91,6 +92,16 @@ export const App = () => {
                 </Stack.Navigator>
             </NavigationContainer>
         );
+    }
+
+    if (!firebase.auth().emailVerified) {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName='VerifyEmail'>
+                    <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        )
     }
 
     const MainWithEvents = () => {
