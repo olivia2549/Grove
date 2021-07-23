@@ -5,7 +5,7 @@
  * User adds new event date
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { View, Button, Text, Dimensions, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -25,7 +25,7 @@ const windowWidth = Dimensions.get("window").width;
 const AddEventDate = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const defaultDate = new Date();
+  const [defaultDate, setDefaultDate] = useState(new Date());
 
   let start = {
     time: defaultDate.getTime(),
@@ -41,6 +41,8 @@ const AddEventDate = () => {
         start.time = currentDate.getTime();
       }
       dispatch(addStartDateTime(currentDate, dateOrTime));
+      dispatch(addEndDateTime(currentDate, dateOrTime));
+      // setDefaultDate(currentDate)
     } else {
       dispatch(addEndDateTime(currentDate, dateOrTime));
     }
@@ -60,7 +62,8 @@ const AddEventDate = () => {
             <DateTimePicker
               mode="date"
               display="default"
-              is24Hour={true}
+              minuteInterval={15}
+              // is24Hour={true}
               onChange={(ev, selectedDate) => {
                 onChange(ev, selectedDate, props.title, "date");
               }}
@@ -71,7 +74,8 @@ const AddEventDate = () => {
             <DateTimePicker
               mode="time"
               display="default"
-              is24Hour={true}
+              minuteInterval={15}
+              // is24Hour={true}
               onChange={(ev, selectedDate) => {
                 onChange(ev, selectedDate, props.title, "time");
               }}
@@ -95,7 +99,7 @@ const AddEventDate = () => {
         </View>
         <View style={styles.underline} />
         <View style={styles.datePickerContainer}>
-          <DateTimePickerWithText title="Starts" />
+          <DateTimePickerWithText title="Starts"/>
         </View>
 
         {/* Ends date time picker */}
