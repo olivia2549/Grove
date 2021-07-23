@@ -21,8 +21,8 @@ import { parseDate } from "./Card";
 import { InviteFriends } from "./InviteFriends";
 import firebase from "firebase";
 import { FancyInput } from "../styling";
-import { useNavigation } from '@react-navigation/native';
-import {useSelector} from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -47,7 +47,6 @@ const windowWidth = Dimensions.get("window").width;
 //   }
 // };
 
-
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
   // get the parameters
@@ -55,9 +54,9 @@ export const EventDetails = ({ navigation, route }) => {
   const start = parseDate(event.startDateTime.toDate());
   const end = parseDate(event.endDateTime.toDate());
 
-  const currentUserID = useSelector(state => state.currentUser.ID);
+  const currentUserID = useSelector((state) => state.currentUser.ID);
 
-  const [interestedColor, setInterestedColor] = useState("#5DB075")
+  const [interestedColor, setInterestedColor] = useState("#5DB075");
 
   // title font size
   const [currentFont, setCurrentFont] = useState(50);
@@ -71,12 +70,12 @@ export const EventDetails = ({ navigation, route }) => {
   const onInterested = () => {
     // add current user to "attendees" collection
     firebase
-        .firestore()
-        .collection("events")
-        .doc()
-        .collection("attendees")
-        .doc(currentUserID)
-        .set({});
+      .firestore()
+      .collection("events")
+      .doc()
+      .collection("attendees")
+      .doc(currentUserID)
+      .set({});
   };
 
   const config = {
@@ -162,30 +161,39 @@ export const EventDetails = ({ navigation, route }) => {
           style={styles.keyboardAvoidContainer}
         >
           <Text style={styles.peopleGoingText}>
-            {event.attendees.length} people going
+            {/* {event.attendees.length} people going */}
           </Text>
         </KeyboardAvoidingView>
       </ScrollView>
 
       <View style={styles.rowFlexContainer}>
         {/*Invite button*/}
-        <TouchableOpacity onPress={() => navigation.navigate("InviteFriends", {
-          name: event.name,
-          description: event.description,
-          tags: event.tags,
-          startDateTime: event.startDateTime,
-          endDateTime: event.endDateTime,
-          location: event.location,
-          attendees: event.attendees,
-        })} style={styles.fancyButtonContainer}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("InviteFriends", {
+              name: event.name,
+              description: event.description,
+              tags: event.tags,
+              startDateTime: event.startDateTime,
+              endDateTime: event.endDateTime,
+              location: event.location,
+              attendees: event.attendees,
+            })
+          }
+          style={styles.fancyButtonContainer}
+        >
           <Text style={styles.fancyButtonText}>Invite</Text>
         </TouchableOpacity>
 
         {/*I'm Interested button*/}
         <TouchableOpacity
-            onPress={onInterested}
-            style={[styles.fancyButtonContainer, {backgroundColor: interestedColor, flex: 2/3}]}>
-          <Text style={styles.fancyButtonText}>{goingBtnText}</Text>
+          onPress={onInterested}
+          style={[
+            styles.fancyButtonContainer,
+            { backgroundColor: interestedColor, flex: 2 / 3 },
+          ]}
+        >
+          {/* <Text style={styles.fancyButtonText}>{goingBtnText}</Text> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -237,7 +245,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 10,
     marginRight: 10,
-    flex: 1/3,
+    flex: 1 / 3,
     justifyContent: "center",
   },
   fancyButtonText: {
