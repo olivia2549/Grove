@@ -90,9 +90,14 @@ export const Notifications = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      {/* Title */}
       <View style={styles.titleBox}>
         <Text style={styles.titleText}>Notifications</Text>
+      </View>
+
+      <View>
+        <Text style={styles.friendRequestTitle}>Friend Requests</Text>
       </View>
       <FlatList
         numColumns={1}
@@ -104,21 +109,44 @@ export const Notifications = () => {
           <View style={styles.userCellContainer}>
             <TouchableOpacity
               onPress={() => {
-                // TODO: invite the friend
+                navigation.navigate("ProfileUser", { uid: item.ID });
               }}
+              style={styles.profileComponentWithoutBorderline}
             >
-              <Image
-                source={require("../../assets/profileicon.jpg")}
-                style={styles.profilePic}
-              />
-              <Text style={styles.userName}>{item.name}</Text>
-              <Button
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Image
+                  source={require("../../assets/profileicon.jpg")}
+                  style={styles.profilePic}
+                />
+                <Text style={styles.userName}>{item.name}</Text>
+              </View>
+
+              {/* <View style={{ flexDirection: "row" }}> */}
+              <TouchableOpacity
+                style={styles.acceptRequestContainer}
+                onPress={() => {
+                  acceptRequest(item.ID);
+                }}
+              >
+                <Text style={styles.acceptRequestContainerText}>Accept</Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity
+                  style={styles.acceptRequestContainer}
+                  onPress={() => console.log("I deny this person")}
+                >
+                  <Text style={styles.acceptRequestContainerText}>Deny</Text>
+                </TouchableOpacity>
+              </View> */}
+
+              {/* <Button
                 title="accept request"
                 onPress={() => {
                   acceptRequest(item.ID);
                 }}
-              />
+              /> */}
             </TouchableOpacity>
+
+            <View style={styles.underline} />
           </View>
         )}
       />
@@ -139,7 +167,7 @@ const styles = StyleSheet.create({
   },
 
   titleBox: {
-    height: "25%",
+    height: "18%",
     backgroundColor: "white",
     justifyContent: "center",
     width: "100%",
@@ -150,6 +178,78 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "700",
     marginTop: windowHeight * 0.05,
+  },
+
+  friendRequestTitle: {
+    textAlign: "flex-start",
+    fontSize: 24,
+    color: "black",
+    fontWeight: "700",
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+
+  // for each profile components
+  profileComponentWithoutBorderline: {
+    flexDirection: "row",
+    marginTop: 5,
+    flex: 1,
+    paddingHorizontal: 13,
+  },
+  addFriendButton: {
+    justifyContent: "center",
+    padding: 11,
+    height: 33,
+    backgroundColor: "#5DB075",
+    borderRadius: 10,
+    position: "absolute",
+    right: 10,
+  },
+  addFriendText: {
+    textAlign: "center",
+    color: "white",
+  },
+  acceptRequestContainer: {
+    justifyContent: "center",
+    padding: 11,
+    height: 33,
+    backgroundColor: "#5DB075",
+    borderRadius: 10,
+    position: "absolute",
+    right: 10,
+  },
+  acceptRequestContainerText: {
+    textAlign: "center",
+    color: "white",
+  },
+  userCellContainer: {
+    margin: 5,
+    flex: 1,
+    // paddingHorizontal: 10,
+  },
+  profilePic: {
+    width: 45,
+    height: 45,
+    borderRadius: 400 / 2,
+  },
+  userName: {
+    flexDirection: "column",
+    justifyContent: "center",
+    marginLeft: 10,
+    // marginTop: 10,
+    fontWeight: "bold",
+    // fontSize: windowWidth * 0.042,
+    fontSize: 20,
+  },
+
+  underline: {
+    borderBottomWidth: 1,
+    width: "92.5%",
+    borderBottomColor: "#E8E8E8",
+    marginTop: 5,
+    alignItems: "center",
+    marginLeft: windowWidth * 0.028,
   },
 });
 
