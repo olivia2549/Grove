@@ -40,6 +40,7 @@ const Feed = () => {
 
     //refreshes feed if pulled up
     const onRefresh = useCallback(() => {
+        console.log(events);
         firebase.firestore().collection('events').get().then(snapshot => {
             const temp = [];
             snapshot.forEach(doc => {
@@ -99,19 +100,22 @@ const Feed = () => {
                     <Text>Loading...</Text> :
                     <FlatList
                         data={events}
+                        keyExtractor={(event) => event.id}
                         refreshControl={
                             <RefreshControl
                                 refreshing={refreshing}
-                                onRefresh={onRefresh}
-                            />
+                                onRefresh={onRefresh}/>
                         }
                         renderItem={(event) => (
                             // when the card is pressed, we head to EventDetails page
-                            <TouchableOpacity onPress={() => navigation.navigate("EventDetails", {
-                                ID: event.ID
+                            <TouchableOpacity 
+                            key={event.id}
+                            onPress={() => navigation.navigate("EventDetails", {
+                                ID: event.item.ID
                             })}>
                                 <Card
-                                    id={event.ID}
+                                    key={event.item.ID}
+                                    id={event.item.ID}
                                 />
                             </TouchableOpacity>
                         )}

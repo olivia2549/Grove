@@ -12,7 +12,7 @@ import firebase from "firebase";
 
 import { FancyInput, FancyButton } from '../styling';
 
-const VALID_DOMAINS = ["vanderbilt.edu", "Vanderbilt.edu"];
+const VALID_DOMAINS = ["vanderbilt.edu"];
 
 export const Register = () => {
     // The information we need for user registration
@@ -26,7 +26,7 @@ export const Register = () => {
     const onSignUp = () => {
         // Validates the email is from a valid domain
         // TODO: send email to validate
-        const domain = state.email.split("@")[1];
+        const domain = state.email.split("@")[1].toLowerCase();
         if (VALID_DOMAINS.indexOf(domain) === -1 ){
             Alert.alert(
                 "Invalid email",
