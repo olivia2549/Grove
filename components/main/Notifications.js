@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
 
   friendRequestTitle: {
-    textAlign: "flex-start",
+    textAlign: "center",
     fontSize: 24,
     color: "black",
     fontWeight: "700",
