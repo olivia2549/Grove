@@ -228,20 +228,20 @@ const styles = StyleSheet.create({
     flex: 1,
     // paddingHorizontal: 10,
   },
-  profilePic: {
-    width: 45,
-    height: 45,
-    borderRadius: 400 / 2,
-  },
-  userName: {
-    flexDirection: "column",
-    justifyContent: "center",
-    marginLeft: 10,
-    // marginTop: 10,
-    fontWeight: "bold",
-    // fontSize: windowWidth * 0.042,
-    fontSize: 20,
-  },
+  // profilePic: {
+  //   width: 45,
+  //   height: 45,
+  //   borderRadius: 400 / 2,
+  // },
+  // userName: {
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   marginLeft: 10,
+  //   // marginTop: 10,
+  //   fontWeight: "bold",
+  //   // fontSize: windowWidth * 0.042,
+  //   fontSize: 20,
+  // },
 
   underline: {
     borderBottomWidth: 1,

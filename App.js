@@ -115,6 +115,7 @@ export const App = () => {
                     <Stack.Screen name="AddEventTags" component={AddEventTags}/>
                     <Stack.Screen name="AddEventDate" component={AddEventDate}/>
                     <Stack.Screen name="AddEventConfirmation" component={AddEventConfirmation}/>
+                    <Stack.Screen name="ProfileUser" component={ProfileUser}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
