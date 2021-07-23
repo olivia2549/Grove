@@ -161,7 +161,7 @@ export const EventDetails = ({ navigation, route }) => {
           style={styles.keyboardAvoidContainer}
         >
           <Text style={styles.peopleGoingText}>
-            {/* {event.attendees.length} people going */}
+            {event.attendees.length} people going
           </Text>
         </KeyboardAvoidingView>
       </ScrollView>
@@ -193,7 +193,7 @@ export const EventDetails = ({ navigation, route }) => {
             { backgroundColor: interestedColor, flex: 2 / 3 },
           ]}
         >
-          {/* <Text style={styles.fancyButtonText}>{goingBtnText}</Text> */}
+          <Text style={styles.fancyButtonText}>{goingBtnText}</Text>
         </TouchableOpacity>
       </View>
     </View>
