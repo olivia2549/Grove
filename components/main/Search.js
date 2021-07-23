@@ -155,11 +155,7 @@ export const Search = () => {
               onPress={() => {
                 navigation.navigate("ProfileUser", { uid: item.ID });
               }}
-              style={{
-                flexDirection: "row",
-                marginTop: 5,
-                flex: 1,
-              }}
+              style={styles.profileComponentWithoutBorderline}
             >
               <View style={{ flexDirection: "row", justifyContent: "center" }}>
                 <Image
@@ -217,10 +213,16 @@ const styles = StyleSheet.create({
     marginTop: windowHeight * 0.05,
   },
 
+  profileComponentWithoutBorderline: {
+    flexDirection: "row",
+    marginTop: 5,
+    flex: 1,
+    paddingHorizontal: 13,
+  },
   addFriendButton: {
     justifyContent: "center",
     padding: 11,
-    height: 40,
+    height: 33,
     backgroundColor: "#5DB075",
     borderRadius: 10,
     position: "absolute",
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
   alreadyFriendsUntouchable: {
     justifyContent: "center",
     padding: 11,
-    height: 40,
+    height: 33,
     backgroundColor: "lightgray",
     borderRadius: 10,
     position: "absolute",
@@ -246,9 +248,7 @@ const styles = StyleSheet.create({
   userCellContainer: {
     margin: 5,
     flex: 1,
-    // flexDirection: "row",
-    // justifyContent: "center",
-    // alignItems: "center",
+    // paddingHorizontal: 10,
   },
   profilePic: {
     width: 45,
