@@ -8,17 +8,24 @@
 import React, { useState } from 'react';
 import { View, Text, Button } from 'react-native'
 import { useNavigation } from "@react-navigation/native";
+import { App } from "../../App";
 
 import firebase from "firebase";
+import {clearUserData} from "../../redux/actions";
 
 export const VerifyEmail = () => {
     const navigation = useNavigation();
-    const email = firebase.auth().currentUser.email;
+    const currentUser = firebase.auth().currentUser;
 
     return (
         <View>
-            <Text>An email has been sent to {email}. Please verify to proceed.</Text>
-            <Button title="Cancel" onPress={() => navigation.navigate("/")}/>
+            <Text>An email has been sent to {currentUser.email}. Please verify to proceed.</Text>
+            <Button title="Resend email" onPress={() => currentUser.sendEmailVerification()}/>
+            <Button title="Continue to login" onPress={() => firebase.auth().signOut()}/>
+            <Button title="Cancel" onPress={() => {
+                firebase.firestore().collection("users").doc(currentUser.uid).delete();
+                currentUser.delete();
+            }}/>
         </View>
     );
 };

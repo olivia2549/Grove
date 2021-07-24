@@ -94,7 +94,7 @@ export const App = () => {
         );
     }
 
-    if (!firebase.auth().emailVerified) {
+    if (!firebase.auth().currentUser.emailVerified) {
         return (
             <NavigationContainer>
                 <Stack.Navigator initialRouteName='VerifyEmail'>
