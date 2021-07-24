@@ -38,6 +38,7 @@ const AddEventConfirmation = () => {
   // Grabs event data from redux, stores as an object
   const eventData = {
     name: useSelector((state) => state.event.name),
+    nameLowercase: useSelector(state => state.event.nameLowercase),
     description: useSelector((state) => state.event.description),
     tags: useSelector((state) => state.event.tags),
     startDateTime: useSelector((state) => state.event.startDateTime),
@@ -54,7 +55,6 @@ const AddEventConfirmation = () => {
   const onSubmit = () => {
     const docRef = firebase.firestore().collection("events").doc();
     eventData.ID = docRef.id;
-    eventData.nameLowercase = eventData.name.toLowerCase();
     eventData.attendees.push(currentUserRef);
     docRef.set(eventData)
     .then(() => {

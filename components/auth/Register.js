@@ -5,8 +5,8 @@
  * This page is where the user navigates to create a new account
  */
 
-import React, { useState } from 'react';
-import { StyleSheet, Alert, View, KeyboardAvoidingView } from 'react-native'
+import React, {useRef, useState} from 'react';
+import {StyleSheet, Alert, View, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard} from 'react-native'
 
 import firebase from "firebase";
 
@@ -44,6 +44,7 @@ export const Register = () => {
                     .set({
                         ID: userID,
                         name: state.name,
+                        nameLowercase: state.name.toLowerCase(),
                         email: state.email,
                         bio: "",
                         year: -1,
@@ -56,28 +57,31 @@ export const Register = () => {
 
     // Displays to the screen
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
-             <FancyInput
-                placeholder="Full name"
-                onChangeText={(name) => setState({
-                    ...state,
-                    name: name})}
-            />
-            <FancyInput
-                placeholder="School email"
-                onChangeText={(email) => setState({
-                    ...state,
-                    email: email})}
-            />
-            <FancyInput
-                placeholder="Password"
-                secureTextEntry={true}  // type in dots instead of text
-                onChangeText={(password) => setState({
-                    ...state,
-                    password: password})}
-            />
-            <FancyButton title="Get Started" onPress={() => onSignUp()}/>
-        </KeyboardAvoidingView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
+                 <FancyInput
+                    placeholder="Full name"
+                    onChangeText={(name) => setState({
+                        ...state,
+                        name: name})}
+                    autoFocus={true}
+                />
+                <FancyInput
+                    placeholder="School email"
+                    onChangeText={(email) => setState({
+                        ...state,
+                        email: email})}
+                />
+                <FancyInput
+                    placeholder="Password"
+                    secureTextEntry={true}  // type in dots instead of text
+                    onChangeText={(password) => setState({
+                        ...state,
+                        password: password})}
+                />
+                <FancyButton title="Get Started" onPress={() => onSignUp()}/>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     );
 };
 
