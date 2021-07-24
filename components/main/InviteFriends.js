@@ -24,6 +24,7 @@ import firebase from "firebase";
 
 import Main from "../Main";
 import { FancyButtonButLower, FancyInput } from "../styling";
+import {fetchFromFirebase} from "../../shared/HelperFunctions";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -31,13 +32,26 @@ const windowWidth = Dimensions.get("window").width;
 export const InviteFriends = ( { route } ) => {
   const navigation = useNavigation();
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  const userName = useSelector(state => state.currentUser.name);
+
   const friends = useSelector(state => state.currentUser.friends);
   const [friendsToDisplay, setFriendsToDisplay] = useState([]);
-  const [allFriends, setAllFriends] = useState([]);
   const [search, setSearch] = useState("");
 
-  const eventName = route.params.name;
-  const userName = useSelector(state => state.currentUser.name);
+  const eventID = route.params.ID;
+  const [event, setEvent] = useState({});
+
+  // Fetch event, and set eventDisplaying
+  useEffect(() => {
+    if (isLoading) {
+      fetchFromFirebase(eventID, "events").then((data) => {
+        setEvent(data.data());
+        setIsLoading(false);
+      });
+    }
+  }, [isLoading]);
 
   // Get the user data for each friend to display
   useEffect(() => {
@@ -58,11 +72,20 @@ export const InviteFriends = ( { route } ) => {
     fetchFriends();
   }, [search]);
 
+  // const inviteFriend = (friend) => {
+  //   // add the event to the friend's incoming invites
+  //   firebase.firestore().collection("users")
+  //       .doc(friend)
+  //       .set({
+  //         incomingInvites: { currentUserID: eventID }
+  //       })
+  // };
+
   const onShare = async () => {
     try {
       const result = await Share.share({
         message:
-            `${userName} is inviting you to ${eventName}. Check it out on Grove! *link*`,
+            `${userName} is inviting you to ${event.name}. Check it out on Grove! *link*`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -86,7 +109,7 @@ export const InviteFriends = ( { route } ) => {
 
       <View style={styles.content}>
         <View style={{ paddingHorizontal: 10 }}>
-          <TextInput
+          <FancyInput
             placeholder="Search..."
             returnKeyType="search"
             onChangeText={search => {setSearch(search)}}
@@ -101,22 +124,33 @@ export const InviteFriends = ( { route } ) => {
             numColumns={1}
             horizontal={false}
             data={friendsToDisplay}
-            renderItem={({item}) => (   // Allows you to render a text item for each user
+            renderItem={({ item }) => (
                 <View style={styles.userCellContainer}>
                   <TouchableOpacity
                       onPress={() => {
-                        // TODO: invite the friend
+                        navigation.navigate("ProfileUser", { uid: item.ID });
                       }}
+                      style={styles.profileComponentWithoutBorderline}
                   >
-                    <Image
-                        source={require("../../assets/profileicon.jpg")}
-                        style={styles.profilePic}
-                    />
-                    <Text style={styles.userName}>{item.name}</Text>
-                    <Button
-                        title="invite friend"
-                    />
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                      <Image
+                          source={require("../../assets/profileicon.jpg")}
+                          style={styles.profilePic}
+                      />
+                      <Text style={styles.userName}>{item.name}</Text>
+                    </View>
+
+                    {/* <View style={{ flexDirection: "row" }}> */}
+                    <TouchableOpacity
+                        style={styles.acceptRequestContainer}
+                        onPress={() => {
+                          inviteFriend(item.ID);
+                        }}
+                    >
+                      <Text style={styles.acceptRequestContainerText}>Invite</Text>
+                    </TouchableOpacity>
                   </TouchableOpacity>
+                  <View style={styles.underline} />
                 </View>
             )}
         />
@@ -163,6 +197,60 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     marginLeft: 5,
+  },
+  friendRequestTitle: {
+    textAlign: "center",
+    fontSize: 24,
+    color: "black",
+    fontWeight: "700",
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  // for each profile components
+  profileComponentWithoutBorderline: {
+    flexDirection: "row",
+    marginTop: 5,
+    flex: 1,
+    paddingHorizontal: 13,
+  },
+  addFriendButton: {
+    justifyContent: "center",
+    padding: 11,
+    height: 33,
+    backgroundColor: "#5DB075",
+    borderRadius: 10,
+    position: "absolute",
+    right: 10,
+  },
+  addFriendText: {
+    textAlign: "center",
+    color: "white",
+  },
+  acceptRequestContainer: {
+    justifyContent: "center",
+    padding: 11,
+    height: 33,
+    backgroundColor: "#5DB075",
+    borderRadius: 10,
+    position: "absolute",
+    right: 10,
+  },
+  acceptRequestContainerText: {
+    textAlign: "center",
+    color: "white",
+  },
+  userCellContainer: {
+    margin: 5,
+    flex: 1,
+  },
+  underline: {
+    borderBottomWidth: 1,
+    width: "92.5%",
+    borderBottomColor: "#E8E8E8",
+    marginTop: 5,
+    alignItems: "center",
+    marginLeft: windowWidth * 0.028,
   },
 });
 

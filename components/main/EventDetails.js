@@ -14,7 +14,7 @@ import {
 	Dimensions,
 	ScrollView,
 	Platform,
-	KeyboardAvoidingView, Image, Button, FlatList,
+	KeyboardAvoidingView, Image, Button, FlatList, Share,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { InviteFriends } from "./InviteFriends";
@@ -33,6 +33,7 @@ const windowWidth = Dimensions.get("window").width;
 export const EventDetails = ({ navigation, route }) => {
 	const currentUserID = firebase.auth().currentUser.uid;
 	const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
+	const currentUserName = useSelector(state => state.currentUser.name);
 
 	const eventDisplayingID = route.params.ID;
 	const [eventDisplaying, setEventDisplaying] = useState({});
@@ -45,6 +46,8 @@ export const EventDetails = ({ navigation, route }) => {
 	const [goingBtnText, setGoingBtnText] = useState("I'm interested");
 
 	const [interestedColor, setInterestedColor] = useState("#5DB075");
+	const [interestedTextColor, setInterestedTextColor] = useState("#ffffff");
+	const [currentFont, setCurrentFont] = useState(50);	// title font size
 
 	// Fetch event, and set eventDisplaying
 	useEffect(() => {
@@ -62,15 +65,18 @@ export const EventDetails = ({ navigation, route }) => {
 			const temp = [];
 			eventDisplaying.attendees.forEach(async (attendee) => {
 				const doc = await attendee.get();
+				const data = doc.data();
+				if (data.ID === currentUserID) {
+					setInterestedColor("lightgray");
+					setInterestedTextColor("black");
+					return;
+				}
 				temp.push(doc.data());
 			});
 			setAttendees(temp);
 			setIsLoadingAttendees(false);
 		}
 	}, [isLoadingAttendees, isLoading]);
-
-	// title font size
-	const [currentFont, setCurrentFont] = useState(50);
 
 	// Goes back to feed when user swipes down from top
 	const onSwipeDown = (gestureState) => {
@@ -84,8 +90,31 @@ export const EventDetails = ({ navigation, route }) => {
         eventRef.update({
             attendees: firebase.firestore.FieldValue.arrayUnion(currentUserRef)
         });
-		goingBtnText.equals("I'm interested") ? setGoingBtnText("Going!") : setGoingBtnText("I'm interested");
+        setGoingBtnText("I'm interested");
+        setInterestedColor("lightgray");
+        setInterestedTextColor("black");
     };
+
+	// Send a message about the event to someone
+	const onShare = async () => {
+		try {
+			const result = await Share.share({
+				message:
+					`${currentUserName} is inviting you to ${eventDisplaying.name}. Check it out on Grove! *link*`,
+			});
+			if (result.action === Share.sharedAction) {
+				if (result.activityType) {
+					// shared with activity type of result.activityType
+				} else {
+					// shared
+				}
+			} else if (result.action === Share.dismissedAction) {
+				// dismissed
+			}
+		} catch (error) {
+			alert(error.message);
+		}
+	};
 
 	const config = {
 		velocityThreshold: 0.3,
@@ -203,14 +232,10 @@ export const EventDetails = ({ navigation, route }) => {
 			<View style={styles.rowFlexContainer}>
 				{/*Invite button*/}
 				<TouchableOpacity
-					onPress={() =>
-						navigation.navigate("InviteFriends", {
-							ID: eventDisplayingID,
-						})
-					}
+					onPress={onShare}
 					style={styles.fancyButtonContainer}
 				>
-					<Text style={styles.fancyButtonText}>Invite</Text>
+					<Text style={styles.fancyButtonText}>Share</Text>
 				</TouchableOpacity>
 
 				{/*I'm Interested button*/}
@@ -221,7 +246,10 @@ export const EventDetails = ({ navigation, route }) => {
 						{ backgroundColor: interestedColor, flex: 2 / 3 },
 					]}
 				>
-					<Text style={styles.fancyButtonText}>{goingBtnText}</Text>
+					<Text style={[
+						styles.fancyButtonText,
+						{ color: interestedTextColor },
+					]}>{goingBtnText}</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -277,7 +305,7 @@ const styles = StyleSheet.create({
 	},
 	fancyButtonText: {
 		fontSize: 18,
-		color: "#fff",
+		color: "white",
 		fontWeight: "bold",
 		alignSelf: "center",
 		textTransform: "uppercase",

@@ -42,7 +42,6 @@ export const Register = () => {
         // Store new user in users collection in firebase
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
             .then((user) => {
-                firebase.auth().currentUser.sendEmailVerification();
                 let userID = firebase.auth().currentUser.uid;
                 firebase.firestore().collection("users")
                     .doc(userID)
