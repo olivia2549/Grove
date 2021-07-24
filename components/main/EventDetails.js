@@ -32,7 +32,7 @@ const windowWidth = Dimensions.get("window").width;
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
 	const currentUserID = firebase.auth().currentUser.uid;
-  const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
+	const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
 
 	const eventDisplayingID = route.params.ID;
 	const [eventDisplaying, setEventDisplaying] = useState({});
@@ -44,9 +44,7 @@ export const EventDetails = ({ navigation, route }) => {
 
 	const [goingBtnText, setGoingBtnText] = useState("I'm interested");
 
-  const currentUserID = useSelector((state) => state.currentUser.ID);
-
-  const [interestedColor, setInterestedColor] = useState("#5DB075");
+	const [interestedColor, setInterestedColor] = useState("#5DB075");
 
 	// Fetch event, and set eventDisplaying
 	useEffect(() => {
@@ -70,18 +68,6 @@ export const EventDetails = ({ navigation, route }) => {
 			setIsLoadingAttendees(false);
 		}
 	}, [isLoadingAttendees, isLoading]);
-
-  // When the "i'm interested" button is pressed
-  const onInterested = () => {
-    // add current user to "attendees" collection
-    firebase
-      .firestore()
-      .collection("events")
-      .doc()
-      .collection("attendees")
-      .doc(currentUserID)
-      .set({});
-  };
 
 	// title font size
 	const [currentFont, setCurrentFont] = useState(50);
@@ -240,38 +226,6 @@ export const EventDetails = ({ navigation, route }) => {
 			</View>
 		</View>
 	);
-//       <View style={styles.rowFlexContainer}>
-//         {/*Invite button*/}
-//         <TouchableOpacity
-//           onPress={() =>
-//             navigation.navigate("InviteFriends", {
-//               name: event.name,
-//               description: event.description,
-//               tags: event.tags,
-//               startDateTime: event.startDateTime,
-//               endDateTime: event.endDateTime,
-//               location: event.location,
-//               attendees: event.attendees,
-//             })
-//           }
-//           style={styles.fancyButtonContainer}
-//         >
-//           <Text style={styles.fancyButtonText}>Invite</Text>
-//         </TouchableOpacity>
-
-//         {/*I'm Interested button*/}
-//         <TouchableOpacity
-//           onPress={onInterested}
-//           style={[
-//             styles.fancyButtonContainer,
-//             { backgroundColor: interestedColor, flex: 2 / 3 },
-//           ]}
-//         >
-//           <Text style={styles.fancyButtonText}>{goingBtnText}</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
 };
 
 const styles = StyleSheet.create({
@@ -451,9 +405,6 @@ const styles = StyleSheet.create({
 	userCellContainer: {
 		margin: 5,
 		flex: 1,
-		// flexDirection: "row",
-		// justifyContent: "center",
-		// alignItems: "center",
 	},
 	profilePic: {
 		width: 45,
@@ -467,151 +418,6 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: windowWidth * 0.042,
 	},
-  // for Share and I'm Going Buttons
-  buttonContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    top: "130%",
-  },
-  fancyButtonContainer: {
-    elevation: 8,
-    backgroundColor: "#5DB075",
-    borderRadius: 100,
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    marginBottom: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    flex: 1 / 3,
-    justifyContent: "center",
-  },
-  fancyButtonText: {
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold",
-    alignSelf: "center",
-    textTransform: "uppercase",
-    textAlign: "center",
-  },
-  tagText: {
-    color: "black",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: windowWidth * 0.05,
-  },
-  whereWhen: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 3,
-    // marginBottom: windowHeight * 0.015,
-  },
-  locationView: {
-    flex: 1,
-    marginLeft: windowWidth * 0.02,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  locationText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  timeView: {
-    flexDirection: "row",
-    marginTop: 6,
-    marginLeft: 1,
-  },
-  scrollStyle: {
-    flex: Platform.OS === "ios" ? 0 : 7, //
-  },
-  descriptionContainer: {
-    padding: windowWidth * 0.05,
-  },
-  descriptionText: {
-    fontSize: windowWidth * 0.07,
-  },
-  bigView: {
-    justifyContent: "center",
-    padding: windowWidth * 0.05,
-  },
-  rowFlexContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  startText: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 3,
-  },
-  startView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  startDayText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  startTimeView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  startTimeText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  endsText: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 2,
-  },
-  peopleGoingText: {
-    fontSize: windowWidth * 0.07,
-    fontWeight: "bold",
-    marginBottom: windowHeight * 0.01,
-  },
-  endDayView: {
-    flex: 1,
-    marginLeft: 25,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  endDayText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  endTimeView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  endTimeText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  keyboardAvoidContainer: {
-    justifyContent: "center",
-    padding: windowWidth * 0.05,
-    flex: 7,
-  },
 });
 
 export default EventDetails;
