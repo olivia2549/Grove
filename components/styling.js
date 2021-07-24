@@ -29,14 +29,16 @@ export const FancyButtonButLower = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
-export const FancyInput = ({ placeholder, onChangeText, secureTextEntry }) => (
+export const FancyInput = (props) => (
   <View style={styles.inputView}>
     <TextInput
       style={styles.TextInput}
-      placeholder={placeholder}
+      placeholder={props.placeholder}
       placeholderTextColor="#003f5c"
-      onChangeText={onChangeText}
-      secureTextEntry={secureTextEntry}
+      onChangeText={props.onChangeText}
+      secureTextEntry={props.secureTextEntry}
+      returnKeyType={props.returnKeyType}
+      autoFocus={props.autoFocus}
     />
   </View>
 );

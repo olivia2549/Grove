@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from "react";
-import {StyleSheet, KeyboardAvoidingView, View} from "react-native"
+import {StyleSheet, KeyboardAvoidingView, View, TouchableWithoutFeedback, Keyboard} from "react-native"
 import { FancyButton, FancyInput, } from "../styling";
 
 import firebase from "firebase";
@@ -28,22 +28,25 @@ export const Login = () => {
 
     // Displays to the screen
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
-            <FancyInput
-                placeholder="email"
-                onChangeText={(email) => setState({
-                    ...state,   // preserve old state
-                    email: email})}
-            />
-            <FancyInput
-                placeholder="password"
-                secureTextEntry={true}
-                onChangeText={(password) => setState({
-                    ...state,
-                    password: password})}
-            />
-            <FancyButton title="Sign In" onPress={() => onSignUp()}/>
-        </KeyboardAvoidingView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.screenContainer}>
+                <FancyInput
+                    placeholder="email"
+                    onChangeText={(email) => setState({
+                        ...state,   // preserve old state
+                        email: email})}
+                    autoFocus={true}
+                />
+                <FancyInput
+                    placeholder="password"
+                    secureTextEntry={true}
+                    onChangeText={(password) => setState({
+                        ...state,
+                        password: password})}
+                />
+                <FancyButton title="Sign In" onPress={() => onSignUp()}/>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     );
 };
 

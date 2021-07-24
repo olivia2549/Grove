@@ -16,6 +16,7 @@ import {
 const initialState = {
     ID: null,
     name: "",
+    nameLowercase: "",
     email: "",
     year: -1,
     major: "",
@@ -42,6 +43,7 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 ID: action.ID,
                 name: action.name,
+                nameLowercase: action.name.toLowerCase(),
                 email: action.email,
                 year: action.year,
                 major: action.major,

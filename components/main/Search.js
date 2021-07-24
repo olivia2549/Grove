@@ -16,8 +16,11 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { FancyInput } from "../styling";
+import { ProfileUser } from "./ProfileUser";
 
 import firebase from "firebase";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,7 +71,7 @@ export const Search = () => {
       const docs = await firebase
         .firestore()
         .collection("users")
-        .orderBy("name")
+        .orderBy("nameLowercase")
         .startAt(search)
         .endAt(search + "\uf8ff") // last letter; includes everything in search so far
         .get();
@@ -129,20 +132,22 @@ export const Search = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.titleBox}>
-        <Text style={styles.titleText}>Add Friends</Text>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <View style={styles.titleBox}>
+            <Text style={styles.titleText}>Add Friends</Text>
+          </View>
 
-      <View style={{ padding: 20 }}>
-        <FancyInput
-          placeholder="Search..."
-          onChangeText={(search) => {
-            setSearch(search);
-          }}
-        />
-      </View>
-
+          <View style={{ padding: 20 }}>
+            <FancyInput
+              placeholder="Search..."
+              onChangeText={(search) => {
+                const searchLower = search.toLowerCase();
+                setSearch(searchLower);
+              }}
+              returnKeyType="search"
+            />
+                
       <FlatList
         numColumns={1}
         horizontal={false}
@@ -191,15 +196,67 @@ export const Search = () => {
 
             <View style={styles.underline} />
           </View>
-        )}
-      />
-    </View>
+
+//           <FlatList
+//             numColumns={1}
+//             horizontal={false}
+//             data={usersToDisplay}
+//             renderItem={(
+//               { item } // Allows you to render a text item for each user
+//             ) => (
+//               <View style={styles.userCellContainer}>
+//                 <TouchableOpacity
+//                   onPress={() => {
+//                     navigation.navigate("ProfileUser", { uid: item.ID });
+//                   }}
+//                   style={{
+//                     flexDirection: "row",
+//                     marginTop: 5,
+//                     flex: 1,
+//                   }}
+//                 >
+//                   <View
+//                     style={{ flexDirection: "row", justifyContent: "flex-start" }}
+//                   >
+//                     <Image
+//                       source={require("../../assets/profileicon.jpg")}
+//                       style={styles.profilePic}
+//                     />
+//                     <Text style={styles.userName}>{item.name}</Text>
+//                   </View>
+//                   {
+//                     friends.indexOf(item.ID) > -1 &&
+//                       <View style={styles.alreadyFriendsUntouchable}>
+//                         <Text style={styles.alreadyFriendsText}>Friends</Text>
+//                       </View>
+//                   }
+//                   {
+//                     outgoingRequests.indexOf(item.ID) > -1 &&
+//                       <View style={styles.alreadyFriendsUntouchable}>
+//                         <Text style={styles.alreadyFriendsText}>Requested</Text>
+//                       </View>
+//                   }
+//                   { friends.indexOf(item.ID) === -1 && outgoingRequests.indexOf(item.ID) === -1 &&
+//                       <TouchableOpacity style={styles.addFriendButton} onPress={() => {addFriend(item.ID)}}>
+//                         <Text style={styles.addFriendText}>Add Friend</Text>
+//                       </TouchableOpacity>
+//                   }
+//                   {/* <Button style={{ borderRadius: 20 }} title="add friend" /> */}
+//                 </TouchableOpacity>
+//                 <View style={styles.underline} />
+//               </View>
+//             )}
+//           />
+        </View>
+      </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "white" },
-
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  },
   titleBox: {
     height: "25%",
     backgroundColor: "white",

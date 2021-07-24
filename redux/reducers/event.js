@@ -16,7 +16,9 @@ import {
 } from "../constants";
 
 const initialState = {
+    ID: "",
     name: "",
+    nameLowercase: "",
     description: "",
     tags: [],
     startDateTime: new Date(),
@@ -38,6 +40,7 @@ export const eventReducer = (state = initialState, action) => {
             return {
                 ...state,
                 name: action.name,
+                nameLowercase: action.name.toLowerCase(),
             }
         case 'EVENT_DESCRIPTION_STATE_CHANGE':
             return {

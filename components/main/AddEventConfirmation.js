@@ -22,6 +22,8 @@ import { useNavigation } from "@react-navigation/native";
 import { InviteFriends } from "./InviteFriends";
 
 import { FancyButtonButLower } from "../styling";
+import {parseDate, getMonthName, getWeekDay } from "../../shared/HelperFunctions";
+
 import firebase from "firebase";
 
 const windowHeight = Dimensions.get("window").height;
@@ -30,73 +32,41 @@ const windowWidth = Dimensions.get("window").width;
 const AddEventConfirmation = () => {
   const navigation = useNavigation();
 
+  const currentUserID = firebase.auth().currentUser.uid;
+  const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
+
   // Grabs event data from redux, stores as an object
   const eventData = {
     name: useSelector((state) => state.event.name),
+    nameLowercase: useSelector(state => state.event.nameLowercase),
     description: useSelector((state) => state.event.description),
     tags: useSelector((state) => state.event.tags),
     startDateTime: useSelector((state) => state.event.startDateTime),
     endDateTime: useSelector((state) => state.event.endDateTime),
     location: useSelector((state) => state.event.location),
     attendees: useSelector(state => state.event.attendees),
+    creator: currentUserID,
   };
+
+  const start = parseDate(eventData.startDateTime.toDate());
+  const end = parseDate(eventData.endDateTime.toDate());
 
   // New event gets added to firebase
-  const onSubmit = async () => {
-    const docRef = await firebase.firestore().collection("events").doc();
+  const onSubmit = () => {
+    const docRef = firebase.firestore().collection("events").doc();
     eventData.ID = docRef.id;
-    eventData.creator = await firebase.firestore().collection("users")
-        .doc(firebase.auth().currentUser.uid);
-    eventData.attendees.push(eventData.creator);
-    eventData.nameLowercase = eventData.name.toLowerCase();
-    await docRef.set(eventData);
-    console.log("Posted to firebase - " + eventData.ID);
-    Alert.alert("Event posted");
-    navigation.navigate("Main", {
-      //TODO - navigate to EventDetails => Auto open invite
+    eventData.attendees.push(currentUserRef);
+    docRef.set(eventData)
+    .then(() => {
+      console.log("Posted to firebase - " + eventData.ID);
+      Alert.alert("Event posted");
+      navigation.navigate("EventDetails", { ID: eventData.ID });
+    })
+    .catch((error) => {
+      console.log("Error posting to firebase - " + error);
+      Alert.alert("Error posting to firebase");
     });
-  };
-
-  // for start and end time translation
-  const [startTime, setStartTime] = useState("");
-  const [startTimeUnit, setStartTimeUnit] = useState("");
-  let startHourInNum = parseInt(
-    eventData.startDateTime.toString().substring(16, 18),
-    10
-  );
-
-  const [endTime, setEndTime] = useState("");
-  const [endTimeUnit, setEndTimeUnit] = useState("AM");
-  let endHourInNum = parseInt(
-    eventData.endDateTime.toString().substring(16, 18),
-    10
-  );
-
-  useEffect(() => {
-    // setting the start hour
-    if (startHourInNum >= 12) {
-      var hour = startHourInNum - 12;
-      setStartTimeUnit("PM");
-      setStartTime(
-        hour.toString() + eventData.startDateTime.toString().substring(18, 21)
-      );
-    } else {
-      setStartTimeUnit("AM");
-      setStartTime(eventData.startDateTime.toString().substring(16, 21));
-    }
-
-    // setting the end hour
-    if (endHourInNum >= 12) {
-      var hour = endHourInNum - 12;
-      setEndTimeUnit("PM");
-      setEndTime(
-        hour.toString() + eventData.endDateTime.toString().substring(18, 21)
-      );
-    } else {
-      setEndTimeUnit("AM");
-      setEndTime(eventData.endDateTime.toString().substring(16, 21));
-    }
-  });
+  }
 
   return (
     <View style={styles.container}>
@@ -144,12 +114,12 @@ const AddEventConfirmation = () => {
 
             <View style={styles.startView}>
               <Text style={styles.startDayText}>
-                {eventData.startDateTime.toString().substring(4, 10)}
+                {start.month.substr(0,3)} {start.date}
               </Text>
             </View>
             <View style={styles.startTimeView}>
               <Text style={styles.startTimeText}>
-                {`${startTime} ${startTimeUnit}`}
+                {start.ampmTime}
               </Text>
             </View>
           </View>
@@ -159,12 +129,12 @@ const AddEventConfirmation = () => {
             <Text style={styles.endsText}>Ends</Text>
             <View style={styles.endDayView}>
               <Text style={styles.endDayText}>
-                {eventData.endDateTime.toString().substring(4, 10)}
+                {end.month.substr(0,3)} {end.date}
               </Text>
             </View>
             <View style={styles.endTimeView}>
               <Text style={styles.startTimeText}>
-                {`${endTime} ${endTimeUnit}`}
+                {end.ampmTime}
               </Text>
             </View>
           </View>
