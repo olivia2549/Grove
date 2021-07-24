@@ -14,7 +14,6 @@ import firebase from "firebase";
 import {clearUserData} from "../../redux/actions";
 
 export const VerifyEmail = () => {
-    const navigation = useNavigation();
     const currentUser = firebase.auth().currentUser;
 
     return (
