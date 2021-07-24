@@ -14,10 +14,11 @@ import {
 	Dimensions,
 	ScrollView,
 	Platform,
-	KeyboardAvoidingView,
+	KeyboardAvoidingView, Image, Button, FlatList,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { InviteFriends } from "./InviteFriends";
+import { ProfileUser } from "./ProfileUser";
 import firebase from "firebase";
 import { FancyInput } from "../styling";
 import { useNavigation } from "@react-navigation/native";
@@ -28,26 +29,6 @@ import {parseDate, getMonthName, getWeekDay, fetchFromFirebase } from "../../sha
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-// const onShare = async () => {
-//   try {
-//     const result = await Share.share({
-//       message:
-//         "*User* is inviting you to *event*. Check it out on Grove! *link*",
-//     });
-//     if (result.action === Share.sharedAction) {
-//       if (result.activityType) {
-//         // shared with activity type of result.activityType
-//       } else {
-//         // shared
-//       }
-//     } else if (result.action === Share.dismissedAction) {
-//       // dismissed
-//     }
-//   } catch (error) {
-//     alert(error.message);
-//   }
-// };
-
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
 	const currentUserID = firebase.auth().currentUser.uid;
@@ -55,7 +36,12 @@ export const EventDetails = ({ navigation, route }) => {
 
 	const eventDisplayingID = route.params.ID;
 	const [eventDisplaying, setEventDisplaying] = useState({});
+
+	const [attendees, setAttendees] = useState([]);
+
 	const [isLoading, setIsLoading] = useState(true);
+	const [isLoadingAttendees, setIsLoadingAttendees] = useState(true);
+
 	const [goingBtnText, setGoingBtnText] = useState("I'm interested");
 
 	// Fetch event, and set eventDisplaying
@@ -64,9 +50,22 @@ export const EventDetails = ({ navigation, route }) => {
             fetchFromFirebase(eventDisplayingID, "events").then((data) => {
                 setEventDisplaying(data.data()); 
                 setIsLoading(false);
-            })
+            });
         }
 	}, [isLoading]);
+
+	useEffect(() => {
+		if (isLoadingAttendees && !isLoading) {
+			console.log("loading attendees...");
+			const temp = [];
+			eventDisplaying.attendees.forEach(async (attendee) => {
+				const doc = await attendee.get();
+				temp.push(doc.data());
+			});
+			setAttendees(temp);
+			setIsLoadingAttendees(false);
+		}
+	}, [isLoadingAttendees, isLoading]);
 
 	const [interestedColor, setInterestedColor] = useState("#5DB075");
 
@@ -93,124 +92,138 @@ export const EventDetails = ({ navigation, route }) => {
 		directionalOffsetThreshold: 80,
 	};
 
+	if (isLoading) return <Text>Loading...</Text>;
+
 	return (
-		<View>
-			{isLoading ? <Text>Loading...</Text> : 
-			<View style={styles.container}>
-				{/* <KeyboardAvoidingView
-						behavior={Platform.OS === "ios" ? "padding" : "height"}
-						style={{flex: 1}}
-						> */}
-
-				<GestureRecognizer
-					onSwipeDown={(state) => onSwipeDown(state)}
-					config={config}
-					style={styles.topBar}
-				>
-					<Text
-						adjustsFontSizeToFit
-						style={[styles.eventName, { fontSize: currentFont }]}
-						onTextLayout={(e) => {
-							const { lines } = e.nativeEvent;
-							if (lines.length > 1) {
-								setCurrentFont(currentFont - 1);
-							}
-						}}
-					>
-						{eventDisplaying.name}
-					</Text>
-				</GestureRecognizer>
-
-				{/* <ScrollView style={styles.scrollStyle}> */}
-				<ScrollView style={{ flex: Platform.OS === "ios" ? 0 : 7 }}>
-					<View style={styles.rowFlexContainer}>
-						{eventDisplaying.tags.map((tag) => (
-							<View style={styles.tagBox}>
-								<Text style={styles.tagText}>{tag}</Text>
-							</View>
-						))}
-					</View>
-					<View style={styles.descriptionContainer}>
-						<Text style={styles.descriptionText}>
-							{eventDisplaying.description}
-						</Text>
-					</View>
-
-					<View style={styles.bigView}>
-						{/* WHERE */}
-						<View style={styles.rowFlexContainer}>
-							<Text style={styles.whereWhen}>Where</Text>
-							<View style={styles.locationView}>
-								{/* this is hard coded, would need to be changed once we fetch info from the data */}
-								<Text style={styles.locationText}>
-									{eventDisplaying.location}
-								</Text>
-							</View>
-						</View>
-
-						{/* START */}
-						<View style={styles.timeView}>
-							<Text style={styles.startText}>Starts</Text>
-
-							<View style={styles.startView}>
-								<Text style={styles.startDayText}>{parseDate(eventDisplaying.startDateTime.toDate()).day}</Text>
-							</View>
-							<View style={styles.startTimeView}>
-								<Text style={styles.startTimeText}>
-									{parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
-								</Text>
-							</View>
-						</View>
-
-						{/* END */}
-						<View style={styles.timeView}>
-							<Text style={styles.endsText}>Ends</Text>
-							<View style={styles.endDayView}>
-								<Text style={styles.endDayText}>{parseDate(eventDisplaying.endDateTime.toDate()).day}</Text>
-							</View>
-							<View style={styles.endTimeView}>
-								<Text style={styles.endTimeText}>
-									{parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
-								</Text>
-							</View>
-						</View>
-					</View>
-
-					<KeyboardAvoidingView
-						behavior={Platform.OS === "ios" ? "padding" : "height"}
-						style={styles.keyboardAvoidContainer}
-					>
-						<Text style={styles.peopleGoingText}>
-							{/* {attendees.length} people going */}
-						</Text>
-					</KeyboardAvoidingView>
-				</ScrollView>
-
-				<View style={styles.rowFlexContainer}>
-					{/*Invite button*/}
-					<TouchableOpacity
-						onPress={() =>
-							navigation.navigate("InviteFriends", {
-								ID: eventDisplayingID,
-							})
+		<View style={styles.container}>
+			<GestureRecognizer
+				onSwipeDown={(state) => onSwipeDown(state)}
+				config={config}
+				style={styles.topBar}
+			>
+				<Text
+					adjustsFontSizeToFit
+					style={[styles.eventName, { fontSize: currentFont }]}
+					onTextLayout={(e) => {
+						const { lines } = e.nativeEvent;
+						if (lines.length > 1) {
+							setCurrentFont(currentFont - 1);
 						}
-						style={styles.fancyButtonContainer}
-					>
-						<Text style={styles.fancyButtonText}>Invite</Text>
-					</TouchableOpacity>
+					}}
+				>
+					{eventDisplaying.name}
+				</Text>
+			</GestureRecognizer>
 
-					{/*I'm Interested button*/}
-					<TouchableOpacity
-						onPress={onInterested}
-						style={[
-							styles.fancyButtonContainer,
-							{ backgroundColor: interestedColor, flex: 2 / 3 },
-						]}
-					>
-						<Text style={styles.fancyButtonText}>{goingBtnText}</Text>
-					</TouchableOpacity>
+			<ScrollView style={{ flex: Platform.OS === "ios" ? 0 : 7 }}>
+				<View style={styles.rowFlexContainer}>
+					{eventDisplaying.tags.map((tag) => (
+						<View style={styles.tagBox}>
+							<Text style={styles.tagText}>{tag}</Text>
+						</View>
+					))}
 				</View>
-			</View>}
+				<View style={styles.descriptionContainer}>
+					<Text style={styles.descriptionText}>
+						{eventDisplaying.description}
+					</Text>
+				</View>
+
+				<View style={styles.bigView}>
+					{/* WHERE */}
+					<View style={styles.rowFlexContainer}>
+						<Text style={styles.whereWhen}>Where</Text>
+						<View style={styles.locationView}>
+							{/* this is hard coded, would need to be changed once we fetch info from the data */}
+							<Text style={styles.locationText}>
+								{eventDisplaying.location}
+							</Text>
+						</View>
+					</View>
+
+					{/* START */}
+					<View style={styles.timeView}>
+						<Text style={styles.startText}>Starts</Text>
+
+						<View style={styles.startView}>
+							<Text style={styles.startDayText}>{parseDate(eventDisplaying.startDateTime.toDate()).day}</Text>
+						</View>
+						<View style={styles.startTimeView}>
+							<Text style={styles.startTimeText}>
+								{parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
+							</Text>
+						</View>
+					</View>
+
+					{/* END */}
+					<View style={styles.timeView}>
+						<Text style={styles.endsText}>Ends</Text>
+						<View style={styles.endDayView}>
+							<Text style={styles.endDayText}>{parseDate(eventDisplaying.endDateTime.toDate()).day}</Text>
+						</View>
+						<View style={styles.endTimeView}>
+							<Text style={styles.endTimeText}>
+								{parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
+							</Text>
+						</View>
+					</View>
+				</View>
+
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					style={styles.keyboardAvoidContainer}
+				>
+					<Text style={styles.peopleGoingText}>People Going ({attendees.length})</Text>
+					{
+						isLoadingAttendees ?
+							<Text>Loading...</Text>
+							:
+							<FlatList
+								numColumns={1}
+								horizontal={false}
+								data={attendees}
+								renderItem={({item}) => (   // Allows you to render a text item for each user
+									<View style={styles.userCellContainer}>
+										<TouchableOpacity
+											onPress={() => navigation.navigate("ProfileUser", { uid: item.ID })}
+										>
+											<Image
+												source={require("../../assets/profileicon.jpg")}
+												style={styles.profilePic}
+											/>
+											<Text style={styles.userName}>{item.name}</Text>
+										</TouchableOpacity>
+									</View>
+								)}
+							/>
+					}
+				</KeyboardAvoidingView>
+			</ScrollView>
+
+			<View style={styles.rowFlexContainer}>
+				{/*Invite button*/}
+				<TouchableOpacity
+					onPress={() =>
+						navigation.navigate("InviteFriends", {
+							ID: eventDisplayingID,
+						})
+					}
+					style={styles.fancyButtonContainer}
+				>
+					<Text style={styles.fancyButtonText}>Invite</Text>
+				</TouchableOpacity>
+
+				{/*I'm Interested button*/}
+				<TouchableOpacity
+					onPress={onInterested}
+					style={[
+						styles.fancyButtonContainer,
+						{ backgroundColor: interestedColor, flex: 2 / 3 },
+					]}
+				>
+					<Text style={styles.fancyButtonText}>{goingBtnText}</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 };
@@ -244,7 +257,6 @@ const styles = StyleSheet.create({
 	scrollable: {
 		flex: 7,
 	},
-
 	// for Share and I'm Going Buttons
 	buttonContainer: {
 		flexDirection: "row",
@@ -389,6 +401,25 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		padding: windowWidth * 0.05,
 		flex: 7,
+	},
+	userCellContainer: {
+		margin: 5,
+		flex: 1,
+		// flexDirection: "row",
+		// justifyContent: "center",
+		// alignItems: "center",
+	},
+	profilePic: {
+		width: 45,
+		height: 45,
+		borderRadius: 400 / 2,
+	},
+	userName: {
+		flexDirection: "column",
+		justifyContent: "center",
+		marginLeft: 5,
+		fontWeight: "bold",
+		fontSize: windowWidth * 0.042,
 	},
 });
 
