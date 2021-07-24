@@ -7,14 +7,18 @@
 
 import React, {useRef, useState} from 'react';
 import {StyleSheet, Alert, View, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard} from 'react-native'
+import { useNavigation } from "@react-navigation/native";
 
 import firebase from "firebase";
 
 import { FancyInput, FancyButton } from '../styling';
+import { VerifyEmail } from "./VerifyEmail";
 
 const VALID_DOMAINS = ["vanderbilt.edu"];
 
 export const Register = () => {
+    const navigation = useNavigation();
+
     // The information we need for user registration
     const [state, setState] = useState({
         email: "",
@@ -37,7 +41,8 @@ export const Register = () => {
         }
         // Store new user in users collection in firebase
         firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
-            .then((result) => {
+            .then((user) => {
+                firebase.auth().currentUser.sendEmailVerification();
                 let userID = firebase.auth().currentUser.uid;
                 firebase.firestore().collection("users")
                     .doc(userID)
