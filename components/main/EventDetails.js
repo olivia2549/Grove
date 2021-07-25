@@ -211,16 +211,19 @@ export const EventDetails = ({ navigation, route }) => {
 								numColumns={1}
 								horizontal={false}
 								data={attendees}
+								keyExtractor={(item, index) => item.ID}
 								renderItem={({item}) => (   // Allows you to render a text item for each user
 									<View style={styles.userCellContainer}>
 										<TouchableOpacity
+											key={item.ID}
 											onPress={() => navigation.navigate("ProfileUser", { uid: item.ID })}
 										>
 											<Image
+												key={item.ID+"image"}
 												source={require("../../assets/profileicon.jpg")}
 												style={styles.profilePic}
 											/>
-											<Text style={styles.userName}>{item.name}</Text>
+											<Text key={item.ID+"name"} style={styles.userName}>{item.name}</Text>
 										</TouchableOpacity>
 									</View>
 								)}

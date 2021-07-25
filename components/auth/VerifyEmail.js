@@ -8,7 +8,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, Button } from 'react-native'
 import { useNavigation } from "@react-navigation/native";
-import { App } from "../../App";
 
 import firebase from "firebase";
 import {clearUserData} from "../../redux/actions";

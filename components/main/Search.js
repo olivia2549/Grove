@@ -151,6 +151,7 @@ export const Search = () => {
               numColumns={1}
               horizontal={false}
               data={usersToDisplay}
+              keyExtractor={(item, index) => item.ID}
               renderItem={(
                   { item } // Allows you to render a text item for each user
               ) => (

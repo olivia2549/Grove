@@ -103,6 +103,7 @@ export const Notifications = () => {
         numColumns={1}
         horizontal={false}
         data={requestsToDisplay}
+        keyExtractor={(item, index) => item.ID}
         renderItem={(
           { item } // Allows you to render a text item for each user
         ) => (
