@@ -48,8 +48,8 @@ const AddEventConfirmation = () => {
     creator: currentUserID,
   };
 
-  const start = parseDate(eventData.startDateTime.toDate());
-  const end = parseDate(eventData.endDateTime.toDate());
+  const start = parseDate(eventData.startDateTime);
+  const end = parseDate(eventData.endDateTime);
 
   // New event gets added to firebase
   const onSubmit = () => {

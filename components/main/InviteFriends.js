@@ -124,6 +124,7 @@ export const InviteFriends = ( { route } ) => {
             numColumns={1}
             horizontal={false}
             data={friendsToDisplay}
+            keyExtractor={(item, index) => item.ID}
             renderItem={({ item }) => (
                 <View style={styles.userCellContainer}>
                   <TouchableOpacity

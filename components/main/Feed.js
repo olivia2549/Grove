@@ -100,7 +100,7 @@ const Feed = () => {
                     <Text>Loading...</Text> :
                     <FlatList
                         data={events}
-                        keyExtractor={(event) => event.id}
+                        keyExtractor={(item, index) => item.ID}
                         refreshControl={
                             <RefreshControl
                                 refreshing={refreshing}
