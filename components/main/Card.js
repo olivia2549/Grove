@@ -70,7 +70,7 @@ export const Card = (props) => {
 
 const styles = StyleSheet.create({
 	card: {
-		backgroundColor: "#1C3129",
+		backgroundColor: "#5DB075",
 		padding: 15,
 		marginBottom: 20,
 		fontFamily: "Verdana",

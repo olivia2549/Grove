@@ -52,7 +52,7 @@ export const AddEventInfo = () => {
     dispatch(addEventLocation(location));
     dispatch(addEventDescription(description));
     navigation.navigate("AddEventTags");
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -84,7 +84,11 @@ export const AddEventInfo = () => {
               if (name === "") {
                 Alert.alert("Please add a name for this event.");
                 nameRef.current.focus();
+              } else if (name.length > 25) {
+                Alert.alert("Please make your title under 25 characters");
+                nameRef.current.focus();
               } else {
+                console.log(name.length);
                 locationRef.current.focus();
               }
             }}
@@ -191,7 +195,8 @@ const styles = StyleSheet.create({
     padding: 25,
     fontSize: windowWidth * 0.12,
   },
-  textBox: {    // name, description, and location styling
+  textBox: {
+    // name, description, and location styling
     marginLeft: windowWidth * 0.05,
     borderRadius: 10,
     justifyContent: "flex-start",
