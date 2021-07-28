@@ -52,10 +52,18 @@ const Feed = () => {
         .get()
         .then((snapshot) => {
           const temp = [];
+          const date = new Date();
           snapshot.forEach((doc) => {
-            temp.push(doc.data());
+            // console.log(date);
+            if (date <= doc.data().startDateTime.toDate()) {
+              // console.log("here:" + date - doc.data().startDateTime.toDate());
+              temp.push(doc.data());
+            }
+            // console.log("date: " + doc.data().startDateTime.toDate());
           });
           if (temp.length > 1) {
+            temp.forEach((i) => console.log(i.startDateTime.toDate()));
+            // console.log(temp[0].startDateTime.toDate());
             temp.sort(
               (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
             );
@@ -77,7 +85,9 @@ const Feed = () => {
       .then((snapshot) => {
         const temp = [];
         snapshot.forEach((doc) => {
-          temp.push(doc.data());
+          if (date <= doc.data().startDateTime.toDate()) {
+            temp.push(doc.data());
+          }
         });
         if (temp.length > 1) {
           temp.sort(
