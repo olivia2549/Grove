@@ -45,7 +45,7 @@ const AddEventConfirmation = () => {
     endDateTime: useSelector((state) => state.event.endDateTime),
     location: useSelector((state) => state.event.location),
     attendees: useSelector(state => state.event.attendees),
-    creator: currentUserID,
+    creator: currentUserRef,
   };
 
   const start = parseDate(eventData.startDateTime);
