@@ -21,20 +21,11 @@ import {
   Share,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { InviteFriends } from "./InviteFriends";
 import { ProfileUser } from "./ProfileUser";
 import firebase from "firebase";
-import { FancyInput } from "../styling";
-import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import UserImageName from "./UserImageName";
-import {
-  parseDate,
-  getMonthName,
-  getWeekDay,
-  fetchFromFirebase,
-  fetchFromFirebaseList
-} from "../../shared/HelperFunctions";
+import { parseDate, fetchFromFirebase } from "../../shared/HelperFunctions";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -50,13 +41,9 @@ export const EventDetails = ({ navigation, route }) => {
 
   const eventDisplayingID = route.params.ID;
   const [eventDisplaying, setEventDisplaying] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [attendees, setAttendees] = useState([]);
-
-	const [isLoading, setIsLoading] = useState(true);
-//   const [isLoadingAttendees, setIsLoadingAttendees] = useState(true);
-//   const [goingBtnText, setGoingBtnText] = useState("I'm interested");
-
+  const [interestedText, setInterestedText] = useState("Interested");
   const [interestedColor, setInterestedColor] = useState("#5DB075");
   const [interestedTextColor, setInterestedTextColor] = useState("#ffffff");
 
@@ -64,49 +51,21 @@ export const EventDetails = ({ navigation, route }) => {
   const [currentFont, setCurrentFont] = useState(50); // title font size
 
 	// Fetch event, and set eventDisplaying
-	useEffect(() => {
-        if (isLoading) {
-            fetchFromFirebase(eventDisplayingID, "events").then((data) => {
-                if (data.data()) setEventDisplaying(data.data()); 
-                setIsLoading(false);
-            });
-        }
+  useEffect(() => {
+    if (isLoading) {
+      fetchFromFirebase(eventDisplayingID, "events").then((data) => {
+        if (data.data()) setEventDisplaying(data.data());
+        setIsLoading(false);
+      });
+    }
   }, [isLoading]);
-//   // Fetch event, and set eventDisplaying
-//   useEffect(() => {
-//     if (isLoading) {
-//       fetchFromFirebase(eventDisplayingID, "events").then((data) => {
-//         setEventDisplaying(data.data());
-//         setIsLoading(false);
-//       });
-//     }
-//   }, [isLoading]);
 
-//   useEffect(() => {
-//     if (isLoadingAttendees && !isLoading) {
-//       console.log("loading attendees...");
-//       const temp = [];
-//       eventDisplaying.attendees.forEach(async (attendee) => {
-//         const doc = await attendee.get();
-//         const data = doc.data();
-//         if (data.ID === currentUserID) {
-//           setInterestedColor("lightgray");
-//           setInterestedTextColor("black");
-//           return;
-//         }
-//         temp.push(doc.data());
-//       });
-//       setAttendees(temp);
-//       setIsLoadingAttendees(false);
-//     }
-//   }, [isLoadingAttendees, isLoading]);
+  // Goes back to feed when user swipes down from top
+  const onSwipeDown = (gestureState) => {
+    navigation.goBack();
+  };
 
-	// Goes back to feed when user swipes down from top
-	const onSwipeDown = (gestureState) => {
-		navigation.goBack();
-	};
-
-  // When the "i'm interested" button is pressed
+  // When the "interested" button is pressed
   const onInterested = () => {
     // add current user to "attendees" array of eventDisplaying
     const eventRef = firebase
@@ -116,7 +75,7 @@ export const EventDetails = ({ navigation, route }) => {
     eventRef.update({
       attendees: firebase.firestore.FieldValue.arrayUnion(currentUserRef),
     });
-    setGoingBtnText("I'm interested");
+    setInterestedText("I'm interested");
     setInterestedColor("lightgray");
     setInterestedTextColor("black");
   };
@@ -161,16 +120,7 @@ export const EventDetails = ({ navigation, route }) => {
         config={config}
         style={styles.topBar}
       >
-        <Text
-          adjustsFontSizeToFit
-          style={[styles.eventName, { fontSize: currentFont }]}
-          //   onTextLayout={(e) => {
-          //     const { lines } = e.nativeEvent;
-          //     if (lines.length > 1) {
-          //       setCurrentFont(currentFont - 1);
-          //     }
-          //   }}
-        >
+        <Text adjustsFontSizeToFit style={[styles.eventName, { fontSize: currentFont }]}>
           {eventDisplaying.name}
         </Text>
       </GestureRecognizer>
@@ -233,69 +183,29 @@ export const EventDetails = ({ navigation, route }) => {
           </View>
         </View>
 
-				<KeyboardAvoidingView
-					behavior={Platform.OS === "ios" ? "padding" : "height"}
-					style={styles.keyboardAvoidContainer}
-				>
-					<Text style={styles.peopleGoingText}>People Going ({eventDisplaying.attendees.length})</Text>
-							<FlatList
-								numColumns={1}
-								horizontal={false}
-								data={eventDisplaying.attendees}
-								keyExtractor={(item, index) => item.id}
-								renderItem={({item}) => (   // Allows you to render a text item for each user
-									<View style={styles.userCellContainer}>
-										<TouchableOpacity
-											key={item.id+"row"}
-											onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
-										>
-											<UserImageName id={item.id}/>
-										</TouchableOpacity>
-									</View>
-								)}
-							/>
-				</KeyboardAvoidingView>
-			</ScrollView>
-//         <KeyboardAvoidingView
-//           behavior={Platform.OS === "ios" ? "padding" : "height"}
-//           style={styles.keyboardAvoidContainer}
-//         >
-//           <Text style={styles.peopleGoingText}>
-//             People Going ({attendees.length})
-//           </Text>
-//           {isLoadingAttendees ? (
-//             <Text>Loading...</Text>
-//           ) : (
-//             <FlatList
-//               numColumns={1}
-//               horizontal={false}
-//               data={attendees}
-//               keyExtractor={(item, index) => item.ID}
-//               renderItem={(
-//                 { item } // Allows you to render a text item for each user
-//               ) => (
-//                 <View style={styles.userCellContainer}>
-//                   <TouchableOpacity
-//                     key={item.ID}
-//                     onPress={() =>
-//                       navigation.navigate("ProfileUser", { uid: item.ID })
-//                     }
-//                   >
-//                     <Image
-//                       key={item.ID + "image"}
-//                       source={require("../../assets/profileicon.jpg")}
-//                       style={styles.profilePic}
-//                     />
-//                     <Text key={item.ID + "name"} style={styles.userName}>
-//                       {item.name}
-//                     </Text>
-//                   </TouchableOpacity>
-//                 </View>
-//               )}
-//             />
-//           )}
-//         </KeyboardAvoidingView>
-//       </ScrollView>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.keyboardAvoidContainer}
+        >
+          <Text style={styles.peopleGoingText}>People Going ({eventDisplaying.attendees.length})</Text>
+          <FlatList
+              numColumns={1}
+              horizontal={false}
+              data={eventDisplaying.attendees}
+              keyExtractor={(item, index) => item.id}
+              renderItem={({item}) => (   // Allows you to render a text item for each user
+                  <View style={styles.userCellContainer}>
+                    <TouchableOpacity
+                        key={item.id+"row"}
+                        onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
+                    >
+                      <UserImageName id={item.id}/>
+                    </TouchableOpacity>
+                  </View>
+              )}
+          />
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       <View style={styles.rowFlexContainer}>
         {/*Invite button*/}
@@ -314,7 +224,7 @@ export const EventDetails = ({ navigation, route }) => {
           <Text
             style={[styles.fancyButtonText, { color: interestedTextColor }]}
           >
-            {goingBtnText}
+            {interestedText}
           </Text>
         </TouchableOpacity>
       </View>
@@ -341,166 +251,6 @@ const styles = StyleSheet.create({
     padding: 13,
     marginTop: 10,
   },
-
-	// for event details
-// 	eventName: {
-// 		color: "#ffffff",
-// 		fontWeight: "600",
-// 		padding: 20,
-// 	},
-// 	scrollable: {
-// 		flex: 7,
-// 	},
-// 	// for Share and I'm Going Buttons
-// 	buttonContainer: {
-// 		flexDirection: "row",
-// 		alignItems: "flex-end",
-// 		top: "130%",
-// 	},
-// 	fancyButtonContainer: {
-// 		elevation: 8,
-// 		backgroundColor: "#5DB075",
-// 		borderRadius: 100,
-// 		paddingVertical: 16,
-// 		paddingHorizontal: 32,
-// 		marginBottom: 20,
-// 		marginLeft: 10,
-// 		marginRight: 10,
-// 		flex: 1 / 3,
-// 		justifyContent: "center",
-// 	},
-// 	fancyButtonText: {
-// 		fontSize: 18,
-// 		color: "white",
-// 		fontWeight: "bold",
-// 		alignSelf: "center",
-// 		textTransform: "uppercase",
-// 		textAlign: "center",
-// 	},
-// 	tagText: {
-// 		color: "black",
-// 		fontWeight: "bold",
-// 		textAlign: "center",
-// 		fontSize: windowWidth * 0.05,
-// 	},
-// 	whereWhen: {
-// 		fontSize: windowWidth * 0.06,
-// 		fontWeight: "bold",
-// 		marginTop: 3,
-// 		// marginBottom: windowHeight * 0.015,
-// 	},
-// 	locationView: {
-// 		flex: 1,
-// 		marginLeft: windowWidth * 0.02,
-// 		justifyContent: "center",
-// 		height: windowHeight * 0.055,
-// 		backgroundColor: "lightgrey",
-// 		borderRadius: 10,
-// 	},
-// 	locationText: {
-// 		marginLeft: windowWidth * 0.03,
-// 		color: "black",
-// 		fontSize: windowWidth * 0.05,
-// 	},
-// 	timeView: {
-// 		flexDirection: "row",
-// 		marginTop: 6,
-// 		marginLeft: 1,
-// 	},
-// 	scrollStyle: {
-// 		flex: Platform.OS === "ios" ? 0 : 7, //
-// 	},
-// 	descriptionContainer: {
-// 		padding: windowWidth * 0.05,
-// 	},
-// 	descriptionText: {
-// 		fontSize: windowWidth * 0.07,
-// 	},
-// 	bigView: {
-// 		justifyContent: "center",
-// 		padding: windowWidth * 0.05,
-// 	},
-// 	rowFlexContainer: {
-// 		flexDirection: "row",
-// 		flexWrap: "wrap",
-// 	},
-// 	startText: {
-// 		fontSize: windowWidth * 0.06,
-// 		fontWeight: "bold",
-// 		marginTop: 3,
-// 	},
-// 	startView: {
-// 		flex: 1,
-// 		marginLeft: 15,
-// 		justifyContent: "center",
-// 		height: windowHeight * 0.055,
-// 		backgroundColor: "lightgrey",
-// 		borderRadius: 10,
-// 	},
-// 	startDayText: {
-// 		marginLeft: windowWidth * 0.03,
-// 		color: "black",
-// 		fontSize: windowWidth * 0.05,
-// 	},
-// 	startTimeView: {
-// 		flex: 1,
-// 		marginLeft: 15,
-// 		justifyContent: "center",
-// 		height: windowHeight * 0.055,
-// 		backgroundColor: "lightgrey",
-// 		borderRadius: 10,
-// 	},
-// 	startTimeText: {
-// 		marginLeft: windowWidth * 0.03,
-// 		color: "black",
-// 		fontSize: windowWidth * 0.05,
-// 	},
-// 	endsText: {
-// 		fontSize: windowWidth * 0.06,
-// 		fontWeight: "bold",
-// 		marginTop: 2,
-// 	},
-// 	peopleGoingText: {
-// 		fontSize: windowWidth * 0.07,
-// 		fontWeight: "bold",
-// 		marginBottom: windowHeight * 0.01,
-// 	},
-// 	endDayView: {
-// 		flex: 1,
-// 		marginLeft: 25,
-// 		justifyContent: "center",
-// 		height: windowHeight * 0.055,
-// 		backgroundColor: "lightgrey",
-// 		borderRadius: 10,
-// 	},
-// 	endDayText: {
-// 		marginLeft: windowWidth * 0.03,
-// 		color: "black",
-// 		fontSize: windowWidth * 0.05,
-// 	},
-// 	endTimeView: {
-// 		flex: 1,
-// 		marginLeft: 15,
-// 		justifyContent: "center",
-// 		height: windowHeight * 0.055,
-// 		backgroundColor: "lightgrey",
-// 		borderRadius: 10,
-// 	},
-// 	endTimeText: {
-// 		marginLeft: windowWidth * 0.03,
-// 		color: "black",
-// 		fontSize: windowWidth * 0.05,
-// 	},
-// 	keyboardAvoidContainer: {
-// 		justifyContent: "center",
-// 		padding: windowWidth * 0.05,
-// 		flex: 7,
-// 	},
-// 	userCellContainer: {
-// 		margin: 5,
-// 		flex: 1,
-// 	},
-
   // for event details
   eventName: {
     color: "#ffffff",
@@ -511,7 +261,7 @@ const styles = StyleSheet.create({
   scrollable: {
     flex: Platform.OS == "ios" ? 1 : 10,
   },
-  // for Share and I'm Going Buttons
+  // for Share and Interested Buttons
   buttonContainer: {
     flexDirection: "row",
     alignItems: "flex-end",
