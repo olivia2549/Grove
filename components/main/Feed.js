@@ -14,6 +14,8 @@ import {
   RefreshControl,
   Button,
   SafeAreaView,
+  StyleSheet,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FancyInput } from "../styling";
@@ -27,6 +29,9 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
+
 // function to filter the events
 // there will be card components within the view. The card components will be clickable
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
@@ -34,6 +39,21 @@ const Feed = () => {
   const navigation = useNavigation();
   const [events, setEvents] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  //for toggle button
+  const [upComingEvents, setUpComingEvents] = useState(true);
+  const [popularEvents, setPopularEvents] = useState(false);
+  const [toggleSide, setToggleSide] = useState("flex-start");
+
+  const flipToggle = () => {
+    if (upComingEvents) {
+      setToggleSide("flex-end");
+    } else if (popularEvents) {
+      setToggleSide("flex-start");
+    }
+    setUpComingEvents(!upComingEvents);
+    setPopularEvents(!popularEvents);
+  };
 
   const sortEvents = () => {
     events.sort(events.map());
@@ -144,6 +164,37 @@ const Feed = () => {
       <View style={{ alignItems: "center" }}>
         <Text style={{ fontSize: 32, fontWeight: "bold" }}>Events</Text>
       </View>
+      {/* Toggle Button */}
+      <TouchableOpacity
+        style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+        onPress={flipToggle}
+        activeOpacity="0.77"
+      >
+        {/* upcoming events pressed */}
+        {upComingEvents && (
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={styles.upcomingEventsContainer}>
+              <Text style={styles.toggleText}>Upcoming Events</Text>
+            </View>
+            <View style={styles.popularEventsGreyTextContainer}>
+              <Text style={styles.popularEventsGreyText}>Popular Events</Text>
+            </View>
+          </View>
+        )}
+
+        {/* events attended pressed */}
+        {popularEvents && (
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={styles.upcomingEventsGreyTextContainer}>
+              <Text style={styles.upcomingEventsGreyText}>Upcoming Events</Text>
+            </View>
+            <View style={styles.popularEventsContainer}>
+              <Text style={styles.toggleText}>Popular Events</Text>
+            </View>
+          </View>
+        )}
+      </TouchableOpacity>
+
       <View style={{ justifyContent: "center", margin: 15 }}>
         {events.length === 0 ? (
           <Text>Loading...</Text>
@@ -174,5 +225,68 @@ const Feed = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  /* toggle button */
+  toggleContainer: {
+    flex: 1 / 11,
+    flexDirection: "row",
+    marginHorizontal: windowWidth * 0.055,
+    marginTop: 22,
+    height: "7%",
+    backgroundColor: "#ededed",
+    borderRadius: 30,
+    borderWidth: 0.3,
+    borderColor: "grey",
+  },
+
+  // when upcoming button is clicked
+  upcomingEventsContainer: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
+    justifyContent: "center",
+    // flexDirection: "row",
+  },
+  popularEventsGreyTextContainer: {
+    flex: 1,
+    height: "97%",
+    justifyContent: "center",
+  },
+  popularEventsGreyText: {
+    color: "#BDBDBD",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.04,
+    textAlign: "center",
+  },
+
+  // when events added button is clicked
+  popularEventsContainer: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
+    justifyContent: "center",
+  },
+  upcomingEventsGreyTextContainer: {
+    flex: 1,
+    height: "97%",
+    justifyContent: "center",
+  },
+  upcomingEventsGreyText: {
+    color: "#BDBDBD",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.04,
+    textAlign: "center",
+  },
+
+  toggleText: {
+    textAlign: "center",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.04,
+    color: "#5DB075",
+  },
+});
 
 export default Feed;
