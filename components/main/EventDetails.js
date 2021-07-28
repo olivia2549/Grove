@@ -23,7 +23,8 @@ import firebase from "firebase";
 import { FancyInput } from "../styling";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import {parseDate, getMonthName, getWeekDay, fetchFromFirebase } from "../../shared/HelperFunctions";
+import {parseDate, getMonthName, getWeekDay, fetchFromFirebase, fetchFromFirebaseList } from "../../shared/HelperFunctions";
+import UserImageName from "./UserImageName";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -38,10 +39,7 @@ export const EventDetails = ({ navigation, route }) => {
 	const eventDisplayingID = route.params.ID;
 	const [eventDisplaying, setEventDisplaying] = useState({});
 
-	const [attendees, setAttendees] = useState([]);
-
 	const [isLoading, setIsLoading] = useState(true);
-	const [isLoadingAttendees, setIsLoadingAttendees] = useState(true);
 
 	const [goingBtnText, setGoingBtnText] = useState("I'm interested");
 
@@ -53,30 +51,11 @@ export const EventDetails = ({ navigation, route }) => {
 	useEffect(() => {
         if (isLoading) {
             fetchFromFirebase(eventDisplayingID, "events").then((data) => {
-                setEventDisplaying(data.data()); 
+                if (data.data()) setEventDisplaying(data.data()); 
                 setIsLoading(false);
             });
         }
 	}, [isLoading]);
-
-	useEffect(() => {
-		if (isLoadingAttendees && !isLoading) {
-			console.log("loading attendees...");
-			const temp = [];
-			eventDisplaying.attendees.forEach(async (attendee) => {
-				const doc = await attendee.get();
-				const data = doc.data();
-				if (data.ID === currentUserID) {
-					setInterestedColor("lightgray");
-					setInterestedTextColor("black");
-					return;
-				}
-				temp.push(doc.data());
-			});
-			setAttendees(temp);
-			setIsLoadingAttendees(false);
-		}
-	}, [isLoadingAttendees, isLoading]);
 
 	// Goes back to feed when user swipes down from top
 	const onSwipeDown = (gestureState) => {
@@ -202,33 +181,23 @@ export const EventDetails = ({ navigation, route }) => {
 					behavior={Platform.OS === "ios" ? "padding" : "height"}
 					style={styles.keyboardAvoidContainer}
 				>
-					<Text style={styles.peopleGoingText}>People Going ({attendees.length})</Text>
-					{
-						isLoadingAttendees ?
-							<Text>Loading...</Text>
-							:
+					<Text style={styles.peopleGoingText}>People Going ({eventDisplaying.attendees.length})</Text>
 							<FlatList
 								numColumns={1}
 								horizontal={false}
-								data={attendees}
-								keyExtractor={(item, index) => item.ID}
+								data={eventDisplaying.attendees}
+								keyExtractor={(item, index) => item.id}
 								renderItem={({item}) => (   // Allows you to render a text item for each user
 									<View style={styles.userCellContainer}>
 										<TouchableOpacity
-											key={item.ID}
-											onPress={() => navigation.navigate("ProfileUser", { uid: item.ID })}
+											key={item.id+"row"}
+											onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
 										>
-											<Image
-												key={item.ID+"image"}
-												source={require("../../assets/profileicon.jpg")}
-												style={styles.profilePic}
-											/>
-											<Text key={item.ID+"name"} style={styles.userName}>{item.name}</Text>
+											<UserImageName id={item.id}/>
 										</TouchableOpacity>
 									</View>
 								)}
 							/>
-					}
 				</KeyboardAvoidingView>
 			</ScrollView>
 
@@ -436,18 +405,6 @@ const styles = StyleSheet.create({
 	userCellContainer: {
 		margin: 5,
 		flex: 1,
-	},
-	profilePic: {
-		width: 45,
-		height: 45,
-		borderRadius: 400 / 2,
-	},
-	userName: {
-		flexDirection: "column",
-		justifyContent: "center",
-		marginLeft: 5,
-		fontWeight: "bold",
-		fontSize: windowWidth * 0.042,
 	},
 });
 
