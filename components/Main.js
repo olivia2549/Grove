@@ -40,11 +40,11 @@ export const Main = () => {
 
     // Displays to the screen
     return (
-        <Tab.Navigator initialRouteName="Feed" labeled={false}>
+        <Tab.Navigator initialRouteName="Feed" labeled={false} barStyle={{ backgroundColor: '#ffff' }} activeColor="#5DB075" inactiveColor="#000">
             <Tab.Screen name="Feed" component={FeedScreen}
                 options={{
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="home" color={color} size={26}/>
+                        <MaterialCommunityIcons name="home-outline" color={color} size={26}/>
                         )
                 }}
             />
@@ -79,7 +79,7 @@ export const Main = () => {
                 })}
                 options={{
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="bell" color={color} size={26}/>
+                        <MaterialCommunityIcons name="bell-outline" color={color} size={26}/> //change when notifications
                     )
                 }}
             />
@@ -93,7 +93,7 @@ export const Main = () => {
                 })}
                 options={{
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="account-circle" color={color} size={26}/>
+                        <MaterialCommunityIcons name="account-circle-outline" color={color} size={26}/>
                     )
                 }}
             />
