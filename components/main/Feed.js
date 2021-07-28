@@ -88,7 +88,7 @@ const Feed = () => {
     // });
 
     return (
-        <SafeAreaView style={{backgroundColor: "#fff", flex: 1}}>
+        <SafeAreaView style={{backgroundColor: "#FFF", flex: 1}}>
             {/* <View style={{marginTop: 30}}>
                 <FancyInput placeholder="Search..." onChangeText={(search) => {searchEvents(search)}}/>
             </View> */}
