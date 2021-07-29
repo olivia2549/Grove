@@ -109,7 +109,7 @@ export const EventDetails = ({ navigation, route }) => {
 
   // setting the event name font
   if (fontSizeChangePossible && eventDisplaying.name.length > 15) {
-    setCurrentFont(40);
+    setCurrentFont(33);
     setFontSizeChangePossible(false);
   }
 
@@ -120,6 +120,12 @@ export const EventDetails = ({ navigation, route }) => {
         config={config}
         style={styles.topBar}
       >
+        <TouchableOpacity
+          style={{ position: "absolute", top: 45, right: 15 }}
+          onPress={(state) => onSwipeDown(state)}
+        >
+          <Text style={{ color: "white", fontSize: 23 }}>▼</Text>
+        </TouchableOpacity>
         <Text
           adjustsFontSizeToFit
           style={[styles.eventName, { fontSize: currentFont }]}
@@ -265,10 +271,10 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: "600",
     padding: 20,
-    marginTop: windowHeight * 0.07,
+    marginTop: 55,
   },
   scrollable: {
-    flex: Platform.OS == "ios" ? 1 : 9,
+    // flex: Platform.OS == "ios" ? 1 : 10,
   },
   // for Share and Interested Buttons
   buttonContainer: {
