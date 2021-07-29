@@ -94,15 +94,15 @@ export const App = () => {
         );
     }
 
-    // if (!firebase.auth().currentUser.emailVerified) {
-    //     return (
-    //         <NavigationContainer>
-    //             <Stack.Navigator initialRouteName='VerifyEmail'>
-    //                 <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen}/>
-    //             </Stack.Navigator>
-    //         </NavigationContainer>
-    //     )
-    // }
+    if (!firebase.auth().currentUser.emailVerified) {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName='VerifyEmail'>
+                    <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        )
+    }
 
     const MainWithEvents = () => {
         return(

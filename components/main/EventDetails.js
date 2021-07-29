@@ -100,6 +100,10 @@ export const EventDetails = ({ navigation, route }) => {
     }
   };
 
+  const addFriend = () => {
+    console.log("Friend added");
+  }
+
   const config = {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 80,
@@ -199,7 +203,7 @@ export const EventDetails = ({ navigation, route }) => {
                         key={item.id+"row"}
                         onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
                     >
-                      <UserImageName id={item.id}/>
+                      <UserImageName id={item.id} onPress={addFriend} disabled={false} text="Add Friend"/>
                     </TouchableOpacity>
                   </View>
               )}

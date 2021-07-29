@@ -25,6 +25,7 @@ import { ProfileUser } from "./ProfileUser";
 import firebase from "firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserOutgoingRequests } from "../../redux/actions";
+import UserImageName from "./UserImageName";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -33,16 +34,9 @@ const windowWidth = Dimensions.get("window").width;
 export const Search = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const currentUserID = useSelector((state) => state.currentUser.ID);
 
   const [search, setSearch] = useState("");
   const [usersToDisplay, setUsersToDisplay] = useState([]);
-
-  const friends = useSelector((state) => state.currentUser.friends);
-
-  const outgoingRequests = useSelector(
-    (state) => state.currentUser.outgoingRequests
-  );
 
   useEffect(() => {
     // Initially show all the users in the database sorted by name
@@ -110,27 +104,6 @@ export const Search = () => {
   //             })
   // }
 
-  // Adds a friend
-  const addFriend = (id) => {
-    // add searched person to the current user's outgoingRequests list
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUserID)
-      .collection("outgoingRequests")
-      .doc(id)
-      .set({});
-    // add current user to the searched person's incomingRequests list
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(id)
-      .collection("incomingRequests")
-      .doc(currentUserID)
-      .set({});
-    dispatch(fetchUserOutgoingRequests());
-  };
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
@@ -157,47 +130,7 @@ export const Search = () => {
           renderItem={(
             { item } // Allows you to render a text item for each user
           ) => (
-            <View style={styles.userCellContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("ProfileUser", { uid: item.ID });
-                }}
-                style={styles.profileComponentWithoutBorderline}
-              >
-                <View
-                  style={{ flexDirection: "row", justifyContent: "flex-start" }}
-                >
-                  <Image
-                    source={require("../../assets/profileicon.jpg")}
-                    style={styles.profilePic}
-                  />
-                  <Text style={styles.userName}>{item.name}</Text>
-                </View>
-                {friends.indexOf(item.ID) > -1 && (
-                  <View style={styles.alreadyFriendsUntouchable}>
-                    <Text style={styles.alreadyFriendsText}>Friends</Text>
-                  </View>
-                )}
-                {outgoingRequests.indexOf(item.ID) > -1 && (
-                  <View style={styles.alreadyFriendsUntouchable}>
-                    <Text style={styles.alreadyFriendsText}>Requested</Text>
-                  </View>
-                )}
-                {friends.indexOf(item.ID) === -1 &&
-                  outgoingRequests.indexOf(item.ID) === -1 && (
-                    <TouchableOpacity
-                      style={styles.addFriendButton}
-                      onPress={() => {
-                        addFriend(item.ID);
-                      }}
-                    >
-                      <Text style={styles.addFriendText}>Add Friend</Text>
-                    </TouchableOpacity>
-                  )}
-                {/* <Button style={{ borderRadius: 20 }} title="add friend" /> */}
-              </TouchableOpacity>
-              <View style={styles.underline} />
-            </View>
+              <UserImageName id={item.ID}/>
           )}
         />
       </View>
@@ -219,7 +152,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginTop: windowHeight * 0.05,
   },
-
   profileComponentWithoutBorderline: {
     flexDirection: "row",
     marginTop: 5,
@@ -229,7 +161,7 @@ const styles = StyleSheet.create({
   addFriendButton: {
     justifyContent: "center",
     padding: 11,
-    height: 33,
+    height: 40,
     backgroundColor: "#5DB075",
     borderRadius: 10,
     position: "absolute",
@@ -242,7 +174,7 @@ const styles = StyleSheet.create({
   alreadyFriendsUntouchable: {
     justifyContent: "center",
     padding: 11,
-    height: 33,
+    height: 40,
     backgroundColor: "lightgray",
     borderRadius: 10,
     position: "absolute",
