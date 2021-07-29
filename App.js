@@ -45,6 +45,7 @@ import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
 import VerifyEmailScreen from './components/auth/VerifyEmail';
+import ForgotPasswordScreen from './components/auth/ForgotPassword';
 import MainScreen from './components/Main';
 import AddEventInfo from './components/main/AddEventInfo';
 import AddEventTags from './components/main/AddEventTags';
@@ -85,10 +86,11 @@ export const App = () => {
     if (!loggedIn) {
         return (
             <NavigationContainer>
-                <Stack.Navigator initialRouteName='Landing'>
-                    <Stack.Screen name="Landing" component={LandingScreen} options={{headerShown: false}}/>
+                <Stack.Navigator initialRouteName='Back'>
+                    <Stack.Screen name="Back" component={LandingScreen} options={{headerShown: false}}/>
                     <Stack.Screen name="Register" component={RegisterScreen}/>
                     <Stack.Screen name="Login" component={LoginScreen}/>
+                    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );
