@@ -207,7 +207,7 @@ const Feed = () => {
       <SafeAreaView style={{ backgroundColor: "#FFF", flex: 1 }}>
         <View style={{ alignItems: "center" }}>
           <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>
-            Events
+            Grove
           </Text>
         </View>
         {/* Toggle Button */}
@@ -220,10 +220,10 @@ const Feed = () => {
           {upComingEvents && (
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={styles.upcomingEventsContainer}>
-                <Text style={styles.toggleText}>Upcoming Events</Text>
+                <Text style={styles.toggleText}>Upcoming</Text>
               </View>
               <View style={styles.popularEventsGreyTextContainer}>
-                <Text style={styles.popularEventsGreyText}>Popular Events</Text>
+                <Text style={styles.popularEventsGreyText}>Popular</Text>
               </View>
             </View>
           )}
@@ -233,11 +233,11 @@ const Feed = () => {
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={styles.upcomingEventsGreyTextContainer}>
                 <Text style={styles.upcomingEventsGreyText}>
-                  Upcoming Events
+                  Upcoming
                 </Text>
               </View>
               <View style={styles.popularEventsContainer}>
-                <Text style={styles.toggleText}>Popular Events</Text>
+                <Text style={styles.toggleText}>Popular</Text>
               </View>
             </View>
           )}
@@ -284,7 +284,7 @@ const Feed = () => {
                 <FancyInput placeholder="Search..." onChangeText={(search) => {searchEvents(search)}}/>
             </View> */}
       <View style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Events</Text>
+        <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Grove</Text>
       </View>
       {/* Toggle Button */}
       <TouchableOpacity
@@ -296,10 +296,10 @@ const Feed = () => {
         {upComingEvents && (
           <View style={{ flex: 1, flexDirection: "row" }}>
             <View style={styles.upcomingEventsContainer}>
-              <Text style={styles.toggleText}>Upcoming Events</Text>
+              <Text style={styles.toggleText}>Upcoming</Text>
             </View>
             <View style={styles.popularEventsGreyTextContainer}>
-              <Text style={styles.popularEventsGreyText}>Popular Events</Text>
+              <Text style={styles.popularEventsGreyText}>Popular</Text>
             </View>
           </View>
         )}
@@ -308,10 +308,10 @@ const Feed = () => {
         {popularEvents && (
           <View style={{ flex: 1, flexDirection: "row" }}>
             <View style={styles.upcomingEventsGreyTextContainer}>
-              <Text style={styles.upcomingEventsGreyText}>Upcoming Events</Text>
+              <Text style={styles.upcomingEventsGreyText}>Upcoming</Text>
             </View>
             <View style={styles.popularEventsContainer}>
-              <Text style={styles.toggleText}>Popular Events</Text>
+              <Text style={styles.toggleText}>Popular</Text>
             </View>
           </View>
         )}
