@@ -29,19 +29,28 @@ export const AddEventTags = () => {
   const dispatch = useDispatch();
 
   const allTags = [
-    "Sports",
-    "Social",
-    "Orgs",
+    "Academic",
+    "Activism",
+    "Arts",
+    "Business",
+    "Coding",
+    "Cultural",
+    "Engineering",
+    "First years",
     "Free food",
-    "Invite-only",
-    "All-welcome",
-    "Party",
+    "Gaming",
+    "Parties",
+    "Prelaw",
+    "Premed",
+    "Religious life",
+    "Service",
+    "Speakers",
   ];
 
   const selectedTags = [];
 
   const Tag = (props) => {
-    const grey = "#f6f7fa";
+    const grey = "lightgray";
     const green = "#5db075";
     let [color, setColor] = useState(grey);
 
@@ -70,7 +79,7 @@ export const AddEventTags = () => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <View style={styles.topBar}>
-        <Text style={styles.titleText}>Add Tags</Text>
+        <Text style={styles.titleText}>Communities</Text>
       </View>
       <View style={styles.content}>
         <View style={styles.tagsFormat}>
@@ -128,7 +137,7 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * 0.12,
   },
   eachTag: {
-    borderRadius: 5,
+    borderRadius: 20,
     padding: windowWidth * 0.04,
     margin: 5,
     width: windowWidth * 0.4,

@@ -210,9 +210,7 @@ export const EventDetails = ({ navigation, route }) => {
               <View style={styles.userCellContainer}>
                 <TouchableOpacity
                   key={item.id + "row"}
-                  onPress={() =>
-                    navigation.navigate("ProfileUser", { uid: item.id })
-                  }
+                  onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
                 >
                   <UserImageName id={item.id} />
                 </TouchableOpacity>
