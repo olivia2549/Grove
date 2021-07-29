@@ -37,7 +37,8 @@ const windowWidth = Dimensions.get("window").width;
 // clicking it will redirect the user to the Event page with the event descriptions passed down as props
 const Feed = () => {
   const navigation = useNavigation();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]); // for normal upcoming events
+  const [popularEventsContent, setPopularEventsContent] = useState([]); // for popular events
   const [refreshing, setRefreshing] = useState(false);
 
   //for toggle button
@@ -74,7 +75,6 @@ const Feed = () => {
           const temp = [];
           const date = new Date();
           snapshot.forEach((doc) => {
-            // console.log(date);
             if (date <= doc.data().startDateTime.toDate()) {
               // console.log("here:" + date - doc.data().startDateTime.toDate());
               temp.push(doc.data());
@@ -82,7 +82,7 @@ const Feed = () => {
             // console.log("date: " + doc.data().startDateTime.toDate());
           });
           if (temp.length > 1) {
-            temp.forEach((i) => console.log(i.startDateTime.toDate()));
+            // temp.forEach((i) => console.log(i.startDateTime.toDate()));
             // console.log(temp[0].startDateTime.toDate());
             temp.sort(
               (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
@@ -156,13 +156,135 @@ const Feed = () => {
   //     });
   // });
 
+  const createPopularEvents = () => {
+    firebase
+      .firestore()
+      .collection("events")
+      .get()
+      .then((snapshot) => {
+        const temp = [];
+        const date = new Date();
+        snapshot.forEach((doc) => {
+          if (date <= doc.data().startDateTime.toDate()) {
+            temp.push(doc.data());
+          }
+        });
+        if (temp.length > 1) {
+          //   temp.forEach((i) => console.log(i.attendees.length));
+          temp.sort((a, b) => b.attendees.length - a.attendees.length);
+        }
+        setPopularEventsContent(temp);
+      });
+  };
+
+  const onPopularRefresh = useCallback(() => {
+    console.log(events);
+    firebase
+      .firestore()
+      .collection("events")
+      .get()
+      .then((snapshot) => {
+        const temp = [];
+        snapshot.forEach((doc) => {
+          if (date <= doc.data().startDateTime.toDate()) {
+            temp.push(doc.data());
+          }
+        });
+        if (temp.length > 1) {
+          temp.sort((a, b) => b.attendees.length - a.attendees.length);
+        }
+        setEvents(temp);
+      });
+
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  // popular events
+  if (popularEvents) {
+    createPopularEvents();
+    return (
+      <SafeAreaView style={{ backgroundColor: "#FFF", flex: 1 }}>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>
+            Events
+          </Text>
+        </View>
+        {/* Toggle Button */}
+        <TouchableOpacity
+          style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+          onPress={flipToggle}
+          activeOpacity="0.77"
+        >
+          {/* upcoming events pressed */}
+          {upComingEvents && (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.upcomingEventsContainer}>
+                <Text style={styles.toggleText}>Upcoming Events</Text>
+              </View>
+              <View style={styles.popularEventsGreyTextContainer}>
+                <Text style={styles.popularEventsGreyText}>Popular Events</Text>
+              </View>
+            </View>
+          )}
+
+          {/* events attended pressed */}
+          {popularEvents && (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.upcomingEventsGreyTextContainer}>
+                <Text style={styles.upcomingEventsGreyText}>
+                  Upcoming Events
+                </Text>
+              </View>
+              <View style={styles.popularEventsContainer}>
+                <Text style={styles.toggleText}>Popular Events</Text>
+              </View>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        <View style={{ justifyContent: "center", margin: 15 }}>
+          {events.length === 0 ? (
+            <Text>Loading...</Text>
+          ) : (
+            <FlatList
+              data={popularEventsContent}
+              keyExtractor={(item, index) => item.ID}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onPopularRefresh}
+                />
+              }
+              renderItem={(event) => (
+                // when the card is pressed, we head to EventDetails page
+                <TouchableOpacity
+                  key={event.id}
+                  onPress={() =>
+                    navigation.navigate("EventDetails", {
+                      ID: event.item.ID,
+                    })
+                  }
+                >
+                  <Card key={event.item.ID} id={event.item.ID} />
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // upcoming events
   return (
     <SafeAreaView style={{ backgroundColor: "#FFF", flex: 1 }}>
       {/* <View style={{marginTop: 30}}>
                 <FancyInput placeholder="Search..." onChangeText={(search) => {searchEvents(search)}}/>
             </View> */}
       <View style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 32, fontWeight: "bold" }}>Events</Text>
+        <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Events</Text>
       </View>
       {/* Toggle Button */}
       <TouchableOpacity
@@ -229,7 +351,7 @@ const Feed = () => {
 const styles = StyleSheet.create({
   /* toggle button */
   toggleContainer: {
-    flex: 1 / 11,
+    flex: 1 / 7,
     flexDirection: "row",
     marginHorizontal: windowWidth * 0.055,
     marginTop: 22,
