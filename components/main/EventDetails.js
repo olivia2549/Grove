@@ -19,6 +19,7 @@ import {
   Button,
   FlatList,
   Share,
+    SafeAreaView,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { ProfileUser } from "./ProfileUser";
@@ -26,6 +27,9 @@ import firebase from "firebase";
 import { useSelector } from "react-redux";
 import UserImageName from "./UserImageName";
 import { parseDate, fetchFromFirebase } from "../../shared/HelperFunctions";
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+// import {SafeAreaView} from "react-native-web";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -50,6 +54,8 @@ export const EventDetails = ({ navigation, route }) => {
   const [fontSizeChangePossible, setFontSizeChangePossible] = useState(true); // to limit the re-rendering number
   const [currentFont, setCurrentFont] = useState(50); // title font size
 
+  const [viewingAttendees, setViewingAttendees] = useState(false);
+
   // Fetch event, and set eventDisplaying
   useEffect(() => {
     if (isLoading) {
@@ -59,11 +65,6 @@ export const EventDetails = ({ navigation, route }) => {
       });
     }
   }, [isLoading]);
-
-  // Goes back to feed when user swipes down from top
-  const onSwipeDown = (gestureState) => {
-    navigation.goBack();
-  };
 
   // When the "interested" button is pressed
   const onInterested = () => {
@@ -114,171 +115,259 @@ export const EventDetails = ({ navigation, route }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <GestureRecognizer
-        onSwipeDown={(state) => onSwipeDown(state)}
-        config={config}
-        style={styles.topBar}
-      >
-        <TouchableOpacity
-          style={{ position: "absolute", top: 45, right: 15 }}
-          onPress={(state) => onSwipeDown(state)}
-        >
-          <Text style={{ color: "white", fontSize: 23 }}>▼</Text>
-        </TouchableOpacity>
-        <Text
-          adjustsFontSizeToFit
-          style={[styles.eventName, { fontSize: currentFont }]}
-        >
-          {eventDisplaying.name}
-        </Text>
-      </GestureRecognizer>
-
-      <ScrollView style={{ flex: Platform.OS === "ios" ? 0 : 7 }}>
-        <View style={styles.rowFlexContainer}>
-          {eventDisplaying.tags.map((tag) => (
-            <View style={styles.tagBox}>
-              <Text style={styles.tagText}>{tag}</Text>
-            </View>
-          ))}
-        </View>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.descriptionText}>
-            {eventDisplaying.description}
-          </Text>
-        </View>
-
-        <View style={styles.bigView}>
-          {/* WHERE */}
-          <View style={styles.rowFlexContainer}>
-            <Text style={styles.whereWhen}>Where</Text>
-            <View style={styles.locationView}>
-              {/* this is hard coded, would need to be changed once we fetch info from the data */}
-              <Text style={styles.locationText}>
-                {eventDisplaying.location}
-              </Text>
-            </View>
-          </View>
-
-          {/* START */}
-          <View style={styles.timeView}>
-            <Text style={styles.startText}>Starts</Text>
-
-            <View style={styles.startView}>
-              <Text style={styles.startDayText}>
-                {parseDate(eventDisplaying.startDateTime.toDate()).day}
-              </Text>
-            </View>
-            <View style={styles.startTimeView}>
-              <Text style={styles.startTimeText}>
-                {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
-              </Text>
-            </View>
-          </View>
-
-          {/* END */}
-          <View style={styles.timeView}>
-            <Text style={styles.endsText}>Ends</Text>
-            <View style={styles.endDayView}>
-              <Text style={styles.endDayText}>
-                {parseDate(eventDisplaying.endDateTime.toDate()).day}
-              </Text>
-            </View>
-            <View style={styles.endTimeView}>
-              <Text style={styles.endTimeText}>
-                {parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardAvoidContainer}
-        >
-          <Text style={styles.peopleGoingText}>
-            People Going ({eventDisplaying.attendees.length})
-          </Text>
-          <FlatList
-            numColumns={1}
-            horizontal={false}
-            data={eventDisplaying.attendees}
-            keyExtractor={(item, index) => item.id}
-            renderItem={(
-              { item } // Allows you to render a text item for each user
-            ) => (
-              <View style={styles.userCellContainer}>
-                <TouchableOpacity
-                  key={item.id + "row"}
-                  onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
-                >
-                  <UserImageName id={item.id} />
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        </KeyboardAvoidingView>
-      </ScrollView>
-
-      <View style={styles.rowFlexContainer}>
-        {/*Invite button*/}
-        <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
-          <Text style={styles.fancyButtonText}>Share</Text>
-        </TouchableOpacity>
-
-        {/*I'm Interested button*/}
-        <TouchableOpacity
-          onPress={onInterested}
-          style={[
-            styles.fancyButtonContainer,
-            { backgroundColor: interestedColor, flex: 2 / 3 },
-          ]}
-        >
-          <Text
-            style={[styles.fancyButtonText, { color: interestedTextColor }]}
+      <View style={styles.container}>
+          <GestureRecognizer
+              onSwipeDown={() => navigation.goBack()}
+              config={config}
           >
-            {interestedText}
-          </Text>
-        </TouchableOpacity>
+            {/*Top bar*/}
+            <View style={styles.topBarContainer}>
+              <View style={styles.topBar}>
+                <View style={styles.topBarButtons}>
+                  <TouchableOpacity onPress={(state) => onSwipeDown(state)}>
+                    <MaterialCommunityIcons name="chevron-down" color={"white"} size={35}/>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={(state) => onSwipeDown(state)}>
+                    <MaterialCommunityIcons name="dots-vertical" color={"white"} size={25}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.eventNameContainer}>
+                  <Text
+                      adjustsFontSizeToFit
+                      style={styles.eventNameText}
+                  >
+                    {eventDisplaying.name}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {
+              !viewingAttendees &&
+              <View style={styles.eventInfoContainer}>
+                <View style={styles.infoContainers}>
+                  {eventDisplaying.tags.map((tag) => (
+                      <View style={styles.eachTag}>
+                        <Text style={styles.tagText}>{tag}</Text>
+                      </View>
+                  ))}
+                </View>
+                <View style={styles.infoContainers}>
+                  <Text style={styles.descriptionText}>
+                    {eventDisplaying.description}
+                  </Text>
+                </View>
+
+                {/* WHERE */}
+                <View style={styles.infoContainers}>
+                  <View style={styles.whereWhenContainer}>
+                    <View style={styles.whereWhenTitlesContainer}>
+                      <Text style={styles.whereWhenTitles}>Where</Text>
+                    </View>
+                    <View style={styles.whereWhenTitlesContainer}>
+                      <Text style={styles.whereWhenTitles}>Starts</Text>
+                    </View>
+                    <View style={styles.whereWhenTitlesContainer}>
+                      <Text style={styles.whereWhenTitles}>Ends</Text>
+                    </View>
+                  </View>
+                  <View style={styles.whereWhenContainer}>
+                    <View style={styles.locationRowContainer}>
+                      <View style={styles.locationView}>
+                        <Text style={styles.locationText}>
+                          {eventDisplaying.location}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.locationRowContainer}>
+                      <View style={styles.timeView}>
+                        <Text style={styles.locationText}>
+                          {parseDate(eventDisplaying.startDateTime.toDate()).day}
+                        </Text>
+                      </View>
+                      <View style={styles.timeView}>
+                        <Text style={styles.locationText}>
+                          {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.locationRowContainer}>
+                      <View style={styles.timeView}>
+                        <Text style={styles.locationText}>
+                          {parseDate(eventDisplaying.endDateTime.toDate()).day}
+                        </Text>
+                      </View>
+                      <View style={styles.timeView}>
+                        <Text style={styles.locationText}>
+                          {parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            }
+          </GestureRecognizer>
+
+          <GestureRecognizer
+              onSwipeUp={() => setViewingAttendees(true)}
+              onSwipeDown={() => setViewingAttendees(false)}
+              config={config}
+              style={styles.peopleInterested}
+          >
+            <Text style={styles.peopleGoingText}>
+              People Interested ({eventDisplaying.attendees.length})
+            </Text>
+
+            <FlatList
+                numColumns={1}
+                horizontal={false}
+                data={eventDisplaying.attendees}
+                keyExtractor={(item, index) => item.id}
+                renderItem={(
+                    { item } // Allows you to render a text item for each user
+                ) => (
+                    <View style={styles.userCellContainer}>
+                      <TouchableOpacity
+                          key={item.id + "row"}
+                          onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
+                      >
+                        <UserImageName id={item.id} />
+                      </TouchableOpacity>
+                    </View>
+                )}
+            />
+          </GestureRecognizer>
+
+          <View style={styles.shareAndInterestedButtons}>
+            {/*Invite button*/}
+            <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
+              <Text style={styles.fancyButtonText}>Share</Text>
+            </TouchableOpacity>
+
+            {/*I'm Interested button*/}
+            <TouchableOpacity
+                onPress={onInterested}
+                style={[
+                  styles.fancyButtonContainer,
+                  { backgroundColor: interestedColor, flex: 2 / 3 },
+                ]}
+            >
+              <Text
+                  style={[styles.fancyButtonText, { color: interestedTextColor }]}
+              >
+                {interestedText}
+              </Text>
+            </TouchableOpacity>
+          </View>
       </View>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: "column",
+  },
+  topBarContainer: {
+    backgroundColor: "#5db075",
+    flexDirection: "column-reverse",
+    justifyContent: "space-around",
+    height: 200,
   },
   topBar: {
-    backgroundColor: "#5DB075",
-    width: "100%",
+    flexDirection: "column",
     justifyContent: "center",
-    flex: 1, // Platform.OS === "ios" ? 0.7 : 1
+    margin: 10,
+    marginTop: 20,
   },
-  tagBox: {
-    height: windowHeight * 0.07,
-    backgroundColor: "lightgrey",
-    marginLeft: 15,
-    borderRadius: 10,
-    justifyContent: "center",
-    padding: 13,
-    marginTop: 10,
-  },
-  // for event details
-  eventName: {
-    color: "#ffffff",
-    fontWeight: "600",
-    padding: 20,
-    marginTop: 55,
-  },
-  scrollable: {
-    // flex: Platform.OS == "ios" ? 1 : 10,
-  },
-  // for Share and Interested Buttons
-  buttonContainer: {
+  topBarButtons: {
     flexDirection: "row",
-    alignItems: "flex-end",
-    top: "130%",
+    justifyContent: "space-between",
+  },
+  eventNameContainer: {
+    alignContent: "flex-end",
+  },
+  eventNameText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 36,
+    textAlign: "center",
+  },
+  eventInfoContainer: {
+    margin: 15,
+  },
+  infoContainers: {
+    marginTop: 10,
+    marginBottom: 20,
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  eachTag: {
+    backgroundColor: "lightgray",
+    borderRadius: 20,
+    padding: 20,
+    marginRight: 10,
+    marginBottom: 5,
+  },
+  tagText: {
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  descriptionText: {
+    fontSize: 20,
+  },
+  whereWhenContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  whereWhenTitlesContainer: {
+    height: 50,
+    marginBottom: 5,
+    justifyContent: "center",
+  },
+  whereWhenTitles: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  whereWhenRow: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  locationRowContainer: {
+    marginLeft: 15,
+    flexDirection: "row",
+    width: windowWidth * .7,
+    justifyContent: "space-between",
+  },
+  locationView: {
+    borderRadius: 10,
+    backgroundColor: "lightgray",
+    paddingLeft: 15,
+    justifyContent: "center",
+    height: 50,
+    marginBottom: 5,
+    width: "100%",
+  },
+  timeView: {
+    borderRadius: 10,
+    backgroundColor: "lightgray",
+    paddingLeft: 15,
+    justifyContent: "center",
+    height: 50,
+    marginBottom: 5,
+    width: "48%",
+  },
+  locationText: {
+    fontSize: 20,
+  },
+  peopleGoingText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: windowHeight * 0.01,
+  },
+  peopleInterested: {
+    margin: 15,
   },
   fancyButtonContainer: {
     elevation: 8,
@@ -300,140 +389,11 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     textAlign: "center",
   },
-  tagText: {
-    color: "black",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: windowWidth * 0.05,
-  },
-  whereWhen: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 3,
-    // marginBottom: windowHeight * 0.015,
-  },
-  locationView: {
-    flex: 1,
-    marginLeft: windowWidth * 0.02,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  locationText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  timeView: {
+  shareAndInterestedButtons: {
+    position: "absolute",
     flexDirection: "row",
-    marginTop: 6,
-    marginLeft: 1,
-  },
-  scrollStyle: {
-    flex: Platform.OS === "ios" ? 0 : 7, //
-  },
-  descriptionContainer: {
-    padding: windowWidth * 0.05,
-  },
-  descriptionText: {
-    fontSize: windowWidth * 0.07,
-  },
-  bigView: {
-    justifyContent: "center",
-    padding: windowWidth * 0.05,
-  },
-  rowFlexContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  startText: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 3,
-  },
-  startView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  startDayText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  startTimeView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  startTimeText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  endsText: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 2,
-  },
-  peopleGoingText: {
-    fontSize: windowWidth * 0.07,
-    fontWeight: "bold",
-    marginBottom: windowHeight * 0.01,
-  },
-  endDayView: {
-    flex: 1,
-    marginLeft: 25,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  endDayText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  endTimeView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  endTimeText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  keyboardAvoidContainer: {
-    justifyContent: "center",
-    padding: windowWidth * 0.05,
-    flex: 7,
-  },
-  userCellContainer: {
-    margin: 5,
-    flex: 1,
-  },
-  profilePic: {
-    width: 45,
-    height: 45,
-    borderRadius: 400 / 2,
-  },
-  userName: {
-    flexDirection: "column",
-    justifyContent: "center",
-    marginLeft: 5,
-    fontWeight: "bold",
-    fontSize: windowWidth * 0.042,
+    justifyContent: "space-between",
+    marginTop: windowHeight * .88,
   },
 });
 

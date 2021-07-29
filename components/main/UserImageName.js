@@ -62,7 +62,9 @@ const UserImageName = (props) => {
 		dispatch(fetchUserOutgoingRequests());
 	};
 
-  if (isLoading) return <Text>Loading...</Text>;
+  	if (isLoading) return <Text>Loading...</Text>;
+
+	if (!user) return null;
 
 	return (
 		<View style={styles.container}>
@@ -76,7 +78,7 @@ const UserImageName = (props) => {
 						source={require("../../assets/profileicon.jpg")}
 						style={styles.profilePic}
 					/>
-					<Text style={styles.userName}>{user.name}</Text>
+					<Text style={styles.userName}>{user?.name}</Text>
 				</View>
 				{friends.indexOf(props.id) > -1 && (
 					<View style={styles.alreadyFriendsUntouchable}>
