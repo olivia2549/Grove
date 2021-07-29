@@ -55,7 +55,7 @@ const UserImageName = ({ id }) => {
         source={require("../../assets/profileicon.jpg")}
         style={styles.profilePic}
       />
-      <Text style={styles.userName}>{user.name}</Text>
+      <Text style={styles.userName}>{user?.name}</Text>
       {friends.indexOf(id) > -1 && (
         <View style={styles.alreadyFriendsUntouchable}>
           <Text style={styles.alreadyFriendsText}>Friends</Text>

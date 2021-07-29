@@ -50,7 +50,7 @@ export const EventDetails = ({ navigation, route }) => {
   const [fontSizeChangePossible, setFontSizeChangePossible] = useState(true); // to limit the re-rendering number
   const [currentFont, setCurrentFont] = useState(50); // title font size
 
-	// Fetch event, and set eventDisplaying
+  // Fetch event, and set eventDisplaying
   useEffect(() => {
     if (isLoading) {
       fetchFromFirebase(eventDisplayingID, "events").then((data) => {
@@ -109,7 +109,7 @@ export const EventDetails = ({ navigation, route }) => {
 
   // setting the event name font
   if (fontSizeChangePossible && eventDisplaying.name.length > 15) {
-    setCurrentFont(33);
+    setCurrentFont(40);
     setFontSizeChangePossible(false);
   }
 
@@ -120,7 +120,10 @@ export const EventDetails = ({ navigation, route }) => {
         config={config}
         style={styles.topBar}
       >
-        <Text adjustsFontSizeToFit style={[styles.eventName, { fontSize: currentFont }]}>
+        <Text
+          adjustsFontSizeToFit
+          style={[styles.eventName, { fontSize: currentFont }]}
+        >
           {eventDisplaying.name}
         </Text>
       </GestureRecognizer>
@@ -184,25 +187,31 @@ export const EventDetails = ({ navigation, route }) => {
         </View>
 
         <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.keyboardAvoidContainer}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.keyboardAvoidContainer}
         >
-          <Text style={styles.peopleGoingText}>People Going ({eventDisplaying.attendees.length})</Text>
+          <Text style={styles.peopleGoingText}>
+            People Going ({eventDisplaying.attendees.length})
+          </Text>
           <FlatList
-              numColumns={1}
-              horizontal={false}
-              data={eventDisplaying.attendees}
-              keyExtractor={(item, index) => item.id}
-              renderItem={({item}) => (   // Allows you to render a text item for each user
-                  <View style={styles.userCellContainer}>
-                    <TouchableOpacity
-                        key={item.id+"row"}
-                        onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
-                    >
-                      <UserImageName id={item.id}/>
-                    </TouchableOpacity>
-                  </View>
-              )}
+            numColumns={1}
+            horizontal={false}
+            data={eventDisplaying.attendees}
+            keyExtractor={(item, index) => item.id}
+            renderItem={(
+              { item } // Allows you to render a text item for each user
+            ) => (
+              <View style={styles.userCellContainer}>
+                <TouchableOpacity
+                  key={item.id + "row"}
+                  onPress={() =>
+                    navigation.navigate("ProfileUser", { uid: item.id })
+                  }
+                >
+                  <UserImageName id={item.id} />
+                </TouchableOpacity>
+              </View>
+            )}
           />
         </KeyboardAvoidingView>
       </ScrollView>
@@ -259,7 +268,7 @@ const styles = StyleSheet.create({
     marginTop: windowHeight * 0.07,
   },
   scrollable: {
-    flex: Platform.OS == "ios" ? 1 : 10,
+    flex: Platform.OS == "ios" ? 1 : 9,
   },
   // for Share and Interested Buttons
   buttonContainer: {
