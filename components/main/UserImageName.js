@@ -6,12 +6,13 @@
  */
 
 import React, { useEffect, useState } from "react";
-import {Text, Image, StyleSheet, Dimensions, View, TouchableOpacity} from "react-native";
+
+import { Text, Image, StyleSheet, Dimensions, View, TouchableOpacity } from "react-native";
 import { fetchFromFirebase } from "../../shared/HelperFunctions";
 import { useNavigation } from "@react-navigation/native";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import firebase from "firebase";
-import {fetchUserOutgoingRequests} from "../../redux/actions";
+import { fetchUserOutgoingRequests } from "../../redux/actions";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -61,7 +62,7 @@ const UserImageName = (props) => {
 		dispatch(fetchUserOutgoingRequests());
 	};
 
-    if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading) return <Text>Loading...</Text>;
 
 	return (
 		<View style={styles.container}>
