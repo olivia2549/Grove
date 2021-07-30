@@ -5,7 +5,7 @@
  * Profile page for someone you searched
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -16,7 +16,9 @@ import {
   Platform,
   Dimensions,
   TouchableWithoutFeedback,
+  RefreshControl,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 // firebase imports
 import firebase from "firebase";
@@ -30,11 +32,16 @@ import { Card } from "./Card";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
+//waiting for feed to refresh
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+
 export const ProfileUser = ({ route }) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const currentUserID = useSelector((state) => state.currentUser.ID);
-
   const userDisplayingID = route.params.uid; // user to display
   const [userDisplaying, setUserDisplaying] = useState({});
 
@@ -43,6 +50,10 @@ export const ProfileUser = ({ route }) => {
   const outgoingRequests = useSelector(
     (state) => state.currentUser.outgoingRequests
   );
+
+  // for the list of events
+  const [events, setEvents] = useState([]); // for normal upcoming events
+  const [refreshing, setRefreshing] = useState(false);
 
   // for the switch
   const [upComingEvents, setUpComingEvents] = useState(true);
@@ -59,7 +70,57 @@ export const ProfileUser = ({ route }) => {
       setUserDisplaying(user.data());
     };
     fetchUserToDisplay();
+
+    firebase
+      .firestore()
+      .collection("events")
+      .get()
+      .then((snapshot) => {
+        const temp = [];
+        const date = new Date();
+        snapshot.forEach((doc) => {
+          if (date <= doc.data().startDateTime.toDate()) {
+            // console.log("here:" + date - doc.data().startDateTime.toDate());
+            temp.push(doc.data());
+          }
+          // console.log("date: " + doc.data().startDateTime.toDate());
+        });
+        if (temp.length > 1) {
+          // temp.forEach((i) => console.log(i.startDateTime.toDate()));
+          // console.log(temp[0].startDateTime.toDate());
+          temp.sort(
+            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
+          );
+        }
+        setEvents(temp);
+      });
   }, [route.params.uid]);
+
+  //refreshes feed if pulled up
+  const onRefresh = useCallback(() => {
+    console.log(events);
+    firebase
+      .firestore()
+      .collection("events")
+      .get()
+      .then((snapshot) => {
+        const temp = [];
+        snapshot.forEach((doc) => {
+          if (date <= doc.data().startDateTime.toDate()) {
+            temp.push(doc.data());
+          }
+        });
+        if (temp.length > 1) {
+          temp.sort(
+            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
+          );
+        }
+        setEvents(temp);
+      });
+
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   // Adds a friend
   const addFriend = (id) => {
@@ -139,23 +200,36 @@ export const ProfileUser = ({ route }) => {
 
         {/* List of events */}
         <View style={styles.containerGallery}>
-          {/*<FlatList*/}
-          {/*    data={currentUserEvents}*/}
-          {/*    renderItem={(event) => (*/}
-          {/*        // when the card is pressed, we head to EventDetails page*/}
-          {/*        <TouchableOpacity*/}
-          {/*            onPress={() =>*/}
-          {/*                navigation.navigate("EventDetails", {*/}
-          {/*                    event: event,*/}
-          {/*                })*/}
-          {/*            }*/}
-          {/*        >*/}
-          {/*            <Card event={event.item} />*/}
-          {/*        </TouchableOpacity>*/}
-          {/*    )}*/}
-          {/*    showsVerticalScrollIndicator={false}*/}
-          {/*/>*/}
-          <Text>List of events</Text>
+          <View style={{ justifyContent: "center", margin: 15 }}>
+            {events.length === 0 ? (
+              <Text>Loading...</Text>
+            ) : (
+              <FlatList
+                data={events}
+                keyExtractor={(item, index) => item.ID}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                renderItem={(event) => (
+                  // when the card is pressed, we head to EventDetails page
+                  <TouchableOpacity
+                    key={event.id}
+                    onPress={() =>
+                      navigation.navigate("EventDetails", {
+                        ID: event.item.ID,
+                      })
+                    }
+                  >
+                    <Card key={event.item.ID} id={event.item.ID} />
+                  </TouchableOpacity>
+                )}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
+          </View>
         </View>
       </View>
     );
