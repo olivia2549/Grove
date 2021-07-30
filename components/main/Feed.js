@@ -56,14 +56,6 @@ const Feed = () => {
     setPopularEvents(!popularEvents);
   };
 
-  const sortEvents = () => {
-    events.sort(events.map());
-    //array.sort((a,b)=>a.getTime()-b.getTime());
-    if (events.length > 1) {
-    }
-    console.log("tryna sort");
-  };
-
   // Fetches each event in the database (when page first loads)
   useEffect(
     () => {
