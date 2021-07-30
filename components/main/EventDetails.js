@@ -5,20 +5,20 @@
  * Displays the details of an event
  */
 
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
   Platform,
   KeyboardAvoidingView,
   Image,
   Button,
   FlatList,
   Share,
+    Alert,
     SafeAreaView,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
@@ -27,12 +27,19 @@ import firebase from "firebase";
 import { useSelector } from "react-redux";
 import UserImageName from "./UserImageName";
 import { parseDate, fetchFromFirebase } from "../../shared/HelperFunctions";
+import { Tooltip } from 'react-native-elements';
+import RBSheet from "react-native-raw-bottom-sheet";
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import {FancyButton, FancyButtonButLower, FancyInput} from "../styling";
 // import {SafeAreaView} from "react-native-web";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
@@ -55,6 +62,19 @@ export const EventDetails = ({ navigation, route }) => {
   const [currentFont, setCurrentFont] = useState(50); // title font size
 
   const [viewingAttendees, setViewingAttendees] = useState(false);
+
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
+  const [backgroundColorTags, setBackgroundColorTags] = useState("lightgray");
+  const [backgroundColorHeader, setBackgroundColorHeader] = useState("#5db075");
+
+  const [reportDetails, setReportDetails] = useState("");
+
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 80,
+  };
+  const refRBSheet = useRef();
+  const refTooltip = useRef();
 
   // Fetch event, and set eventDisplaying
   useEffect(() => {
@@ -101,9 +121,21 @@ export const EventDetails = ({ navigation, route }) => {
     }
   };
 
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
+  const sendReport = () => {
+    setBackgroundColor("transparent");
+    setBackgroundColorTags("lightgray");
+    setBackgroundColorHeader("#5db075");
+    wait(600).then(() => Alert.alert("Your report has been sent to our team. Thank you for notifying us."));
+  };
+
+  const ReportComp = () => {
+    return (
+        <TouchableOpacity
+            style={{height: "100%", width: "100%", justifyContent: "center"}}
+            onPress={() => refRBSheet.current.open()}>
+          <Text style={{color: "#F47174", fontSize: 16, textAlign: "center"}}>Report</Text>
+        </TouchableOpacity>
+    );
   };
 
   if (isLoading) return <Text>Loading...</Text>;
@@ -115,21 +147,26 @@ export const EventDetails = ({ navigation, route }) => {
   }
 
   return (
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: backgroundColor}]}>
           <GestureRecognizer
               onSwipeDown={() => navigation.goBack()}
               config={config}
           >
             {/*Top bar*/}
-            <View style={styles.topBarContainer}>
+            <View style={[styles.topBarContainer, {backgroundColor: backgroundColorHeader}]}>
               <View style={styles.topBar}>
                 <View style={styles.topBarButtons}>
-                  <TouchableOpacity onPress={(state) => onSwipeDown(state)}>
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="chevron-down" color={"white"} size={35}/>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={(state) => onSwipeDown(state)}>
+                  <Tooltip
+                      ref={refTooltip}
+                      backgroundColor="white"
+                      overlayColor='rgba(0, 0, 0, 0.50)'
+                      height={70}
+                      popover={<ReportComp/>}>
                     <MaterialCommunityIcons name="dots-vertical" color={"white"} size={25}/>
-                  </TouchableOpacity>
+                  </Tooltip>
                 </View>
                 <View style={styles.eventNameContainer}>
                   <Text
@@ -147,7 +184,7 @@ export const EventDetails = ({ navigation, route }) => {
               <View style={styles.eventInfoContainer}>
                 <View style={styles.infoContainers}>
                   {eventDisplaying.tags.map((tag) => (
-                      <View style={styles.eachTag}>
+                      <View style={[styles.eachTag, {backgroundColor: backgroundColorTags}]}>
                         <Text style={styles.tagText}>{tag}</Text>
                       </View>
                   ))}
@@ -173,31 +210,31 @@ export const EventDetails = ({ navigation, route }) => {
                   </View>
                   <View style={styles.whereWhenContainer}>
                     <View style={styles.locationRowContainer}>
-                      <View style={styles.locationView}>
+                      <View style={[styles.locationView, {backgroundColor: backgroundColorTags}]}>
                         <Text style={styles.locationText}>
                           {eventDisplaying.location}
                         </Text>
                       </View>
                     </View>
                     <View style={styles.locationRowContainer}>
-                      <View style={styles.timeView}>
+                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
                         <Text style={styles.locationText}>
                           {parseDate(eventDisplaying.startDateTime.toDate()).day}
                         </Text>
                       </View>
-                      <View style={styles.timeView}>
+                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
                         <Text style={styles.locationText}>
                           {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
                         </Text>
                       </View>
                     </View>
                     <View style={styles.locationRowContainer}>
-                      <View style={styles.timeView}>
+                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
                         <Text style={styles.locationText}>
                           {parseDate(eventDisplaying.endDateTime.toDate()).day}
                         </Text>
                       </View>
-                      <View style={styles.timeView}>
+                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
                         <Text style={styles.locationText}>
                           {parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
                         </Text>
@@ -260,6 +297,48 @@ export const EventDetails = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
           </View>
+
+        {/*Report modal*/}
+        <RBSheet
+            ref={refRBSheet}
+            closeOnDragDown={true}
+            closeOnPressMask={true}
+            onClose={() => sendReport()}
+            onOpen={() => {
+              refTooltip.current.toggleTooltip();
+              setBackgroundColor("rgba(0, 0, 0, 0.50)");
+              setBackgroundColorTags("rgba(0, 0, 0, 0.20)");
+              setBackgroundColorHeader("rgba(93, 176, 117, 0.70)");
+            }}
+            animationType="slide"
+            openDuration={100}
+            height={windowHeight * .6}
+            customStyles={{
+              wrapper: {
+                backgroundColor: "transparent"
+              },
+              draggableIcon: {
+                backgroundColor: "#000"
+              },
+              container: {
+                height: "70%",
+              },
+            }}
+        >
+          <Text style={{textAlign: "center", margin: 20, fontWeight: "bold", fontSize: 16}}>
+            Report
+          </Text>
+          <FancyInput
+              style={{marginLeft: 10, marginRight: 10}}
+              placeholder="Why are you reporting this event?"
+              onChangeText={(text) => setReportDetails(text)}
+              returnKeyType="done"
+          />
+          <FancyButtonButLower
+              title="Report"
+              onPress={() => refRBSheet.current.close()}
+          />
+        </RBSheet>
       </View>
   );
 };

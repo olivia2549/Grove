@@ -30,7 +30,7 @@ export const FancyButtonButLower = ({ onPress, title }) => (
 );
 
 export const FancyInput = (props) => (
-  <View style={styles.inputView}>
+  <View style={[props.style, styles.inputView]}>
     <TextInput
       style={styles.TextInput}
       placeholder={props.placeholder}
@@ -38,7 +38,9 @@ export const FancyInput = (props) => (
       onChangeText={props.onChangeText}
       secureTextEntry={props.secureTextEntry}
       returnKeyType={props.returnKeyType}
+      returnKeyLabel={props.returnKeyLabel}
       autoFocus={props.autoFocus}
+      onSubmitEditing={props.onSubmitEditing}
     />
   </View>
 );

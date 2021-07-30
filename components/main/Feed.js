@@ -358,7 +358,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 0.3,
     borderColor: "grey",
-    height: 30,
   },
 
   // when upcoming button is clicked
