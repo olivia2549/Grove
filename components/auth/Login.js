@@ -6,8 +6,9 @@
  */
 
 import React, { useState } from "react";
-import {StyleSheet, KeyboardAvoidingView, View, TouchableWithoutFeedback, Keyboard} from "react-native"
+import {StyleSheet, KeyboardAvoidingView, View, TouchableWithoutFeedback, Keyboard, Button} from "react-native"
 import { FancyButton, FancyInput, } from "../styling";
+import { useNavigation } from "@react-navigation/native";
 
 import firebase from "firebase";
 
@@ -17,6 +18,8 @@ export const Login = () => {
         email: "",
         password: "",
     });
+
+    const navigation = useNavigation();
 
     // Use firebase to sign in an existing user
     const onSignUp = () => {
@@ -45,7 +48,16 @@ export const Login = () => {
                         password: password})}
                 />
                 <FancyButton title="Sign In" onPress={() => onSignUp()}/>
+                <Button
+                title='Forgot Password?'
+                onPress={() => {navigation.navigate("ForgotPassword")}}
+                titleStyle={{
+                color: '#039BE5'
+                }}
+                type='clear'
+            />
             </KeyboardAvoidingView>
+            
         </TouchableWithoutFeedback>
     );
 };

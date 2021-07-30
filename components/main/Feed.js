@@ -232,9 +232,7 @@ const Feed = () => {
           {popularEvents && (
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={styles.upcomingEventsGreyTextContainer}>
-                <Text style={styles.upcomingEventsGreyText}>
-                  Upcoming
-                </Text>
+                <Text style={styles.upcomingEventsGreyText}>Upcoming</Text>
               </View>
               <View style={styles.popularEventsContainer}>
                 <Text style={styles.toggleText}>Popular</Text>
@@ -351,7 +349,7 @@ const Feed = () => {
 const styles = StyleSheet.create({
   /* toggle button */
   toggleContainer: {
-    flex: 1 / 7,
+    // flex: 1 / 7,
     flexDirection: "row",
     marginHorizontal: windowWidth * 0.055,
     marginTop: 22,
@@ -360,6 +358,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 0.3,
     borderColor: "grey",
+    height: 30,
   },
 
   // when upcoming button is clicked
