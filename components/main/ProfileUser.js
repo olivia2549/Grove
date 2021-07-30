@@ -53,6 +53,7 @@ export const ProfileUser = ({ route }) => {
 
   // for the list of events
   const [events, setEvents] = useState([]); // for normal upcoming events
+  const [attendedEvents, setAttendedEvents] = useState([]); // for normal upcoming events
   const [refreshing, setRefreshing] = useState(false);
 
   // for the switch
@@ -71,28 +72,50 @@ export const ProfileUser = ({ route }) => {
     };
     fetchUserToDisplay();
 
+    // for the upcoming events
     firebase
       .firestore()
       .collection("events")
       .get()
       .then((snapshot) => {
-        const temp = [];
+        const tempEventsAttended = [];
+        const tempUpcomingEvents = [];
         const date = new Date();
         snapshot.forEach((doc) => {
-          if (date <= doc.data().startDateTime.toDate()) {
-            // console.log("here:" + date - doc.data().startDateTime.toDate());
-            temp.push(doc.data());
+          if (doc.data().attendees.length > 0) {
+            /// FOR EVENTS ATTENDED
+            doc.data().attendees.forEach((person) => {
+              date >= doc.data().endDateTime.toDate() &&
+                person.id === userDisplayingID &&
+                !tempEventsAttended.includes(doc.data()) &&
+                tempEventsAttended.push(doc.data());
+            });
+
+            /// FOR UPCOMING EVENTS
+            // events from the current time and so on AND the user displaying is attending this event
+            doc.data().attendees.forEach((person) => {
+              date <= doc.data().startDateTime.toDate() &&
+                person.id === userDisplayingID &&
+                !tempUpcomingEvents.includes(doc.data()) &&
+                tempUpcomingEvents.push(doc.data());
+            });
           }
-          // console.log("date: " + doc.data().startDateTime.toDate());
         });
-        if (temp.length > 1) {
-          // temp.forEach((i) => console.log(i.startDateTime.toDate()));
-          // console.log(temp[0].startDateTime.toDate());
-          temp.sort(
+
+        // sorting with most recent on on top
+
+        if (tempEventsAttended.length > 1) {
+          tempEventsAttended.sort(
             (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
           );
         }
-        setEvents(temp);
+        if (tempUpcomingEvents.length > 1) {
+          tempUpcomingEvents.sort(
+            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
+          );
+        }
+        setEvents(tempUpcomingEvents);
+        setAttendedEvents(tempEventsAttended);
       });
   }, [route.params.uid]);
 
@@ -107,8 +130,14 @@ export const ProfileUser = ({ route }) => {
         const temp = [];
         const date = new Date();
         snapshot.forEach((doc) => {
-          if (date <= doc.data().startDateTime.toDate()) {
-            temp.push(doc.data());
+          if (doc.data().attendees.length > 0) {
+            /// FOR UPCOMING EVENTS
+            doc.data().attendees.forEach((person) => {
+              date <= doc.data().startDateTime.toDate() &&
+                person.id === userDisplayingID &&
+                !temp.includes(doc.data());
+              temp.push(doc.data());
+            });
           }
         });
         if (temp.length > 1) {
@@ -117,6 +146,36 @@ export const ProfileUser = ({ route }) => {
           );
         }
         setEvents(temp);
+      });
+
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  const onAttendedEventsRefresh = useCallback(() => {
+    firebase
+      .firestore()
+      .collection("events")
+      .get()
+      .then((snapshot) => {
+        const temp = [];
+        snapshot.forEach((doc) => {
+          if (doc.data().attendees.length > 0) {
+            /// FOR EVENTS ATTENDED
+            doc.data().attendees.forEach((person) => {
+              date >= doc.data().endDateTime.toDate() &&
+                person.id === userDisplayingID &&
+                !temp.includes(doc.data());
+              temp.push(doc.data());
+            });
+          }
+        });
+        if (temp.length > 1) {
+          temp.sort(
+            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
+          );
+        }
+        setAttendedEvents(temp);
       });
 
     setRefreshing(true);
@@ -160,7 +219,7 @@ export const ProfileUser = ({ route }) => {
 
   const ProfileFollowing = () => {
     return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View style={{ justifyContent: "center" }}>
         {/* Friends Button */}
         <TouchableOpacity style={styles.alreadyFriend}>
           <Text style={styles.alreadyFriendText}>Friends</Text>
@@ -200,7 +259,7 @@ export const ProfileUser = ({ route }) => {
         </TouchableOpacity>
 
         {/* List of events */}
-        <View style={styles.containerGallery}>
+        {upComingEvents && (
           <View style={{ justifyContent: "center", margin: 15 }}>
             {events.length === 0 ? (
               <Text>Loading...</Text>
@@ -231,7 +290,40 @@ export const ProfileUser = ({ route }) => {
               />
             )}
           </View>
-        </View>
+        )}
+
+        {eventsAttended && (
+          <View style={{ justifyContent: "center", margin: 15 }}>
+            {events.length === 0 ? (
+              <Text>Loading...</Text>
+            ) : (
+              <FlatList
+                data={attendedEvents}
+                keyExtractor={(item, index) => item.ID}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onAttendedEventsRefresh}
+                  />
+                }
+                renderItem={(event) => (
+                  // when the card is pressed, we head to EventDetails page
+                  <TouchableOpacity
+                    key={event.id}
+                    onPress={() =>
+                      navigation.navigate("EventDetails", {
+                        ID: event.item.ID,
+                      })
+                    }
+                  >
+                    <Card key={event.item.ID} id={event.item.ID} />
+                  </TouchableOpacity>
+                )}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
+          </View>
+        )}
       </View>
     );
   };
@@ -384,7 +476,6 @@ const styles = StyleSheet.create({
   alreadyFriend: {
     marginHorizontal: 15,
     marginTop: 8,
-    height: "7%",
     backgroundColor: "#E8E8E8",
     borderRadius: 10,
     justifyContent: "center",
@@ -420,11 +511,10 @@ const styles = StyleSheet.create({
 
   /* toggle button */
   toggleContainer: {
-    flex: 1 / 8,
+    height: 35,
     flexDirection: "row",
     marginHorizontal: windowWidth * 0.028,
     marginTop: 22,
-    height: "7%",
     backgroundColor: "#ededed",
     borderRadius: 30,
     borderWidth: 0.3,
