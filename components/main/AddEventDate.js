@@ -6,7 +6,7 @@
  */
 
 import React from "react";
-import { View, Button, Text, Dimensions, StyleSheet } from "react-native";
+import {View, Button, Text, Dimensions, StyleSheet, TouchableOpacity} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import {
@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import { FancyButtonButLower } from "../styling";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -86,6 +87,9 @@ const AddEventDate = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons style={{top: "50%"}} name="chevron-down" color={"white"} size={35}/>
+        </TouchableOpacity>
         <Text style={styles.titleText}>Time</Text>
       </View>
       <View style={styles.content}>
@@ -140,11 +144,10 @@ const styles = StyleSheet.create({
   titleText: {
     color: "#ffffff",
     fontWeight: "600",
-    top: "20%",
+    top: "15%",
     padding: 25,
     fontSize: windowWidth * 0.12,
   },
-
   textBox: {
     // "Starts" and "Ends" styling
     marginLeft: windowWidth * 0.05,
@@ -163,7 +166,6 @@ const styles = StyleSheet.create({
     borderBottomColor: "#5DB075",
     marginLeft: windowWidth * 0.05,
   },
-
   datePickerContainer: { marginLeft: windowWidth * 0.05, marginTop: 10 },
 });
 

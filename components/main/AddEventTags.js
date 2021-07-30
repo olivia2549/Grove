@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { addEventTags } from "../../redux/actions";
 
 import { FancyButtonButLower } from "../styling";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -53,10 +54,12 @@ export const AddEventTags = () => {
     const grey = "lightgray";
     const green = "#5db075";
     let [color, setColor] = useState(grey);
+    let [textColor, setTextColor] = useState("black");
 
     const onPress = () => {
       const tagName = props.title;
       color === grey ? setColor(green) : setColor(grey);
+      textColor === "black" ? setTextColor("white") : setTextColor("black");
       // push tagName to selectedTags if not already there, pop if already there
       if (selectedTags.indexOf(tagName) === -1) {
         selectedTags.push(tagName);
@@ -71,7 +74,7 @@ export const AddEventTags = () => {
         style={[styles.eachTag, { backgroundColor: color }]}
         activeOpacity={0.6}
       >
-        <Text style={styles.tagText}>{props.title}</Text>
+        <Text style={[styles.tagText, {color: textColor}]}>{props.title}</Text>
       </TouchableOpacity>
     );
   };
@@ -79,6 +82,9 @@ export const AddEventTags = () => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons style={{top: "50%"}} name="chevron-down" color={"white"} size={35}/>
+        </TouchableOpacity>
         <Text style={styles.titleText}>Communities</Text>
       </View>
       <View style={styles.content}>
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 7,
     justifyContent: "center",
-    marginTop: windowHeight * 0.1,
+    marginTop: windowHeight * 0.15,
   },
   keyBoardAvoid: {
     marginTop: windowHeight * 0.25,
@@ -132,7 +138,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: "#ffffff",
     fontWeight: "600",
-    top: "20%",
+    top: "15%",
     padding: 25,
     fontSize: windowWidth * 0.12,
   },

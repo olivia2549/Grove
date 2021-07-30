@@ -15,10 +15,11 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Alert,
-  StyleSheet,
+  StyleSheet, TouchableOpacity,
 } from "react-native";
 
 import { FancyButtonButLower } from "../styling";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
   addEventDescription,
@@ -57,6 +58,9 @@ export const AddEventInfo = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons style={{top: "50%"}} name="chevron-down" color={"white"} size={35}/>
+        </TouchableOpacity>
         <Text style={styles.titleText}>Create Event</Text>
       </View>
       <View style={{ flex: 1 }}>
@@ -191,7 +195,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: "#ffffff",
     fontWeight: "600",
-    top: "20%",
+    top: "15%",
     padding: 25,
     fontSize: windowWidth * 0.12,
   },

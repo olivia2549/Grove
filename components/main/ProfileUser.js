@@ -105,6 +105,7 @@ export const ProfileUser = ({ route }) => {
       .get()
       .then((snapshot) => {
         const temp = [];
+        const date = new Date();
         snapshot.forEach((doc) => {
           if (date <= doc.data().startDateTime.toDate()) {
             temp.push(doc.data());
@@ -381,7 +382,6 @@ const styles = StyleSheet.create({
 
   // add friend
   alreadyFriend: {
-    height: 35,
     marginHorizontal: 15,
     marginTop: 8,
     height: "7%",

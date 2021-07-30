@@ -13,7 +13,7 @@ import {
   Button,
   StyleSheet,
   Dimensions,
-  Platform,
+  Platform, TouchableOpacity,
 } from "react-native";
 
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import { InviteFriends } from "./InviteFriends";
 
 import { FancyButtonButLower } from "../styling";
 import {parseDate, getMonthName, getWeekDay } from "../../shared/HelperFunctions";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import firebase from "firebase";
 
@@ -71,6 +72,9 @@ const AddEventConfirmation = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons style={{top: "50%"}} name="chevron-down" color={"white"} size={35}/>
+        </TouchableOpacity>
         <Text style={styles.titleText}>
            {eventData.name}
         </Text>
@@ -174,7 +178,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: "#ffffff",
     fontWeight: "600",
-    top: "20%",
+    top: "15%",
     padding: 25,
     fontSize: windowWidth * 0.12,
   },
