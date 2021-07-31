@@ -84,6 +84,7 @@ export const ProfileUser = ({ route }) => {
         snapshot.forEach((doc) => {
           if (doc.data().attendees.length > 0) {
             /// FOR EVENTS ATTENDED
+            // add the event if and only if the event has ended and the displaying user's id is part of the event's attendees's list
             doc.data().attendees.forEach((person) => {
               date >= doc.data().endDateTime.toDate() &&
                 person.id === userDisplayingID &&
@@ -152,6 +153,7 @@ export const ProfileUser = ({ route }) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  // for refershing events addended
   const onAttendedEventsRefresh = useCallback(() => {
     firebase
       .firestore()
