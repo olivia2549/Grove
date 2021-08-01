@@ -1,0 +1,50 @@
+[debug] [2021-08-01T19:01:31.074Z] ----------------------------------------------------------------------
+[debug] [2021-08-01T19:01:31.075Z] Command:       C:\Users\seoda\Documents\JavaScript\node.exe C:\Users\seoda\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js ext:install firebase/firestore-send-email --project=grove-ecc8a
+[debug] [2021-08-01T19:01:31.076Z] CLI Version:   9.16.0
+[debug] [2021-08-01T19:01:31.076Z] Platform:      win32
+[debug] [2021-08-01T19:01:31.076Z] Node Version:  v14.15.0
+[debug] [2021-08-01T19:01:31.076Z] Time:          Sun Aug 01 2021 12:01:31 GMT-0700 (Pacific Daylight Time)
+[debug] [2021-08-01T19:01:31.077Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-08-01T19:01:31.082Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-08-01T19:01:31.083Z] > authorizing via signed-in user (seodavid221@gmail.com)
+[debug] [2021-08-01T19:01:31.084Z] [iam] checking project grove-ecc8a for permissions ["firebase.projects.get","firebaseextensions.instances.create"]
+[debug] [2021-08-01T19:01:31.085Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-08-01T19:01:31.086Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-08-01T19:01:31.242Z] <<< HTTP RESPONSE 200 {"date":"Sun, 01 Aug 2021 19:01:31 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-01T19:01:31.267Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/grove-ecc8a:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebaseextensions.instances.create"]}
+[debug] [2021-08-01T19:01:31.560Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:31 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=184","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2021-08-01T19:01:31.564Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/grove-ecc8a/services/firebaseextensions.googleapis.com  
+ 
+[debug] [2021-08-01T19:01:31.996Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:31 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2021-08-01T19:01:32.005Z] >>> HTTP REQUEST GET https://firebaseextensions.googleapis.com/v1beta/publishers/firebase/extensions/firestore-send-email  
+ 
+[debug] [2021-08-01T19:01:32.376Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:32 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-01T19:01:32.377Z] >>> HTTP REQUEST GET https://firebaseextensions.googleapis.com/v1beta/publishers/firebase/extensions/firestore-send-email/versions/latest  
+ 
+[debug] [2021-08-01T19:01:32.911Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:32 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  extensions: information about 'firebase/firestore-send-email@latest': 
+[info] Name: Trigger Email
+Publisher: firebase
+Description: Composes and sends an email based on the contents of a document written to a specified Cloud Firestore collection.
+License: Apache-2.0
+Source code: https://github.com/firebase/extensions/tree/master/firestore-send-email
+
+[debug] [2021-08-01T19:01:37.398Z] >>> HTTP REQUEST GET https://extensions-registry.firebaseapp.com/extensions.json  
+ 
+[debug] [2021-08-01T19:01:37.543Z] <<< HTTP RESPONSE 200 {"connection":"keep-alive","content-length":"44842","access-control-allow-origin":"*","cache-control":"max-age=3600","content-type":"application/json","etag":"\"7eb6230e89c6cda80a6f2d2c27fa1ef6b191cca928a13e053d1a14e995bd5ad5\"","last-modified":"Wed, 02 Jun 2021 19:51:20 GMT","strict-transport-security":"max-age=31556926; includeSubDomains; preload","accept-ranges":"bytes","date":"Sun, 01 Aug 2021 19:01:37 GMT","x-served-by":"cache-lax10660-LGB","x-cache":"HIT","x-cache-hits":"1","x-timer":"S1627844497.371852,VS0,VE1","vary":"x-fh-requested-host, accept-encoding"}
+[debug] [2021-08-01T19:01:37.546Z] >>> HTTP REQUEST GET https://cloudbilling.googleapis.com/v1/projects/grove-ecc8a/billingInfo  
+ 
+[debug] [2021-08-01T19:01:37.810Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:37 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-01T19:01:37.811Z] >>> HTTP REQUEST GET https://iam.googleapis.com/v1/roles/datastore.user  
+ 
+[debug] [2021-08-01T19:01:38.426Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:38 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  extensions: Trigger Email will be granted the following access to project grove-ecc8a
+- Cloud Datastore User (Provides read/write access to data in a Cloud Datastore database. Intended for application developers and service accounts.) 
+[debug] [2021-08-01T19:01:45.961Z] >>> HTTP REQUEST GET https://firebaseextensions.googleapis.com/v1beta/projects/grove-ecc8a/instances/firestore-send-email  
+ 
+[debug] [2021-08-01T19:01:46.431Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Aug 2021 19:01:46 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}

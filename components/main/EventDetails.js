@@ -5,7 +5,7 @@
  * Displays the details of an event
  */
 
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -18,8 +18,8 @@ import {
   Button,
   FlatList,
   Share,
-    Alert,
-    SafeAreaView,
+  Alert,
+  SafeAreaView,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { ProfileUser } from "./ProfileUser";
@@ -27,12 +27,15 @@ import firebase from "firebase";
 import { useSelector } from "react-redux";
 import UserImageName from "./UserImageName";
 import { parseDate, fetchFromFirebase } from "../../shared/HelperFunctions";
-import { Tooltip } from 'react-native-elements';
+import { Tooltip } from "react-native-elements";
 import RBSheet from "react-native-raw-bottom-sheet";
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {FancyButton, FancyButtonButLower, FancyInput} from "../styling";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { FancyButton, FancyButtonButLower, FancyInput } from "../styling";
 // import {SafeAreaView} from "react-native-web";
+
+// for sending an email
+// import * as admin from "firebase-admin";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -122,19 +125,38 @@ export const EventDetails = ({ navigation, route }) => {
   };
 
   const sendReport = () => {
+    // var admin = require("firebase-admin"); - i can't use admin on a client side
+    const emailRef = firebase
+      .firestore()
+      .collection("mail")
+      .add({
+        to: "grovecollegehelp@gmail.com",
+        message: {
+          subject: "Event Report from User " + currentUserName,
+          text: reportDetails,
+        },
+      })
+      .then(() => console.log("email sent!"));
     setBackgroundColor("transparent");
     setBackgroundColorTags("lightgray");
     setBackgroundColorHeader("#5db075");
-    wait(600).then(() => Alert.alert("Your report has been sent to our team. Thank you for notifying us."));
+    wait(600).then(() =>
+      Alert.alert(
+        "Your report has been sent to our team. Thank you for notifying us."
+      )
+    );
   };
 
   const ReportComp = () => {
     return (
-        <TouchableOpacity
-            style={{height: "100%", width: "100%", justifyContent: "center"}}
-            onPress={() => refRBSheet.current.open()}>
-          <Text style={{color: "#F47174", fontSize: 16, textAlign: "center"}}>Report</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={{ height: "100%", width: "100%", justifyContent: "center" }}
+        onPress={() => refRBSheet.current.open()}
+      >
+        <Text style={{ color: "#F47174", fontSize: 16, textAlign: "center" }}>
+          Report
+        </Text>
+      </TouchableOpacity>
     );
   };
 
@@ -147,199 +169,251 @@ export const EventDetails = ({ navigation, route }) => {
   }
 
   return (
-      <View style={[styles.container, {backgroundColor: backgroundColor}]}>
-          <GestureRecognizer
-              onSwipeDown={() => navigation.goBack()}
-              config={config}
-          >
-            {/*Top bar*/}
-            <View style={[styles.topBarContainer, {backgroundColor: backgroundColorHeader}]}>
-              <View style={styles.topBar}>
-                <View style={styles.topBarButtons}>
-                  <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <MaterialCommunityIcons name="chevron-down" color={"white"} size={35}/>
-                  </TouchableOpacity>
-                  <Tooltip
-                      ref={refTooltip}
-                      backgroundColor="white"
-                      overlayColor='rgba(0, 0, 0, 0.50)'
-                      height={70}
-                      popover={<ReportComp/>}>
-                    <MaterialCommunityIcons name="dots-vertical" color={"white"} size={25}/>
-                  </Tooltip>
+    <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+      <GestureRecognizer
+        onSwipeDown={() => navigation.goBack()}
+        config={config}
+      >
+        {/*Top bar*/}
+        <View
+          style={[
+            styles.topBarContainer,
+            { backgroundColor: backgroundColorHeader },
+          ]}
+        >
+          <View style={styles.topBar}>
+            <View style={styles.topBarButtons}>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <MaterialCommunityIcons
+                  name="chevron-down"
+                  color={"white"}
+                  size={35}
+                />
+              </TouchableOpacity>
+              <Tooltip
+                ref={refTooltip}
+                backgroundColor="white"
+                overlayColor="rgba(0, 0, 0, 0.50)"
+                height={70}
+                popover={<ReportComp />}
+              >
+                <MaterialCommunityIcons
+                  name="dots-vertical"
+                  color={"white"}
+                  size={25}
+                />
+              </Tooltip>
+            </View>
+            <View style={styles.eventNameContainer}>
+              <Text adjustsFontSizeToFit style={styles.eventNameText}>
+                {eventDisplaying.name}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {!viewingAttendees && (
+          <View style={styles.eventInfoContainer}>
+            <View style={styles.infoContainers}>
+              {eventDisplaying.tags.map((tag) => (
+                <View
+                  style={[
+                    styles.eachTag,
+                    { backgroundColor: backgroundColorTags },
+                  ]}
+                >
+                  <Text style={styles.tagText}>{tag}</Text>
                 </View>
-                <View style={styles.eventNameContainer}>
-                  <Text
-                      adjustsFontSizeToFit
-                      style={styles.eventNameText}
+              ))}
+            </View>
+            <View style={styles.infoContainers}>
+              <Text style={styles.descriptionText}>
+                {eventDisplaying.description}
+              </Text>
+            </View>
+
+            {/* WHERE */}
+            <View style={styles.infoContainers}>
+              <View style={styles.whereWhenContainer}>
+                <View style={styles.whereWhenTitlesContainer}>
+                  <Text style={styles.whereWhenTitles}>Where</Text>
+                </View>
+                <View style={styles.whereWhenTitlesContainer}>
+                  <Text style={styles.whereWhenTitles}>Starts</Text>
+                </View>
+                <View style={styles.whereWhenTitlesContainer}>
+                  <Text style={styles.whereWhenTitles}>Ends</Text>
+                </View>
+              </View>
+              <View style={styles.whereWhenContainer}>
+                <View style={styles.locationRowContainer}>
+                  <View
+                    style={[
+                      styles.locationView,
+                      { backgroundColor: backgroundColorTags },
+                    ]}
                   >
-                    {eventDisplaying.name}
-                  </Text>
+                    <Text style={styles.locationText}>
+                      {eventDisplaying.location}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.locationRowContainer}>
+                  <View
+                    style={[
+                      styles.timeView,
+                      { backgroundColor: backgroundColorTags },
+                    ]}
+                  >
+                    <Text style={styles.locationText}>
+                      {parseDate(eventDisplaying.startDateTime.toDate()).day}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.timeView,
+                      { backgroundColor: backgroundColorTags },
+                    ]}
+                  >
+                    <Text style={styles.locationText}>
+                      {
+                        parseDate(eventDisplaying.startDateTime.toDate())
+                          .ampmTime
+                      }
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.locationRowContainer}>
+                  <View
+                    style={[
+                      styles.timeView,
+                      { backgroundColor: backgroundColorTags },
+                    ]}
+                  >
+                    <Text style={styles.locationText}>
+                      {parseDate(eventDisplaying.endDateTime.toDate()).day}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.timeView,
+                      { backgroundColor: backgroundColorTags },
+                    ]}
+                  >
+                    <Text style={styles.locationText}>
+                      {parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-
-            {
-              !viewingAttendees &&
-              <View style={styles.eventInfoContainer}>
-                <View style={styles.infoContainers}>
-                  {eventDisplaying.tags.map((tag) => (
-                      <View style={[styles.eachTag, {backgroundColor: backgroundColorTags}]}>
-                        <Text style={styles.tagText}>{tag}</Text>
-                      </View>
-                  ))}
-                </View>
-                <View style={styles.infoContainers}>
-                  <Text style={styles.descriptionText}>
-                    {eventDisplaying.description}
-                  </Text>
-                </View>
-
-                {/* WHERE */}
-                <View style={styles.infoContainers}>
-                  <View style={styles.whereWhenContainer}>
-                    <View style={styles.whereWhenTitlesContainer}>
-                      <Text style={styles.whereWhenTitles}>Where</Text>
-                    </View>
-                    <View style={styles.whereWhenTitlesContainer}>
-                      <Text style={styles.whereWhenTitles}>Starts</Text>
-                    </View>
-                    <View style={styles.whereWhenTitlesContainer}>
-                      <Text style={styles.whereWhenTitles}>Ends</Text>
-                    </View>
-                  </View>
-                  <View style={styles.whereWhenContainer}>
-                    <View style={styles.locationRowContainer}>
-                      <View style={[styles.locationView, {backgroundColor: backgroundColorTags}]}>
-                        <Text style={styles.locationText}>
-                          {eventDisplaying.location}
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={styles.locationRowContainer}>
-                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
-                        <Text style={styles.locationText}>
-                          {parseDate(eventDisplaying.startDateTime.toDate()).day}
-                        </Text>
-                      </View>
-                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
-                        <Text style={styles.locationText}>
-                          {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={styles.locationRowContainer}>
-                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
-                        <Text style={styles.locationText}>
-                          {parseDate(eventDisplaying.endDateTime.toDate()).day}
-                        </Text>
-                      </View>
-                      <View style={[styles.timeView, {backgroundColor: backgroundColorTags}]}>
-                        <Text style={styles.locationText}>
-                          {parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            }
-          </GestureRecognizer>
-
-          <GestureRecognizer
-              onSwipeUp={() => setViewingAttendees(true)}
-              onSwipeDown={() => setViewingAttendees(false)}
-              config={config}
-              style={styles.peopleInterested}
-          >
-            <Text style={styles.peopleGoingText}>
-              People Interested ({eventDisplaying.attendees.length})
-            </Text>
-
-            <FlatList
-                numColumns={1}
-                horizontal={false}
-                data={eventDisplaying.attendees}
-                keyExtractor={(item, index) => item.id}
-                renderItem={(
-                    { item } // Allows you to render a text item for each user
-                ) => (
-                    <View style={styles.userCellContainer}>
-                      <TouchableOpacity
-                          key={item.id + "row"}
-                          onPress={() => navigation.navigate("ProfileUser", { uid: item.id })}
-                      >
-                        <UserImageName id={item.id} />
-                      </TouchableOpacity>
-                    </View>
-                )}
-            />
-          </GestureRecognizer>
-
-          <View style={styles.shareAndInterestedButtons}>
-            {/*Invite button*/}
-            <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
-              <Text style={styles.fancyButtonText}>Share</Text>
-            </TouchableOpacity>
-
-            {/*I'm Interested button*/}
-            <TouchableOpacity
-                onPress={onInterested}
-                style={[
-                  styles.fancyButtonContainer,
-                  { backgroundColor: interestedColor, flex: 2 / 3 },
-                ]}
-            >
-              <Text
-                  style={[styles.fancyButtonText, { color: interestedTextColor }]}
-              >
-                {interestedText}
-              </Text>
-            </TouchableOpacity>
           </View>
+        )}
+      </GestureRecognizer>
 
-        {/*Report modal*/}
-        <RBSheet
-            ref={refRBSheet}
-            closeOnDragDown={true}
-            closeOnPressMask={true}
-            onClose={() => sendReport()}
-            onOpen={() => {
-              refTooltip.current.toggleTooltip();
-              setBackgroundColor("rgba(0, 0, 0, 0.50)");
-              setBackgroundColorTags("rgba(0, 0, 0, 0.20)");
-              setBackgroundColorHeader("rgba(93, 176, 117, 0.70)");
-            }}
-            animationType="slide"
-            openDuration={100}
-            height={windowHeight * .6}
-            customStyles={{
-              wrapper: {
-                backgroundColor: "transparent"
-              },
-              draggableIcon: {
-                backgroundColor: "#000"
-              },
-              container: {
-                height: "70%",
-              },
-            }}
+      <GestureRecognizer
+        onSwipeUp={() => setViewingAttendees(true)}
+        onSwipeDown={() => setViewingAttendees(false)}
+        config={config}
+        style={styles.peopleInterested}
+      >
+        <Text style={styles.peopleGoingText}>
+          People Interested ({eventDisplaying.attendees.length})
+        </Text>
+
+        <FlatList
+          numColumns={1}
+          horizontal={false}
+          data={eventDisplaying.attendees}
+          keyExtractor={(item, index) => item.id}
+          renderItem={(
+            { item } // Allows you to render a text item for each user
+          ) => (
+            <View style={styles.userCellContainer}>
+              <TouchableOpacity
+                key={item.id + "row"}
+                onPress={() =>
+                  navigation.navigate("ProfileUser", { uid: item.id })
+                }
+              >
+                <UserImageName id={item.id} />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </GestureRecognizer>
+
+      <View style={styles.shareAndInterestedButtons}>
+        {/*Invite button*/}
+        <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
+          <Text style={styles.fancyButtonText}>Share</Text>
+        </TouchableOpacity>
+
+        {/*I'm Interested button*/}
+        <TouchableOpacity
+          onPress={onInterested}
+          style={[
+            styles.fancyButtonContainer,
+            { backgroundColor: interestedColor, flex: 2 / 3 },
+          ]}
         >
-          <Text style={{textAlign: "center", margin: 20, fontWeight: "bold", fontSize: 16}}>
-            Report
+          <Text
+            style={[styles.fancyButtonText, { color: interestedTextColor }]}
+          >
+            {interestedText}
           </Text>
-          <FancyInput
-              style={{marginLeft: 10, marginRight: 10}}
-              placeholder="Why are you reporting this event?"
-              onChangeText={(text) => setReportDetails(text)}
-              returnKeyType="done"
-          />
-          <FancyButtonButLower
-              title="Report"
-              onPress={() => refRBSheet.current.close()}
-          />
-        </RBSheet>
+        </TouchableOpacity>
       </View>
+
+      {/*Report modal*/}
+      <RBSheet
+        ref={refRBSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        onClose={() => sendReport()}
+        onOpen={() => {
+          refTooltip.current.toggleTooltip();
+          setBackgroundColor("rgba(0, 0, 0, 0.50)");
+          setBackgroundColorTags("rgba(0, 0, 0, 0.20)");
+          setBackgroundColorHeader("rgba(93, 176, 117, 0.70)");
+        }}
+        animationType="slide"
+        openDuration={100}
+        height={windowHeight * 0.6}
+        customStyles={{
+          wrapper: {
+            backgroundColor: "transparent",
+          },
+          draggableIcon: {
+            backgroundColor: "#000",
+          },
+          container: {
+            height: "70%",
+          },
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            margin: 20,
+            fontWeight: "bold",
+            fontSize: 16,
+          }}
+        >
+          Report
+        </Text>
+        <FancyInput
+          style={{ marginLeft: 10, marginRight: 10 }}
+          placeholder="Why are you reporting this event?"
+          onChangeText={(text) => setReportDetails(text)}
+          returnKeyType="done"
+        />
+        <FancyButtonButLower
+          title="Report"
+          onPress={() => refRBSheet.current.close()}
+        />
+      </RBSheet>
+    </View>
   );
 };
 
@@ -416,7 +490,7 @@ const styles = StyleSheet.create({
   locationRowContainer: {
     marginLeft: 15,
     flexDirection: "row",
-    width: windowWidth * .7,
+    width: windowWidth * 0.7,
     justifyContent: "space-between",
   },
   locationView: {
@@ -472,7 +546,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: windowHeight * .88,
+    marginTop: windowHeight * 0.88,
   },
 });
 
