@@ -5,7 +5,7 @@
  * Profile page for someone you searched
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -19,6 +19,12 @@ import {
   RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+
+// for reporting
+import { Tooltip } from "react-native-elements";
+import RBSheet from "react-native-raw-bottom-sheet";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { FancyButtonButLower, FancyInput } from "../styling";
 
 // firebase imports
 import firebase from "firebase";
@@ -41,6 +47,7 @@ export const ProfileUser = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const currentUserName = useSelector((state) => state.currentUser.name);
   const currentUserID = useSelector((state) => state.currentUser.ID);
   const userDisplayingID = route.params.uid; // user to display
   const [userDisplaying, setUserDisplaying] = useState({});
@@ -361,10 +368,67 @@ export const ProfileUser = ({ route }) => {
     );
   };
 
+  const refTooltip = useRef();
+  const refRBSheet = useRef();
+  const [reportDetails, setReportDetails] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
+  const [backgroundColorTags, setBackgroundColorTags] = useState("lightgray");
+  const [backgroundColorHeader, setBackgroundColorHeader] = useState("#5db075");
+  const sendReport = () => {
+    // var admin = require("firebase-admin"); - i can't use admin on a client side
+    const emailRef = firebase
+      .firestore()
+      .collection("mail")
+      .add({
+        to: "grovecollegehelp@gmail.com",
+        message: {
+          subject: "User Report from User " + currentUserName,
+          text: reportDetails,
+        },
+      })
+      .then(() => console.log("email sent!"));
+    setBackgroundColor("transparent");
+    setBackgroundColorTags("lightgray");
+    setBackgroundColorHeader("#5db075");
+    wait(600).then(() =>
+      Alert.alert(
+        "Your report has been sent to our team. Thank you for notifying us."
+      )
+    );
+  };
+
+  const ReportComp = () => {
+    return (
+      <TouchableOpacity
+        style={{ height: "100%", width: "100%", justifyContent: "center" }}
+        onPress={() => refRBSheet.current.open()}
+      >
+        <Text style={{ color: "#F47174", fontSize: 16, textAlign: "center" }}>
+          Report
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.screenContainer}>
       <View style={styles.userNameContainer}>
         <Text style={styles.userNameText}>{userDisplaying.name}</Text>
+        <View style={styles.report}>
+          <Tooltip
+            ref={refTooltip}
+            backgroundColor="white"
+            overlayColor="rgba(0, 0, 0, 0.50)"
+            height={70}
+            popover={<ReportComp />}
+          >
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              color={"white"}
+              size={25}
+            />
+          </Tooltip>
+        </View>
       </View>
 
       {/* Profile Picture */}
@@ -389,6 +453,57 @@ export const ProfileUser = ({ route }) => {
             <ProfileNotFollowing requested={false} />
           )}
       </View>
+
+      {/*Report modal*/}
+      <RBSheet
+        ref={refRBSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        onClose={() => sendReport()}
+        onOpen={() => {
+          refTooltip.current.toggleTooltip();
+          setBackgroundColor("rgba(0, 0, 0, 0.50)");
+          setBackgroundColorTags("rgba(0, 0, 0, 0.20)");
+          setBackgroundColorHeader("rgba(93, 176, 117, 0.70)");
+        }}
+        animationType="slide"
+        openDuration={100}
+        height={windowHeight * 0.6}
+        customStyles={{
+          wrapper: {
+            backgroundColor: "transparent",
+          },
+          draggableIcon: {
+            backgroundColor: "#000",
+          },
+          container: {
+            height: "70%",
+          },
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            margin: 20,
+            fontWeight: "bold",
+            fontSize: 16,
+          }}
+        >
+          Report
+        </Text>
+        <FancyInput
+          style={{ marginLeft: 10, marginRight: 10 }}
+          placeholder="Why are you reporting this user?"
+          onChangeText={(text) => setReportDetails(text)}
+          returnKeyType="done"
+        />
+        <View style={styles.reportButtonContainer}>
+          <FancyButtonButLower
+            title="Report"
+            onPress={() => refRBSheet.current.close()}
+          />
+        </View>
+      </RBSheet>
     </View>
   );
 };
@@ -457,6 +572,13 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * 0.045,
     fontWeight: "400",
   },
+  report: { position: "absolute", left: windowWidth * 0.9, top: 55 },
+  reportButtonContainer: {
+    position: "absolute",
+    bottom: 35,
+    width: "100%",
+    justifyContent: "center",
+  },
 
   // lock icon
   lockContainer: {
@@ -481,6 +603,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8E8E8",
     borderRadius: 10,
     justifyContent: "center",
+    height: 35,
   },
   alreadyFriendText: {
     textAlign: "center",
