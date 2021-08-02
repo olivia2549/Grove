@@ -69,7 +69,6 @@ export const EventDetails = ({ navigation, route }) => {
   const [backgroundColor, setBackgroundColor] = useState("transparent");
   const [backgroundColorTags, setBackgroundColorTags] = useState("lightgray");
   const [backgroundColorHeader, setBackgroundColorHeader] = useState("#5db075");
-
   const [reportDetails, setReportDetails] = useState("");
 
   const config = {
@@ -408,10 +407,12 @@ export const EventDetails = ({ navigation, route }) => {
           onChangeText={(text) => setReportDetails(text)}
           returnKeyType="done"
         />
-        <FancyButtonButLower
-          title="Report"
-          onPress={() => refRBSheet.current.close()}
-        />
+        <View style={styles.reportButtonContainer}>
+          <FancyButtonButLower
+            title="Report"
+            onPress={() => refRBSheet.current.close()}
+          />
+        </View>
       </RBSheet>
     </View>
   );
@@ -449,6 +450,12 @@ const styles = StyleSheet.create({
   eventInfoContainer: {
     margin: 15,
   },
+  reportButtonContainer: {
+    position: "absolute",
+    bottom: 35,
+    width: "100%",
+    justifyContent: "center",
+  },
   infoContainers: {
     marginTop: 10,
     marginBottom: 20,
@@ -456,6 +463,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
+
   eachTag: {
     backgroundColor: "lightgray",
     borderRadius: 20,
