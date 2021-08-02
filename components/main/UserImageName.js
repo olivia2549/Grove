@@ -31,6 +31,7 @@ const UserImageName = (props) => {
   let [isLoading, setIsLoading] = useState(true);
   let [user, setUser] = useState(null);
 
+  const currentUser = useSelector((state) => state.currentUser);
   const currentUserID = firebase.auth().currentUser.uid;
 
   const friends = useSelector((state) => state.currentUser.friends);
@@ -69,88 +70,95 @@ const UserImageName = (props) => {
     dispatch(fetchUserOutgoingRequests());
   };
 
-  	if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading) return <Text>Loading...</Text>;
 
-	if (!user) return null;
+  if (!user) return null;
 
-	return (
-		<View style={styles.container}>
-			<TouchableOpacity
-				onPress={() => {
-					navigation.navigate("ProfileUser", { uid: props.id });
-				}}
-			>
-				<View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-					<Image
-						source={require("../../assets/profileicon.jpg")}
-						style={styles.profilePic}
-					/>
-					<Text style={styles.userName}>{user?.name}</Text>
-				</View>
-				{friends.indexOf(props.id) > -1 && (
-					<View style={styles.alreadyFriendsUntouchable}>
-						<Text style={styles.alreadyFriendsText}>Friends</Text>
-					</View>
-				)}
-				{outgoingRequests.indexOf(props.id) > -1 && (
-					<View style={styles.alreadyFriendsUntouchable}>
-						<Text style={styles.alreadyFriendsText}>Requested</Text>
-					</View>
-				)}
-				{friends.indexOf(props.id) === -1 &&
-				outgoingRequests.indexOf(props.id) === -1 && (
-					<TouchableOpacity
-						style={styles.addFriendButton}
-						onPress={() => {
-							addFriend(props.id);
-						}}
-					>
-						<Text style={styles.addFriendText}>Add Friend</Text>
-					</TouchableOpacity>
-				)}
-			</TouchableOpacity>
-			<View style={styles.underline} />
-		</View>
-	);
-//   return (
-//     <View style={styles.container}>
-//       <TouchableOpacity
-//         onPress={() => {
-//           navigation.navigate("ProfileUser", { uid: props.id });
-//         }}
-//       >
-//         <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-//           <Image
-//             source={require("../../assets/profileicon.jpg")}
-//             style={styles.profilePic}
-//           />
-//           <Text style={styles.userName}>{user?.name}</Text>
-//         </View>
-//         {friends.indexOf(props.id) > -1 && (
-//           <View style={styles.alreadyFriendsUntouchable}>
-//             <Text style={styles.alreadyFriendsText}>Friends</Text>
-//           </View>
-//         )}
-//         {outgoingRequests.indexOf(props.id) > -1 && (
-//           <View style={styles.alreadyFriendsUntouchable}>
-//             <Text style={styles.alreadyFriendsText}>Requested</Text>
-//           </View>
-//         )}
-//         {friends.indexOf(props.id) === -1 &&
-//           outgoingRequests.indexOf(props.id) === -1 && (
-//             <TouchableOpacity
-//               style={styles.addFriendButton}
-//               onPress={() => {
-//                 addFriend(props.id);
-//               }}
-//             >
-//               <Text style={styles.addFriendText}>Add Friend</Text>
-//             </TouchableOpacity>
-//           )}
-//       </TouchableOpacity>
-//       <View style={styles.underline} />
-//     </View>
-//   );
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("ProfileUser", { uid: props.id });
+        }}
+      >
+        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+          <Image
+            source={require("../../assets/profileicon.jpg")}
+            style={styles.profilePic}
+          />
+          <Text style={styles.userName}>{user?.name}</Text>
+        </View>
+        {console.log("another userid: " + currentUser.ID)}
+        {props.id === currentUser.ID && (
+          <View style={styles.alreadyFriendsUntouchable}>
+            <Text style={styles.alreadyFriendsText}>You</Text>
+          </View>
+        )}
+        {friends.indexOf(props.id) > -1 && (
+          <View style={styles.alreadyFriendsUntouchable}>
+            <Text style={styles.alreadyFriendsText}>Friends</Text>
+          </View>
+        )}
+        {outgoingRequests.indexOf(props.id) > -1 && (
+          <View style={styles.alreadyFriendsUntouchable}>
+            <Text style={styles.alreadyFriendsText}>Requested</Text>
+          </View>
+        )}
+        {props.id !== currentUser.ID &&
+          friends.indexOf(props.id) === -1 &&
+          outgoingRequests.indexOf(props.id) === -1 && (
+            <TouchableOpacity
+              style={styles.addFriendButton}
+              onPress={() => {
+                addFriend(props.id);
+              }}
+            >
+              <Text style={styles.addFriendText}>Add Friend</Text>
+            </TouchableOpacity>
+          )}
+      </TouchableOpacity>
+      <View style={styles.underline} />
+    </View>
+  );
+  //   return (
+  //     <View style={styles.container}>
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           navigation.navigate("ProfileUser", { uid: props.id });
+  //         }}
+  //       >
+  //         <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+  //           <Image
+  //             source={require("../../assets/profileicon.jpg")}
+  //             style={styles.profilePic}
+  //           />
+  //           <Text style={styles.userName}>{user?.name}</Text>
+  //         </View>
+  //         {friends.indexOf(props.id) > -1 && (
+  //           <View style={styles.alreadyFriendsUntouchable}>
+  //             <Text style={styles.alreadyFriendsText}>Friends</Text>
+  //           </View>
+  //         )}
+  //         {outgoingRequests.indexOf(props.id) > -1 && (
+  //           <View style={styles.alreadyFriendsUntouchable}>
+  //             <Text style={styles.alreadyFriendsText}>Requested</Text>
+  //           </View>
+  //         )}
+  //         {friends.indexOf(props.id) === -1 &&
+  //           outgoingRequests.indexOf(props.id) === -1 && (
+  //             <TouchableOpacity
+  //               style={styles.addFriendButton}
+  //               onPress={() => {
+  //                 addFriend(props.id);
+  //               }}
+  //             >
+  //               <Text style={styles.addFriendText}>Add Friend</Text>
+  //             </TouchableOpacity>
+  //           )}
+  //       </TouchableOpacity>
+  //       <View style={styles.underline} />
+  //     </View>
+  //   );
 };
 
 const styles = StyleSheet.create({

@@ -34,7 +34,9 @@ export const Profile = () => {
   const navigation = useNavigation();
 
   const currentUser = useSelector((state) => state.currentUser);
-  const currentUserEvents = useSelector(state => state.currentUser.eventsPosted);
+  const currentUserEvents = useSelector(
+    (state) => state.currentUser.eventsPosted
+  );
 
   // for the toggle (a person you're following)
   const [upComingEvents, setUpComingEvents] = useState(true);
@@ -68,6 +70,7 @@ export const Profile = () => {
           style={styles.profilePic}
         />
       </View>
+      {console.log("userid: " + currentUser.ID)}
 
       <View style={styles.infoView}>
         <View style={styles.containerInfo}>
