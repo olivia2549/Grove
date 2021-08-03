@@ -74,7 +74,6 @@ const Feed = () => {
             // console.log("date: " + doc.data().startDateTime.toDate());
           });
           if (temp.length > 1) {
-            // temp.forEach((i) => console.log(i.startDateTime.toDate()));
             // console.log(temp[0].startDateTime.toDate());
             temp.sort(
               (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
@@ -148,6 +147,31 @@ const Feed = () => {
   //     });
   // });
 
+  const createUpcomingEvents = () => {
+    firebase
+      .firestore()
+      .collection("events")
+      .get()
+      .then((snapshot) => {
+        const temp = [];
+        const date = new Date();
+        snapshot.forEach((doc) => {
+          if (date <= doc.data().startDateTime.toDate()) {
+            // console.log("here:" + date - doc.data().startDateTime.toDate());
+            temp.push(doc.data());
+          }
+          // console.log("date: " + doc.data().startDateTime.toDate());
+        });
+        if (temp.length > 1) {
+          // console.log(temp[0].startDateTime.toDate());
+          temp.sort(
+            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
+          );
+        }
+        setEvents(temp);
+      });
+  };
+
   const createPopularEvents = () => {
     firebase
       .firestore()
@@ -191,6 +215,10 @@ const Feed = () => {
     setRefreshing(true);
     wait(1000).then(() => setRefreshing(false));
   }, []);
+
+  if (upComingEvents) {
+    createUpcomingEvents();
+  }
 
   // popular events
   if (popularEvents) {
