@@ -15,15 +15,19 @@ import {
   FlatList,
   TouchableOpacity,
   Platform,
-  Dimensions,
+  Dimensions, Keyboard, TouchableWithoutFeedback,
 } from "react-native";
 
 import { Card } from "./Card";
 
 import { useSelector, useDispatch } from "react-redux";
 import { clearUserData } from "../../redux/actions";
+import { changeProfile } from "../../redux/actions";
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import firebase from "firebase";
+import {FancyInput} from "../styling";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -43,6 +47,15 @@ export const Profile = () => {
   const [eventsAttended, setEventsAttended] = useState(false);
   const [toggleSide, setToggleSide] = useState("flex-start");
 
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [profile, setProfile] = useState({
+    name: currentUser.name,
+    year: currentUser.year,
+    major: currentUser.major,
+    bio: currentUser.bio,
+  });
+
   const signOut = () => {
     firebase.auth().signOut();
     dispatch(clearUserData());
@@ -58,30 +71,78 @@ export const Profile = () => {
     setEventsAttended(!eventsAttended);
   };
 
+  const doneEditing = () => {
+    setIsEditing(false);
+    dispatch(changeProfile(profile));
+  }
+
   return (
-    <View style={styles.screenContainer}>
-      <View style={styles.userNameContainer}>
-        <Text style={styles.userNameText}>{currentUser.name}</Text>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.screenContainer}>
+          <View style={styles.userNameContainer}>
+            <Text style={styles.userNameText}>{currentUser.name}</Text>
+          </View>
 
-      <View style={styles.profileBackground}>
-        <Image
-          source={require("../../assets/profileicon.jpg")}
-          style={styles.profilePic}
-        />
-      </View>
-      {console.log("userid: " + currentUser.ID)}
+          <View style={styles.profileBackground}>
+            <Image
+              source={require("../../assets/profileicon.jpg")}
+              style={styles.profilePic}
+            />
+          </View>
+          {console.log("userid: " + currentUser.ID)}
 
-      <View style={styles.infoView}>
-        <View style={styles.containerInfo}>
-          <Text style={styles.userEmail}>{currentUser.email}</Text>
+          {
+            !isEditing &&
+            <View style={styles.infoView}>
+              <View style={styles.containerInfo}>
+                <TouchableOpacity onPress={() => setIsEditing(true)}>
+                  <MaterialCommunityIcons name="pencil-circle" color="gray" size={26}/>
+                </TouchableOpacity>
+
+                <Text style={styles.userEmail}>{currentUser.name}</Text>
+                <Text style={styles.userEmail}>Class of {currentUser.year}</Text>
+                <Text style={styles.userEmail}>{currentUser.major}</Text>
+                <Text style={styles.userEmail}>{currentUser.bio}</Text>
+              </View>
+
+              <TouchableOpacity onPress={signOut} style={styles.signOut}>
+                <Text style={styles.signOutText}>Sign Out</Text>
+              </TouchableOpacity>
+            </View>
+          }
+          {
+            isEditing &&
+              <View style={styles.infoView}>
+                <View style={styles.containerInfo}>
+                  <FancyInput
+                      style={styles.userEmail}
+                      placeholder={profile.name}
+                      onChangeText={(text) => setProfile({...profile, name: text})}
+                  />
+                  <FancyInput
+                      style={styles.userEmail}
+                      placeholder={"Class of " + profile.year}
+                      onChangeText={(text) => setProfile({...profile, year: text})}
+                  />
+                  <FancyInput
+                      style={styles.userEmail}
+                      placeholder={profile.major}
+                      onChangeText={(text) => setProfile({...profile, major: text})}
+                  />
+                  <FancyInput
+                      style={styles.userEmail}
+                      placeholder={profile.bio}
+                      onChangeText={(text) => setProfile({...profile, bio: text})}
+                  />
+                </View>
+
+                <TouchableOpacity onPress={doneEditing} style={styles.signOut}>
+                  <Text style={styles.signOutText}>Done</Text>
+                </TouchableOpacity>
+              </View>
+          }
         </View>
-
-        <TouchableOpacity onPress={signOut} style={styles.signOut}>
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
   );
 };
 
