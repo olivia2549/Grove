@@ -7,6 +7,7 @@
 
 import {
     USER_STATE_CHANGE,
+    USER_PROFILE_STATE_CHANGE,
     USER_FRIENDS_STATE_CHANGE,
     USER_INCOMING_REQUESTS_STATE_CHANGE,
     USER_OUTGOING_REQUESTS_STATE_CHANGE,
@@ -50,6 +51,14 @@ export const userReducer = (state = initialState, action) => {
                 bio: action.bio,
                 eventsPosted: action.eventsPosted,
                 eventsAttending: action.eventsAttending,
+            }
+        case 'USER_PROFILE_STATE_CHANGE':
+            return {
+                ...state,
+                name: action.profile.name,
+                year: action.profile.year,
+                major: action.profile.major,
+                bio: action.profile.bio,
             }
         case 'USER_FRIENDS_STATE_CHANGE':
             return {

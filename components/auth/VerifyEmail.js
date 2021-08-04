@@ -18,7 +18,7 @@ export const VerifyEmail = () => {
     const emailString = `Click here if your email is not ${currentUser.email}`;
 
     useEffect(() => {
-        // firebase.auth().currentUser.sendEmailVerification();
+        firebase.auth().currentUser.sendEmailVerification();
     }, []);
 
     return (

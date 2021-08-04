@@ -16,6 +16,7 @@ import {
     EVENT_LOCATION_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
     USER_STATE_CHANGE,
+    USER_PROFILE_STATE_CHANGE,
     USER_FRIENDS_STATE_CHANGE,
     USER_INCOMING_REQUESTS_STATE_CHANGE,
     USER_OUTGOING_REQUESTS_STATE_CHANGE,
@@ -162,5 +163,21 @@ export const fetchUserFriends = () => {
                 console.log("friends state change");
                 dispatch({type: USER_FRIENDS_STATE_CHANGE, friends});
             })
+    })
+}
+
+export const changeProfile = (profile) => {
+    console.log(profile);
+    firebase.firestore()
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+            name: profile.name,
+            year: profile.year,
+            major: profile.major,
+            bio: profile.bio,
+        });
+    return ((dispatch) => {
+        dispatch({type: USER_PROFILE_STATE_CHANGE, profile: profile});
     })
 }
