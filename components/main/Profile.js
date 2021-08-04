@@ -100,9 +100,20 @@ export const Profile = () => {
                 </TouchableOpacity>
 
                 <Text style={styles.userEmail}>{currentUser.name}</Text>
-                <Text style={styles.userEmail}>Class of {currentUser.year}</Text>
-                <Text style={styles.userEmail}>{currentUser.major}</Text>
-                <Text style={styles.userEmail}>{currentUser.bio}</Text>
+                {
+                  currentUser.year === -1 ?
+                      <Text style={styles.userEmail}>Unknown class</Text>
+                    : <Text style={styles.userEmail}>Class of {currentUser.year}</Text>
+                }
+                {
+                  currentUser.major === "" ?
+                      <Text style={styles.userEmail}>Undecided major</Text>
+                    : <Text style={styles.userEmail}>{currentUser.major}</Text>
+                }
+                {
+                  currentUser.bio !== "" &&
+                    <Text style={styles.userEmail}>{currentUser.bio}</Text>
+                }
               </View>
 
               <TouchableOpacity onPress={signOut} style={styles.signOut}>

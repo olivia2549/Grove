@@ -442,7 +442,21 @@ export const ProfileUser = ({ route }) => {
       <View style={styles.infoView}>
         {/* User Info */}
         <View style={styles.containerInfo}>
-          <Text style={styles.userEmail}>{userDisplaying.email}</Text>
+          <Text style={styles.userEmail}>{userDisplaying.name}</Text>
+          {
+            userDisplaying.year === -1 ?
+                <Text style={styles.userEmail}>Unknown class</Text>
+                : <Text style={styles.userEmail}>Class of {userDisplaying.year}</Text>
+          }
+          {
+            userDisplaying.major === "" ?
+                <Text style={styles.userEmail}>Undecided major</Text>
+                : <Text style={styles.userEmail}>{userDisplaying.major}</Text>
+          }
+          {
+            userDisplaying.bio !== "" &&
+                <Text style={styles.userEmail}>{userDisplaying.bio}</Text>
+          }
         </View>
         {friends.indexOf(userDisplayingID) > -1 && <ProfileFollowing />}
         {outgoingRequests.indexOf(userDisplayingID) > -1 && (
