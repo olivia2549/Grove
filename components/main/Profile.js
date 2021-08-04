@@ -132,7 +132,7 @@ export const Profile = () => {
                   />
                   <FancyInput
                       style={styles.userEmail}
-                      placeholder={"Class of " + profile.year}
+                      placeholder={profile.year}
                       onChangeText={(text) => setProfile({...profile, year: text})}
                   />
                   <FancyInput
