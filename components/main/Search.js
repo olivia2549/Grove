@@ -38,71 +38,39 @@ export const Search = () => {
   const [search, setSearch] = useState("");
   const [usersToDisplay, setUsersToDisplay] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingSearch, setIsLoadingSearch] = useState(true);
+
+  useEffect(() => {
+    // Fetch outgoingRequests
+    dispatch(fetchUserOutgoingRequests());
+  }, []);
+
   useEffect(() => {
     // Initially show all the users in the database sorted by name
     // TODO: sort users using a suggestion algorithm
     firebase
       .firestore()
       .collection("users")
-      .orderBy("name")
+      .orderBy("nameLowercase")
+        .startAt(search)
+        .endAt(search + "\uf8ff")
       .get()
       .then((snapshot) => {
-        let usersArr = snapshot.docs.map((doc) => {
+        let usersArr = [];
+        snapshot.docs.forEach((doc) => {
           const data = doc.data();
           const id = doc.id;
-          return { id, ...data }; // the object to place in the users array
-        });
+          if (id === firebase.auth().currentUser.uid) {
+            return;
+          }
+          usersArr.push(data); // the object to place in the users array
+        })
         setUsersToDisplay(usersArr);
+        setIsLoading(false);
+        setIsLoadingSearch(false);
       });
-
-    // Fetch outgoingRequests
-    dispatch(fetchUserOutgoingRequests());
-  }, []);
-
-  // Grab users that match a search
-  useEffect(() => {
-    const fetchUserToDisplay = async () => {
-      const docs = await firebase
-        .firestore()
-        .collection("users")
-        .orderBy("nameLowercase")
-        .startAt(search)
-        .endAt(search + "\uf8ff") // last letter; includes everything in search so far
-        .get();
-
-      let usersArr = [];
-      docs.forEach((doc) => {
-        const data = doc.data();
-        const id = doc.id;
-        if (id === firebase.auth().currentUser.uid) {
-          return;
-        }
-        usersArr.push(data);
-      });
-      setUsersToDisplay(usersArr);
-    };
-    fetchUserToDisplay();
-  }, [search]);
-
-  //returns events user searched for
-  //   const searchEvents = (search) => {
-  //         search = search.toLowerCase();
-  //         firebase.firestore()
-  //             .collection("events")
-  //             .orderBy('nameLowercase')
-  //             .startAt(search)
-  //             .endAt(search + '\uf8ff')
-  //             // .where('name', '>=', search) // username == search, or has search contents plus more chars
-  //             .get()
-  //             .then((snapshot) => {
-  //                 let eventsArr = snapshot.docs.map(doc => {
-  //                     const data = doc.data();
-  //                     const id = doc.id;
-  //                     return {id, ...data}  // the object to place in the users array
-  //                 });
-  //                 setEvents(eventsArr);
-  //             })
-  // }
+    }, [isLoading, isLoadingSearch]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -117,6 +85,7 @@ export const Search = () => {
             onChangeText={(search) => {
               const searchLower = search.toLowerCase();
               setSearch(searchLower);
+              setIsLoadingSearch(true);
             }}
             returnKeyType="search"
           />

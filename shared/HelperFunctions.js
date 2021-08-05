@@ -24,19 +24,19 @@ export const getWeekDay = (dateObject) => {
 
 	switch (dayNumber) {
 		case 0:
-			return "Sunday";
+			return "Sun";
 		case 1:
-			return "Monday";
+			return "Mon";
 		case 2:
-			return "Tuesday";
+			return "Tues";
 		case 3:
-			return "Wednesday";
+			return "Wed";
 		case 4:
-			return "Thursday";
+			return "Thurs";
 		case 5:
-			return "Friday";
+			return "Fri";
 		case 6:
-			return "Sunday";
+			return "Sun";
 	}
 };
 
@@ -44,29 +44,29 @@ export const getMonthName = (dateObject) => {
 	const monthNumber = dateObject.getMonth();
 	switch (monthNumber) {
 		case 0:
-			return "January";
+			return "Jan";
 		case 1:
-			return "February";
+			return "Feb";
 		case 2:
-			return "March";
+			return "Mar";
 		case 3:
-			return "April";
+			return "Apr";
 		case 4:
 			return "May";
 		case 5:
-			return "June";
+			return "Jun";
 		case 6:
-			return "July";
+			return "Jul";
 		case 7:
-			return "August";
+			return "Aug";
 		case 8:
-			return "September";
+			return "Sept";
 		case 9:
-			return "October";
+			return "Oct";
 		case 10:
-			return "November";
+			return "Nov";
 		case 11:
-			return "December";
+			return "Dec";
 	}
 };
 

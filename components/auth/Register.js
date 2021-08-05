@@ -30,33 +30,43 @@ export const Register = () => {
     const onSignUp = () => {
         // Validates the email is from a valid domain
         // TODO: send email to validate
-        const domain = state.email.split("@")[1].toLowerCase();
-        if (VALID_DOMAINS.indexOf(domain) === -1 ){
-            Alert.alert(
-                "Invalid email",
-                "Please use your school email to sign up.",
-                [{text: "OK", onPress: () => console.log("OK pressed")}]
-            );
-            return;
+        try {
+            const domain = state.email.split("@")[1].toLowerCase();
+            if (VALID_DOMAINS.indexOf(domain) === -1) {
+                Alert.alert(
+                    "Invalid email",
+                    "Please use your school email to sign up.",
+                    [{text: "OK", onPress: () => console.log("OK pressed")}]
+                );
+                return;
+            }
         }
-        // Store new user in users collection in firebase
-        firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
-            .then((user) => {
-                let userID = firebase.auth().currentUser.uid;
-                firebase.firestore().collection("users")
-                    .doc(userID)
-                    .set({
-                        ID: userID,
-                        name: state.name,
-                        nameLowercase: state.name.toLowerCase(),
-                        email: state.email,
-                        bio: "",
-                        year: -1,
-                        major: "",
-                        eventsAttending: [],
-                        eventsPosted: [],
-                    })
-        }).catch((error) => {Alert.alert(error)});
+        catch (e) {
+            console.log(e);
+        }
+            // Store new user in users collection in firebase
+        try {
+            firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
+                .then((user) => {
+                    let userID = firebase.auth().currentUser.uid;
+                    firebase.firestore().collection("users")
+                        .doc(userID)
+                        .set({
+                            ID: userID,
+                            name: state.name,
+                            nameLowercase: state.name.toLowerCase(),
+                            email: state.email,
+                            bio: "",
+                            year: -1,
+                            major: "",
+                            eventsAttending: [],
+                            eventsPosted: [],
+                        })
+                })
+        }
+        catch (error) {
+            Alert.alert(error)
+        }
     }
 
     // Displays to the screen

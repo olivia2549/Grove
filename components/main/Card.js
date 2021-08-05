@@ -19,6 +19,7 @@ export const Card = (props) => {
   const eventDisplayingID = props.id;
   const [eventDisplaying, setEventDisplaying] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [startDateString, setStartDateString] = useState("");
 
   // Fetch event, and set eventDisplaying
   useEffect(() => {
@@ -27,6 +28,13 @@ export const Card = (props) => {
         setEventDisplaying(data.data());
         setIsLoading(false);
       });
+    }
+    if (!isLoading) {
+      setStartDateString(
+          parseDate(eventDisplaying.startDateTime.toDate()).day + ", " +
+          parseDate(eventDisplaying.startDateTime.toDate()).month + " " +
+          parseDate(eventDisplaying.startDateTime.toDate()).date
+      );
     }
   }, [isLoading]);
 
@@ -48,7 +56,7 @@ export const Card = (props) => {
             <Text style={styles.eventName}>{eventDisplaying.name}</Text>
             <View style={styles.eventDate}>
               <Text style={styles.eventDay}>
-                {parseDate(eventDisplaying.startDateTime.toDate()).day}
+                {startDateString}
               </Text>
               {/* {console.log(eventDisplaying.startDateTime.toDate())}
               {console.log(eventDisplaying.startDateTime)}

@@ -129,7 +129,6 @@ export const fetchUserIncomingRequests = () => {
                 let incomingRequests = snapshot.docs.map(doc => {
                     return doc.id;
                 })
-                console.log("incoming requests state change for ", firebase.auth().currentUser.uid);
                 dispatch({type: USER_INCOMING_REQUESTS_STATE_CHANGE, incomingRequests});
             })
     })
@@ -144,7 +143,6 @@ export const fetchUserOutgoingRequests = () => {
                 let outgoingRequests = snapshot.docs.map(doc => {
                     return doc.id;
                 })
-                console.log("outgoing requests state change for ", firebase.auth().currentUser.uid);
                 dispatch({type: USER_OUTGOING_REQUESTS_STATE_CHANGE, outgoingRequests});
             })
     })
@@ -160,14 +158,12 @@ export const fetchUserFriends = () => {
                 let friends = snapshot.docs.map(doc => {
                     return doc.id;
                 })
-                console.log("friends state change");
                 dispatch({type: USER_FRIENDS_STATE_CHANGE, friends});
             })
     })
 }
 
 export const changeProfile = (profile) => {
-    console.log(profile);
     firebase.firestore()
         .collection("users")
         .doc(firebase.auth().currentUser.uid)

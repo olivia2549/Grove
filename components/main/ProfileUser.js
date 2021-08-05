@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   StyleSheet,
+    Alert,
   View,
   Text,
   Image,
@@ -414,6 +415,13 @@ export const ProfileUser = ({ route }) => {
     <View style={styles.screenContainer}>
       <View style={styles.userNameContainer}>
         <Text style={styles.userNameText}>{userDisplaying.name}</Text>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons
+              name="chevron-down"
+              color={"white"}
+              size={35}
+          />
+        </TouchableOpacity>
         <View style={styles.report}>
           <Tooltip
             ref={refTooltip}
@@ -472,7 +480,11 @@ export const ProfileUser = ({ route }) => {
         ref={refRBSheet}
         closeOnDragDown={true}
         closeOnPressMask={true}
-        onClose={() => sendReport()}
+        onClose={() => {
+          setBackgroundColor("transparent");
+          setBackgroundColorTags("lightgray");
+          setBackgroundColorHeader("#5db075");
+        }}
         onOpen={() => {
           refTooltip.current.toggleTooltip();
           setBackgroundColor("rgba(0, 0, 0, 0.50)");
@@ -513,7 +525,10 @@ export const ProfileUser = ({ route }) => {
         <View style={styles.reportButtonContainer}>
           <FancyButtonButLower
             title="Report"
-            onPress={() => refRBSheet.current.close()}
+            onPress={() => {
+              refRBSheet.current.close();
+              sendReport();
+            }}
           />
         </View>
       </RBSheet>
@@ -585,7 +600,16 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * 0.045,
     fontWeight: "400",
   },
-  report: { position: "absolute", left: windowWidth * 0.9, top: 55 },
+  backButton: {
+    position: "absolute",
+    left: windowWidth * 0.05,
+    top: 55
+  },
+  report: {
+    position: "absolute",
+    left: windowWidth * 0.9,
+    top: 55
+  },
   reportButtonContainer: {
     position: "absolute",
     bottom: 35,
