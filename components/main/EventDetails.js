@@ -52,6 +52,8 @@ export const EventDetails = ({ navigation, route }) => {
 
   const eventDisplayingID = route.params.ID;
   const [eventDisplaying, setEventDisplaying] = useState({});
+  const [startDateString, setStartDateString] = useState("");
+  const [endDateString, setEndDateString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   const [interestedText, setInterestedText] = useState("Interested");
@@ -91,6 +93,16 @@ export const EventDetails = ({ navigation, route }) => {
           setInterestedTextColor("black");
         }
       });
+      setStartDateString(
+          parseDate(eventDisplaying.startDateTime.toDate()).day + ", " +
+          parseDate(eventDisplaying.startDateTime.toDate()).month + " " +
+          parseDate(eventDisplaying.startDateTime.toDate()).date
+      );
+      setEndDateString(
+          parseDate(eventDisplaying.endDateTime.toDate()).day + ", " +
+          parseDate(eventDisplaying.endDateTime.toDate()).month + " " +
+          parseDate(eventDisplaying.endDateTime.toDate()).date
+      );
     }
   }, [isLoading]);
 
@@ -267,12 +279,12 @@ export const EventDetails = ({ navigation, route }) => {
                 <View style={styles.locationRowContainer}>
                   <View
                     style={[
-                      styles.timeView,
+                      styles.dateView,
                       { backgroundColor: backgroundColorTags },
                     ]}
                   >
                     <Text style={styles.locationText}>
-                      {parseDate(eventDisplaying.startDateTime.toDate()).day}
+                      {startDateString}
                     </Text>
                   </View>
                   <View
@@ -282,22 +294,19 @@ export const EventDetails = ({ navigation, route }) => {
                     ]}
                   >
                     <Text style={styles.locationText}>
-                      {
-                        parseDate(eventDisplaying.startDateTime.toDate())
-                          .ampmTime
-                      }
+                      {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.locationRowContainer}>
                   <View
                     style={[
-                      styles.timeView,
+                      styles.dateView,
                       { backgroundColor: backgroundColorTags },
                     ]}
                   >
                     <Text style={styles.locationText}>
-                      {parseDate(eventDisplaying.endDateTime.toDate()).day}
+                      {endDateString}
                     </Text>
                   </View>
                   <View
@@ -377,7 +386,11 @@ export const EventDetails = ({ navigation, route }) => {
         ref={refRBSheet}
         closeOnDragDown={true}
         closeOnPressMask={true}
-        onClose={() => sendReport()}
+        onClose={() => {
+          setBackgroundColor("transparent");
+          setBackgroundColorTags("lightgray");
+          setBackgroundColorHeader("#5db075");
+        }}
         onOpen={() => {
           refTooltip.current.toggleTooltip();
           setBackgroundColor("rgba(0, 0, 0, 0.50)");
@@ -418,7 +431,10 @@ export const EventDetails = ({ navigation, route }) => {
         <View style={styles.reportButtonContainer}>
           <FancyButtonButLower
             title="Report"
-            onPress={() => refRBSheet.current.close()}
+            onPress={() => {
+              sendReport();
+              refRBSheet.current.close();
+            }}
           />
         </View>
       </RBSheet>
@@ -519,13 +535,23 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   timeView: {
+    flex: 3/7,
     borderRadius: 10,
     backgroundColor: "lightgray",
     paddingLeft: 15,
     justifyContent: "center",
     height: 50,
     marginBottom: 5,
-    width: "48%",
+  },
+  dateView: {
+    flex: 4/7,
+    borderRadius: 10,
+    backgroundColor: "lightgray",
+    paddingLeft: 15,
+    justifyContent: "center",
+    height: 50,
+    marginBottom: 5,
+    marginRight: 5,
   },
   locationText: {
     fontSize: 20,

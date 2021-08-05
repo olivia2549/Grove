@@ -6,7 +6,15 @@
  */
 
 import React, { useState } from "react";
-import {StyleSheet, KeyboardAvoidingView, View, TouchableWithoutFeedback, Keyboard, Button} from "react-native"
+import {
+    StyleSheet,
+    KeyboardAvoidingView,
+    View,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Button,
+    Alert
+} from "react-native"
 import { FancyButton, FancyInput, } from "../styling";
 import { useNavigation } from "@react-navigation/native";
 
@@ -23,10 +31,14 @@ export const Login = () => {
 
     // Use firebase to sign in an existing user
     const onSignUp = () => {
-        firebase.auth()
-            .signInWithEmailAndPassword(state.email, state.password)
-            .then((result) => {console.log(result)})
-            .catch((error) => {console.log(error)})
+        try {
+            firebase.auth()
+                .signInWithEmailAndPassword(state.email, state.password)
+                .then((result) => {console.log(result)})
+        }
+        catch (error) {
+            Alert.alert(error);
+        }
     }
 
     // Displays to the screen

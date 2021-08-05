@@ -45,8 +45,8 @@ const UserImageName = (props) => {
       if (data.data()) {
         setUser(data.data());
         console.log(data.data());
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
   }, [isLoading]);
 
@@ -88,7 +88,6 @@ const UserImageName = (props) => {
           />
           <Text style={styles.userName}>{user?.name}</Text>
         </View>
-        {console.log("another userid: " + currentUser.ID)}
         {props.id === currentUser.ID && (
           <View style={styles.alreadyFriendsUntouchable}>
             <Text style={styles.alreadyFriendsText}>You</Text>
@@ -120,45 +119,6 @@ const UserImageName = (props) => {
       <View style={styles.underline} />
     </View>
   );
-  //   return (
-  //     <View style={styles.container}>
-  //       <TouchableOpacity
-  //         onPress={() => {
-  //           navigation.navigate("ProfileUser", { uid: props.id });
-  //         }}
-  //       >
-  //         <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-  //           <Image
-  //             source={require("../../assets/profileicon.jpg")}
-  //             style={styles.profilePic}
-  //           />
-  //           <Text style={styles.userName}>{user?.name}</Text>
-  //         </View>
-  //         {friends.indexOf(props.id) > -1 && (
-  //           <View style={styles.alreadyFriendsUntouchable}>
-  //             <Text style={styles.alreadyFriendsText}>Friends</Text>
-  //           </View>
-  //         )}
-  //         {outgoingRequests.indexOf(props.id) > -1 && (
-  //           <View style={styles.alreadyFriendsUntouchable}>
-  //             <Text style={styles.alreadyFriendsText}>Requested</Text>
-  //           </View>
-  //         )}
-  //         {friends.indexOf(props.id) === -1 &&
-  //           outgoingRequests.indexOf(props.id) === -1 && (
-  //             <TouchableOpacity
-  //               style={styles.addFriendButton}
-  //               onPress={() => {
-  //                 addFriend(props.id);
-  //               }}
-  //             >
-  //               <Text style={styles.addFriendText}>Add Friend</Text>
-  //             </TouchableOpacity>
-  //           )}
-  //       </TouchableOpacity>
-  //       <View style={styles.underline} />
-  //     </View>
-  //   );
 };
 
 const styles = StyleSheet.create({

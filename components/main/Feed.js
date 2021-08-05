@@ -88,7 +88,6 @@ const Feed = () => {
 
   //refreshes feed if pulled up
   const onRefresh = useCallback(() => {
-    console.log(events);
     firebase
       .firestore()
       .collection("events")
@@ -194,7 +193,6 @@ const Feed = () => {
   };
 
   const onPopularRefresh = useCallback(() => {
-    console.log(events);
     firebase
       .firestore()
       .collection("events")
