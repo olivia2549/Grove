@@ -60,7 +60,7 @@ export const ProfileUser = ({ route }) => {
 
   // for the list of events
   const [events, setEvents] = useState([]); // for normal upcoming events
-  const [attendedEvents, setAttendedEvents] = useState([]); // for normal upcoming events
+  const [attendedEvents, setAttendedEvents] = useState([]); // for events attended
   const [refreshing, setRefreshing] = useState(false);
 
   // for the switch
@@ -276,12 +276,12 @@ export const ProfileUser = ({ route }) => {
               <FlatList
                 data={events}
                 keyExtractor={(item, index) => item.ID}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                  />
-                }
+                // refreshControl={
+                //   <RefreshControl
+                //     refreshing={refreshing}
+                //     // onRefresh={onRefresh}
+                //   />
+                // }
                 renderItem={(event) => (
                   // when the card is pressed, we head to EventDetails page
                   <TouchableOpacity
@@ -309,12 +309,12 @@ export const ProfileUser = ({ route }) => {
               <FlatList
                 data={attendedEvents}
                 keyExtractor={(item, index) => item.ID}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onAttendedEventsRefresh}
-                  />
-                }
+                // refreshControl={
+                //   // <RefreshControl
+                //   //   refreshing={refreshing}
+                //   //   // onRefresh={onAttendedEventsRefresh}
+                //   // />
+                // }
                 renderItem={(event) => (
                   // when the card is pressed, we head to EventDetails page
                   <TouchableOpacity
@@ -443,20 +443,19 @@ export const ProfileUser = ({ route }) => {
         {/* User Info */}
         <View style={styles.containerInfo}>
           <Text style={styles.userEmail}>{userDisplaying.name}</Text>
-          {
-            userDisplaying.year === -1 ?
-                <Text style={styles.userEmail}>Unknown class</Text>
-                : <Text style={styles.userEmail}>Class of {userDisplaying.year}</Text>
-          }
-          {
-            userDisplaying.major === "" ?
-                <Text style={styles.userEmail}>Undecided major</Text>
-                : <Text style={styles.userEmail}>{userDisplaying.major}</Text>
-          }
-          {
-            userDisplaying.bio !== "" &&
-                <Text style={styles.userEmail}>{userDisplaying.bio}</Text>
-          }
+          {userDisplaying.year === -1 ? (
+            <Text style={styles.userEmail}>Unknown class</Text>
+          ) : (
+            <Text style={styles.userEmail}>Class of {userDisplaying.year}</Text>
+          )}
+          {userDisplaying.major === "" ? (
+            <Text style={styles.userEmail}>Undecided major</Text>
+          ) : (
+            <Text style={styles.userEmail}>{userDisplaying.major}</Text>
+          )}
+          {userDisplaying.bio !== "" && (
+            <Text style={styles.userEmail}>{userDisplaying.bio}</Text>
+          )}
         </View>
         {friends.indexOf(userDisplayingID) > -1 && <ProfileFollowing />}
         {outgoingRequests.indexOf(userDisplayingID) > -1 && (
