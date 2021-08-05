@@ -47,10 +47,7 @@ const wait = (timeout) => {
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
   const currentUserID = firebase.auth().currentUser.uid;
-  const currentUserRef = firebase
-    .firestore()
-    .collection("users")
-    .doc(currentUserID);
+  const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
   const currentUserName = useSelector((state) => state.currentUser.name);
 
   const eventDisplayingID = route.params.ID;
@@ -86,17 +83,27 @@ export const EventDetails = ({ navigation, route }) => {
         setIsLoading(false);
       });
     }
+    if (!isLoading) {
+      eventDisplaying.attendees.forEach((attendeeRef) => {
+        if (attendeeRef.isEqual(currentUserRef)) {
+          setInterestedText("I'm interested");
+          setInterestedColor("lightgray");
+          setInterestedTextColor("black");
+        }
+      });
+    }
   }, [isLoading]);
 
   // When the "interested" button is pressed
   const onInterested = () => {
     // add current user to "attendees" array of eventDisplaying
-    const eventRef = firebase
-      .firestore()
-      .collection("events")
-      .doc(eventDisplayingID);
+    const eventRef = firebase.firestore().collection("events").doc(eventDisplayingID);
     eventRef.update({
       attendees: firebase.firestore.FieldValue.arrayUnion(currentUserRef),
+    });
+    const userRef = firebase.firestore().collection("users").doc(currentUserID);
+    userRef.update({
+      eventsAttending: firebase.firestore.FieldValue.arrayUnion(eventRef),
     });
     setInterestedText("I'm interested");
     setInterestedColor("lightgray");
@@ -328,6 +335,7 @@ export const EventDetails = ({ navigation, route }) => {
           renderItem={(
             { item } // Allows you to render a text item for each user
           ) => (
+              item.id !== currentUserID &&
             <View style={styles.userCellContainer}>
               <TouchableOpacity
                 key={item.id + "row"}
