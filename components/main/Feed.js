@@ -261,7 +261,7 @@ const Feed = () => {
           )}
         </TouchableOpacity>
 
-        <View style={{ justifyContent: "center", margin: 15 }}>
+        <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
           {events.length === 0 ? (
             <Text>Loading...</Text>
           ) : (
@@ -288,6 +288,7 @@ const Feed = () => {
                 </TouchableOpacity>
               )}
               showsVerticalScrollIndicator={false}
+              // style={{ marginBottom: windowHeight * 0.4 }}
             />
           )}
         </View>
@@ -335,7 +336,7 @@ const Feed = () => {
         )}
       </TouchableOpacity>
 
-      <View style={{ justifyContent: "center", margin: 15 }}>
+      <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
         {events.length === 0 ? (
           <Text>Loading...</Text>
         ) : (
