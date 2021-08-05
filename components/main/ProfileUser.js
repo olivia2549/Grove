@@ -269,7 +269,7 @@ export const ProfileUser = ({ route }) => {
 
         {/* List of events */}
         {upComingEvents && (
-          <View style={{ justifyContent: "center", margin: 15 }}>
+          <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
             {events.length === 0 ? (
               <Text>Loading...</Text>
             ) : (
@@ -302,7 +302,7 @@ export const ProfileUser = ({ route }) => {
         )}
 
         {eventsAttended && (
-          <View style={{ justifyContent: "center", margin: 15 }}>
+          <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
             {events.length === 0 ? (
               <Text>Loading...</Text>
             ) : (
