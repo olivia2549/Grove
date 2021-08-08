@@ -13,7 +13,7 @@ import {
   Button,
   StyleSheet,
   Dimensions,
-  Platform, TouchableOpacity,
+  Platform, TouchableOpacity, FlatList,
 } from "react-native";
 
 import { useSelector } from "react-redux";
@@ -21,11 +21,15 @@ import { useNavigation } from "@react-navigation/native";
 
 import { InviteFriends } from "./InviteFriends";
 
-import { FancyButtonButLower } from "../styling";
+import {FancyButtonButLower, FancyInput} from "../styling";
 import {parseDate, getMonthName, getWeekDay } from "../../shared/HelperFunctions";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import firebase from "firebase";
+import GestureRecognizer from "react-native-swipe-gestures";
+import {Tooltip} from "react-native-elements";
+import UserImageName from "./UserImageName";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -58,243 +62,216 @@ const AddEventConfirmation = () => {
     eventData.ID = docRef.id;
     eventData.attendees.push(currentUserRef);
     docRef.set(eventData)
-    .then(() => {
-      console.log("Posted to firebase - " + eventData.ID);
-      Alert.alert("Event posted");
-      navigation.navigate("EventDetails", { ID: eventData.ID });
-    })
-    .catch((error) => {
-      console.log("Error posting to firebase - " + error);
-      Alert.alert("Error posting to firebase");
-    });
+        .then(() => {
+          console.log("Posted to firebase - " + eventData.ID);
+          Alert.alert("Event posted");
+          navigation.navigate("EventDetails", {ID: eventData.ID});
+        })
+        .catch((error) => {
+          console.log("Error posting to firebase - " + error);
+          Alert.alert("Error posting to firebase");
+        });
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons style={{top: "50%"}} name="chevron-down" color={"white"} size={35}/>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>
-           {eventData.name}
-        </Text>
-      </View>
-
-      <View style={styles.content}>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.descriptionText}>
-             {eventData.description}
-          </Text>
-        </View>
-
-        <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 5 }}>
-          {eventData.tags.map((tag) => (
-            <View key={tag} style={styles.tagContainer}>
-              <Text
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  fontSize: 16,
-                }}
-              >
-                {tag}
+      <View style={styles.container}>
+        {/*Top bar*/}
+        <View
+            style={styles.topBarContainer}
+        >
+          <View style={styles.topBar}>
+            <View style={styles.topBarButtons}>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <MaterialCommunityIcons
+                    name="chevron-down"
+                    color={"white"}
+                    size={35}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.eventNameContainer}>
+              <Text adjustsFontSizeToFit style={styles.eventNameText}>
+                {eventData.name}
               </Text>
             </View>
-          ))}
+          </View>
         </View>
-        <View style={styles.bigView}>
+
+        <View style={styles.eventInfoContainer}>
+          <View style={styles.infoContainers}>
+            {eventData.tags.map((tag) => (
+                <View style={styles.eachTag}>
+                  <Text style={styles.tagText}>{tag}</Text>
+                </View>
+            ))}
+          </View>
+          <View style={styles.infoContainers}>
+            <Text style={styles.descriptionText}>
+              {eventData.description}
+            </Text>
+          </View>
+
           {/* WHERE */}
-          <View style={styles.rowFlexContainer}>
-            <Text style={styles.whereWhen}>Where</Text>
-            <View style={styles.locationView}>
-              <Text style={styles.locationText}>{eventData.location}</Text>
+          <View style={styles.infoContainers}>
+            <View style={styles.whereWhenContainer}>
+              <View style={styles.whereWhenTitlesContainer}>
+                <Text style={styles.whereWhenTitles}>Where</Text>
+              </View>
+              <View style={styles.whereWhenTitlesContainer}>
+                <Text style={styles.whereWhenTitles}>Starts</Text>
+              </View>
+              <View style={styles.whereWhenTitlesContainer}>
+                <Text style={styles.whereWhenTitles}>Ends</Text>
+              </View>
             </View>
-          </View>
-
-          {/* START */}
-          <View style={styles.timeView}>
-            <Text style={styles.startText}>Starts</Text>
-
-            <View style={styles.startView}>
-              <Text style={styles.startDayText}>
-                {start.month.substr(0,3)} {start.date}
-              </Text>
-            </View>
-            <View style={styles.startTimeView}>
-              <Text style={styles.startTimeText}>
-                {start.ampmTime}
-              </Text>
-            </View>
-          </View>
-
-          {/* END */}
-          <View style={styles.timeView}>
-            <Text style={styles.endsText}>Ends</Text>
-            <View style={styles.endDayView}>
-              <Text style={styles.endDayText}>
-                {end.month.substr(0,3)} {end.date}
-              </Text>
-            </View>
-            <View style={styles.endTimeView}>
-              <Text style={styles.startTimeText}>
-                {end.ampmTime}
-              </Text>
+            <View style={styles.whereWhenContainer}>
+              <View style={styles.locationRowContainer}>
+                <View style={styles.locationView}>
+                  <Text style={styles.locationText}>
+                    {eventData.location}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.locationRowContainer}>
+                <View style={styles.dateView}>
+                  <Text style={styles.locationText}>
+                    {start.month.substr(0,3)} {start.date}
+                  </Text>
+                </View>
+                <View style={styles.timeView}>
+                  <Text style={styles.locationText}>
+                    {start.ampmTime}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.locationRowContainer}>
+                <View style={styles.dateView}>
+                  <Text style={styles.locationText}>
+                    {end.month.substr(0,3)} {end.date}
+                  </Text>
+                </View>
+                <View style={styles.timeView}>
+                  <Text style={styles.locationText}>
+                    {end.ampmTime}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
+        <View style={{ bottom: windowWidth * 0.1 }}>
+          <FancyButtonButLower title="Post Event" onPress={() => onSubmit()}/>
+        </View>
       </View>
-
-      <View style={{ bottom: windowWidth * 0.1 }}>
-        <FancyButtonButLower
-          title="Post Event"
-          onPress={() => {
-            onSubmit();
-          }}
-        />
-      </View>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: "column",
   },
-  content: {
-    flex: Platform.OS === "ios" ? 0 : 7,
-    marginTop: windowHeight * 0.24,
-    justifyContent: "flex-start",
+  topBarContainer: {
+    backgroundColor: "#5db075",
+    flexDirection: "column-reverse",
+    justifyContent: "space-around",
+    height: 200,
   },
   topBar: {
-    backgroundColor: "#5DB075",
-    height: "20%",
+    flexDirection: "column",
+    justifyContent: "center",
+    margin: 10,
+    marginTop: 20,
+  },
+  topBarButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  eventNameContainer: {
+    alignContent: "flex-end",
+  },
+  eventNameText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 36,
+    textAlign: "center",
+  },
+  eventInfoContainer: {
+    margin: 15,
+  },
+  infoContainers: {
+    marginTop: 15,
+    marginBottom: 15,
     width: "100%",
-    position: "absolute",
-    top: 0,
-    justifyContent: "center",
-    flex: 1,
-  },
-  titleText: {
-    color: "#ffffff",
-    fontWeight: "600",
-    top: "15%",
-    padding: 25,
-    fontSize: windowWidth * 0.12,
-  },
-
-  tagContainer: {
-    height: 45,
-    backgroundColor: "lightgrey",
-    marginLeft: 15,
-    borderRadius: 10,
-    justifyContent: "center",
-    padding: 13,
-    marginTop: 10,
-  },
-
-  descriptionContainer: {
-    paddingHorizontal: windowWidth * 0.03,
-  },
-  descriptionText: {
-    fontSize: windowWidth * 0.062,
-  },
-  bigView: {
-    justifyContent: "center",
-    padding: windowWidth * 0.05,
-    // marginTop: 5,
-  },
-  rowFlexContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  startText: {
-    fontSize: windowWidth * 0.06,
+  eachTag: {
+    backgroundColor: "lightgray",
+    borderRadius: 20,
+    padding: 20,
+    marginRight: 10,
+    marginBottom: 5,
+  },
+  tagText: {
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  descriptionText: {
+    fontSize: 20,
+  },
+  whereWhenContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  whereWhenTitlesContainer: {
+    height: 50,
+    marginBottom: 5,
+    justifyContent: "center",
+  },
+  whereWhenTitles: {
+    fontSize: 24,
     fontWeight: "bold",
-    marginTop: 3,
   },
-  startView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  startDayText: {
-    marginLeft: windowWidth * 0.032,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  startTimeView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  startTimeText: {
-    marginLeft: windowWidth * 0.032,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  endsText: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 2,
-  },
-
-  endDayView: {
-    flex: 1,
-    marginLeft: 25,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  endDayText: {
-    marginLeft: windowWidth * 0.032,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-  endTimeView: {
-    flex: 1,
-    marginLeft: 15,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
-    borderRadius: 10,
-  },
-  endTimeText: {
-    marginLeft: windowWidth * 0.032,
-    color: "black",
-    fontSize: windowWidth * 0.05,
-  },
-
-  timeView: {
+  whereWhenRow: {
     flexDirection: "row",
-    marginTop: 6,
-    marginLeft: 1,
+    marginBottom: 10,
   },
-  whereWhen: {
-    fontSize: windowWidth * 0.06,
-    fontWeight: "bold",
-    marginTop: 3,
-    // marginBottom: windowHeight * 0.015,
+  locationRowContainer: {
+    marginLeft: 15,
+    flexDirection: "row",
+    width: windowWidth * 0.7,
+    justifyContent: "space-between",
   },
   locationView: {
-    flex: 1,
-    marginLeft: windowWidth * 0.02,
-    justifyContent: "center",
-    height: windowHeight * 0.055,
-    backgroundColor: "lightgrey",
     borderRadius: 10,
+    backgroundColor: "lightgray",
+    paddingLeft: 15,
+    justifyContent: "center",
+    height: 50,
+    marginBottom: 5,
+    width: "100%",
+  },
+  timeView: {
+    flex: 3 / 7,
+    borderRadius: 10,
+    backgroundColor: "lightgray",
+    paddingLeft: 15,
+    justifyContent: "center",
+    height: 50,
+    marginBottom: 5,
+  },
+  dateView: {
+    flex: 4 / 7,
+    borderRadius: 10,
+    backgroundColor: "lightgray",
+    paddingLeft: 15,
+    justifyContent: "center",
+    height: 50,
+    marginBottom: 5,
+    marginRight: 5,
   },
   locationText: {
-    marginLeft: windowWidth * 0.03,
-    color: "black",
-    fontSize: windowWidth * 0.05,
+    fontSize: 20,
   },
 });
 

@@ -58,9 +58,6 @@ export const Card = (props) => {
               <Text style={styles.eventDay}>
                 {startDateString}
               </Text>
-              {/* {console.log(eventDisplaying.startDateTime.toDate())}
-              {console.log(eventDisplaying.startDateTime)}
-              {console.log(eventDisplaying.startDateTime.seconds)} */}
               <Text style={styles.eventTime}>{`${
                 parseDate(eventDisplaying.startDateTime.toDate()).ampmTime
               } - ${

@@ -15,7 +15,9 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Alert,
-  StyleSheet, TouchableOpacity,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 
 import { FancyButtonButLower } from "../styling";
@@ -63,10 +65,11 @@ export const AddEventInfo = () => {
         </TouchableOpacity>
         <Text style={styles.titleText}>Create Event</Text>
       </View>
-      <View style={{ flex: 1 }}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.keyBoardAvoid}
+          enabled
+          keyboardVerticalOffset={200}
         >
           {/* NAME */}
           <View style={styles.textBox}>
@@ -134,30 +137,29 @@ export const AddEventInfo = () => {
           <View style={styles.underline} />
 
           <TextInput
-            id="descriptionInput"
-            name="descriptionInput"
-            placeholder="Description..."
-            ref={descriptionRef}
-            onChangeText={(text) => {
-              setDescription(text);
-            }}
-            returnKeyType="done"
-            blurOnSubmit={false}
-            onSubmitEditing={() => {
-              if (description === "") {
-                Alert.alert("Please add a description for this event.");
-                descriptionRef.current.focus();
-              } else {
-                onSubmit();
-              }
-            }}
-            value={description}
-            multiline={true}
-            allowFontScaling={true}
-            style={styles.textInput}
-          />
+              id="descriptionInput"
+              name="descriptionInput"
+              placeholder="Description..."
+              ref={descriptionRef}
+              onChangeText={(text) => {
+                setDescription(text);
+              }}
+              returnKeyType="done"
+              blurOnSubmit={false}
+              onSubmitEditing={() => {
+                if (description === "") {
+                  Alert.alert("Please add a description for this event.");
+                  descriptionRef.current.focus();
+                } else {
+                  onSubmit();
+                }
+              }}
+              value={description}
+              multiline={true}
+              allowFontScaling={true}
+              style={styles.textInputDescription}
+            />
         </KeyboardAvoidingView>
-      </View>
       <View style={{ bottom: windowWidth * 0.1 }}>
         <FancyButtonButLower
           title="Next"
@@ -175,10 +177,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   keyBoardAvoid: {
+    flex: 1,
     marginTop: windowHeight * 0.25,
   },
   textInput: {
     fontSize: windowWidth * 0.08,
+    marginLeft: windowWidth * 0.05,
+    marginBottom: 20,
+    marginTop: windowHeight * 0.012,
+  },
+  textInputDescription: {
+    fontSize: windowWidth * 0.04,
     marginLeft: windowWidth * 0.05,
     marginBottom: 20,
     marginTop: windowHeight * 0.012,
