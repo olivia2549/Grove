@@ -23,12 +23,11 @@ export const Card = (props) => {
 
   // Fetch event, and set eventDisplaying
   useEffect(() => {
-    if (isLoading) {
-      fetchFromFirebase(eventDisplayingID, "events").then((data) => {
-        setEventDisplaying(data.data());
-        setIsLoading(false);
-      });
-    }
+    fetchFromFirebase(eventDisplayingID, "events").then((data) => {
+      setEventDisplaying(data.data());
+      setIsLoading(false);
+      console.log(eventDisplaying.name, eventDisplaying.attendees.length)
+    });
     if (!isLoading) {
       setStartDateString(
           parseDate(eventDisplaying.startDateTime.toDate()).day + ", " +
@@ -36,7 +35,7 @@ export const Card = (props) => {
           parseDate(eventDisplaying.startDateTime.toDate()).date
       );
     }
-  }, [isLoading]);
+  }, [isLoading, props.loading]);
 
   const Tag = (props) => {
     return (
