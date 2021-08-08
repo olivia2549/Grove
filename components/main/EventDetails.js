@@ -322,8 +322,30 @@ export const EventDetails = ({ navigation, route }) => {
                 </View>
               </View>
             </View>
+
+            <View style={styles.shareAndInterestedButtons}>
+              {/*Invite button*/}
+              <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
+                <Text style={styles.fancyButtonText}>Share</Text>
+              </TouchableOpacity>
+
+              {/*I'm Interested button*/}
+              <TouchableOpacity
+                  onPress={onInterested}
+                  style={[
+                    styles.fancyButtonContainer,
+                    { backgroundColor: interestedColor, flex: 2 / 3 },
+                  ]}
+              >
+                <Text
+                    style={[styles.fancyButtonText, { color: interestedTextColor }]}
+                >
+                  {interestedText}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        )}
+          )}
       </GestureRecognizer>
 
       <GestureRecognizer
@@ -332,54 +354,59 @@ export const EventDetails = ({ navigation, route }) => {
         config={config}
         style={styles.peopleInterested}
       >
-        <Text style={styles.peopleGoingText}>
-          People Interested ({eventDisplaying.attendees.length})
-        </Text>
+          {
+            !viewingAttendees ?
+                  <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity onPress={() => setViewingAttendees(true)}>
+                      <MaterialCommunityIcons
+                          name="chevron-up"
+                          color={"black"}
+                          size={35}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.peopleGoingText}>
+                      People Interested ({eventDisplaying.attendees.length})
+                    </Text>
+                  </View>
+                : <View style={{flexDirection: "row", marginTop: 15}}>
+                    <TouchableOpacity onPress={() => setViewingAttendees(false)}>
+                      <MaterialCommunityIcons
+                          name="chevron-down"
+                          color={"black"}
+                          size={35}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.peopleGoingText}>
+                      People Interested ({eventDisplaying.attendees.length})
+                    </Text>
+                  </View>
+          }
 
-        <FlatList
-          numColumns={1}
-          horizontal={false}
-          data={eventDisplaying.attendees}
-          keyExtractor={(item, index) => item.id}
-          renderItem={(
-            { item } // Allows you to render a text item for each user
-          ) => (
-              item.id !== currentUserID &&
-            <View style={styles.userCellContainer}>
-              <TouchableOpacity
-                key={item.id + "row"}
-                onPress={() =>
-                  navigation.navigate("ProfileUser", { uid: item.id })
-                }
-              >
-                <UserImageName id={item.id} />
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        <View style={styles.peopleInterested}>
+          <FlatList
+              numColumns={1}
+              horizontal={false}
+              data={eventDisplaying.attendees}
+              onScrollBeginDrag={() => setViewingAttendees(true)}
+              keyExtractor={(item, index) => item.id}
+              renderItem={(
+                  { item } // Allows you to render a text item for each user
+              ) => (
+                  <View style={styles.userCellContainer}>
+                    <TouchableOpacity
+                        key={item.id + "row"}
+                        onPress={() =>
+                            navigation.navigate("ProfileUser", { uid: item.id })
+                        }
+                    >
+                      <UserImageName id={item.id} />
+                    </TouchableOpacity>
+                  </View>
+              )}
+          />
+        </View>
+
       </GestureRecognizer>
-
-      <View style={styles.shareAndInterestedButtons}>
-        {/*Invite button*/}
-        <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
-          <Text style={styles.fancyButtonText}>Share</Text>
-        </TouchableOpacity>
-
-        {/*I'm Interested button*/}
-        <TouchableOpacity
-          onPress={onInterested}
-          style={[
-            styles.fancyButtonContainer,
-            { backgroundColor: interestedColor, flex: 2 / 3 },
-          ]}
-        >
-          <Text
-            style={[styles.fancyButtonText, { color: interestedTextColor }]}
-          >
-            {interestedText}
-          </Text>
-        </TouchableOpacity>
-      </View>
 
       {/*Report modal*/}
       <RBSheet
@@ -481,13 +508,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   infoContainers: {
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: 15,
+    marginBottom: 15,
     width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
   },
-
   eachTag: {
     backgroundColor: "lightgray",
     borderRadius: 20,
@@ -562,7 +588,8 @@ const styles = StyleSheet.create({
     marginBottom: windowHeight * 0.01,
   },
   peopleInterested: {
-    margin: 15,
+    marginLeft: 15,
+    justifyContent: "flex-start"
   },
   fancyButtonContainer: {
     elevation: 8,
@@ -585,10 +612,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   shareAndInterestedButtons: {
-    position: "absolute",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: windowHeight * 0.88,
+    marginTop: 15,
   },
 });
 
