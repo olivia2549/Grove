@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   StyleSheet,
-    Alert,
+  Alert,
   View,
   Text,
   Image,
@@ -35,7 +35,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserOutgoingRequests } from "../../redux/actions";
 
 import { Card } from "./Card";
-import {fetchFromFirebase} from "../../shared/HelperFunctions";
+import { fetchFromFirebase } from "../../shared/HelperFunctions";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -74,11 +74,12 @@ export const ProfileUser = ({ route }) => {
       setUserDisplaying(data.data());
       setIsLoadingUser(false);
     });
-  }, [isLoadingUser, route.params.uid])
+  }, [isLoadingUser, route.params.uid]);
 
   useEffect(() => {
     // for the upcoming events
-    firebase.firestore()
+    firebase
+      .firestore()
       .collection("events")
       .get()
       .then((snapshot) => {
@@ -160,17 +161,19 @@ export const ProfileUser = ({ route }) => {
 
   const ProfileFollowing = () => {
     return (
-      <View style={{ justifyContent: "center" }}>
+      <View style={{ justifyContent: "center", marginTop: 20, flex: 1 }}>
         {/* Friends Button */}
-        <TouchableOpacity style={styles.alreadyFriend}>
+        {/* <TouchableOpacity style={styles.alreadyFriend}>
           <Text style={styles.alreadyFriendText}>Friends</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Toggle Button */}
         <TouchableOpacity
           style={[styles.toggleContainer, { justifyContent: toggleSide }]}
           onPress={() => {
-            toggleSide === "flex-start" ? setToggleSide("flex-end") : setToggleSide("flex-start");
+            toggleSide === "flex-start"
+              ? setToggleSide("flex-end")
+              : setToggleSide("flex-start");
           }}
           activeOpacity="0.77"
         >
@@ -208,6 +211,7 @@ export const ProfileUser = ({ route }) => {
               <Text>Loading...</Text>
             ) : (
               <FlatList
+                style={{ height: windowHeight * 0.44 }}
                 data={events}
                 keyExtractor={(item, index) => item.ID}
                 renderItem={(event) => (
@@ -220,7 +224,11 @@ export const ProfileUser = ({ route }) => {
                       })
                     }
                   >
-                    <Card key={event.item.ID} id={event.item.ID} loading={true}/>
+                    <Card
+                      key={event.item.ID}
+                      id={event.item.ID}
+                      loading={true}
+                    />
                   </TouchableOpacity>
                 )}
                 showsVerticalScrollIndicator={false}
@@ -235,6 +243,7 @@ export const ProfileUser = ({ route }) => {
               <Text>Loading...</Text>
             ) : (
               <FlatList
+                style={{ height: windowHeight * 0.44 }}
                 data={attendedEvents}
                 keyExtractor={(item, index) => item.ID}
                 renderItem={(event) => (
@@ -247,7 +256,11 @@ export const ProfileUser = ({ route }) => {
                       })
                     }
                   >
-                    <Card key={event.item.ID} id={event.item.ID} loading={true}/>
+                    <Card
+                      key={event.item.ID}
+                      id={event.item.ID}
+                      loading={true}
+                    />
                   </TouchableOpacity>
                 )}
                 showsVerticalScrollIndicator={false}
@@ -336,11 +349,14 @@ export const ProfileUser = ({ route }) => {
     <View style={styles.screenContainer}>
       <View style={styles.userNameContainer}>
         <Text style={styles.userNameText}>{userDisplaying.name}</Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <MaterialCommunityIcons
-              name="chevron-down"
-              color={"white"}
-              size={35}
+            name="chevron-down"
+            color={"white"}
+            size={35}
           />
         </TouchableOpacity>
         <View style={styles.report}>
@@ -386,6 +402,11 @@ export const ProfileUser = ({ route }) => {
             <Text style={styles.userEmail}>{userDisplaying.bio}</Text>
           )}
         </View>
+        {friends.indexOf(userDisplayingID) > -1 && (
+          <TouchableOpacity style={styles.alreadyFriend}>
+            <Text style={styles.alreadyFriendText}>Friends</Text>
+          </TouchableOpacity>
+        )}
         {friends.indexOf(userDisplayingID) > -1 && <ProfileFollowing />}
         {outgoingRequests.indexOf(userDisplayingID) > -1 && (
           <ProfileNotFollowing requested={true} />
@@ -461,16 +482,6 @@ const styles = StyleSheet.create({
   containerInfo: {
     margin: 20,
   },
-  containerGallery: {
-    flex: 1,
-  },
-  containerImage: {
-    flex: 1 / 3,
-  },
-  image: {
-    flex: 1,
-    aspectRatio: 1,
-  },
   screenContainer: {
     flex: 1,
     justifyContent: "center",
@@ -524,12 +535,12 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: windowWidth * 0.05,
-    top: 55
+    top: 55,
   },
   report: {
     position: "absolute",
     left: windowWidth * 0.9,
-    top: 55
+    top: 55,
   },
   reportButtonContainer: {
     position: "absolute",
@@ -543,7 +554,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 20,
     marginLeft: 10,
-    // marginTop: 10, // margin: 15,
   },
   lockIcon: {
     height: 30,
