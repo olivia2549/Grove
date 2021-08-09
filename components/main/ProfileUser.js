@@ -35,6 +35,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserOutgoingRequests } from "../../redux/actions";
 
 import { Card } from "./Card";
+import {fetchFromFirebase} from "../../shared/HelperFunctions";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -53,8 +54,10 @@ export const ProfileUser = ({ route }) => {
   const userDisplayingID = route.params.uid; // user to display
   const [userDisplaying, setUserDisplaying] = useState({});
 
-  const friends = useSelector((state) => state.currentUser.friends);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
+  const friends = useSelector((state) => state.currentUser.friends);
   const outgoingRequests = useSelector(
     (state) => state.currentUser.outgoingRequests
   );
@@ -62,27 +65,20 @@ export const ProfileUser = ({ route }) => {
   // for the list of events
   const [events, setEvents] = useState([]); // for normal upcoming events
   const [attendedEvents, setAttendedEvents] = useState([]); // for events attended
-  const [refreshing, setRefreshing] = useState(false);
 
   // for the switch
-  const [upComingEvents, setUpComingEvents] = useState(true);
-  const [eventsAttended, setEventsAttended] = useState(false);
   const [toggleSide, setToggleSide] = useState("flex-start");
 
   useEffect(() => {
-    const fetchUserToDisplay = async () => {
-      const user = await firebase
-        .firestore()
-        .collection("users")
-        .doc(userDisplayingID)
-        .get();
-      setUserDisplaying(user.data());
-    };
-    fetchUserToDisplay();
+    fetchFromFirebase(userDisplayingID, "users").then((data) => {
+      setUserDisplaying(data.data());
+      setIsLoadingUser(false);
+    });
+  }, [isLoadingUser, route.params.uid])
 
+  useEffect(() => {
     // for the upcoming events
-    firebase
-      .firestore()
+    firebase.firestore()
       .collection("events")
       .get()
       .then((snapshot) => {
@@ -90,20 +86,21 @@ export const ProfileUser = ({ route }) => {
         const tempUpcomingEvents = [];
         const date = new Date();
         snapshot.forEach((doc) => {
-          if (doc.data().attendees.length > 0) {
+          const data = doc.data();
+          if (data.attendees.length > 0) {
             /// FOR EVENTS ATTENDED
-            // add the event if and only if the event has ended and the displaying user's id is part of the event's attendees's list
-            doc.data().attendees.forEach((person) => {
-              date >= doc.data().endDateTime.toDate() &&
+            // add the event if and only if the event has ended and the displaying user's id is part of the event's attendees list
+            data.attendees.forEach((person) => {
+              date >= data.endDateTime.toDate() &&
                 person.id === userDisplayingID &&
-                !tempEventsAttended.includes(doc.data()) &&
-                tempEventsAttended.push(doc.data());
+                !tempEventsAttended.includes(data) &&
+                tempEventsAttended.push(data);
             });
 
             /// FOR UPCOMING EVENTS
             // events from the current time and so on AND the user displaying is attending this event
-            doc.data().attendees.forEach((person) => {
-              date <= doc.data().startDateTime.toDate() &&
+            data.attendees.forEach((person) => {
+              date <= data.startDateTime.toDate() &&
                 person.id === userDisplayingID &&
                 !tempUpcomingEvents.includes(doc.data()) &&
                 tempUpcomingEvents.push(doc.data());
@@ -112,7 +109,6 @@ export const ProfileUser = ({ route }) => {
         });
 
         // sorting with most recent on on top
-
         if (tempEventsAttended.length > 1) {
           tempEventsAttended.sort(
             (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
@@ -125,72 +121,17 @@ export const ProfileUser = ({ route }) => {
         }
         setEvents(tempUpcomingEvents);
         setAttendedEvents(tempEventsAttended);
-      });
-  }, [route.params.uid]);
-
-  //refreshes feed if pulled up
-  const onRefresh = useCallback(() => {
-    console.log(events);
-    firebase
-      .firestore()
-      .collection("events")
-      .get()
-      .then((snapshot) => {
-        const temp = [];
-        const date = new Date();
-        snapshot.forEach((doc) => {
-          if (doc.data().attendees.length > 0) {
-            /// FOR UPCOMING EVENTS
-            doc.data().attendees.forEach((person) => {
-              date <= doc.data().startDateTime.toDate() &&
-                person.id === userDisplayingID &&
-                !temp.includes(doc.data());
-              temp.push(doc.data());
-            });
-          }
+        setIsLoadingEvents(false);
+        console.log("attended:");
+        attendedEvents.forEach((event) => {
+          console.log(event.name, event.attendees.length);
         });
-        if (temp.length > 1) {
-          temp.sort(
-            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
-          );
-        }
-        setEvents(temp);
-      });
-
-    setRefreshing(true);
-    wait(1000).then(() => setRefreshing(false));
-  }, []);
-
-  // for refershing events addended
-  const onAttendedEventsRefresh = useCallback(() => {
-    firebase
-      .firestore()
-      .collection("events")
-      .get()
-      .then((snapshot) => {
-        const temp = [];
-        snapshot.forEach((doc) => {
-          if (doc.data().attendees.length > 0) {
-            /// FOR EVENTS ATTENDED
-            doc.data().attendees.forEach((person) => {
-              date >= doc.data().endDateTime.toDate() &&
-                person.id === userDisplayingID &&
-                !temp.includes(doc.data());
-              temp.push(doc.data());
-            });
-          }
+        console.log("upcoming:");
+        events.forEach((event) => {
+          console.log(event.name, event.attendees.length);
         });
-        if (temp.length > 1) {
-          temp.sort(
-            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
-          );
-        }
-        setAttendedEvents(temp);
       });
-
-    setRefreshing(true);
-    wait(1000).then(() => setRefreshing(false));
-  }, []);
+  }, [isLoadingEvents, route.params.uid]);
 
   // Adds a friend
   const addFriend = (id) => {
@@ -213,16 +154,6 @@ export const ProfileUser = ({ route }) => {
     dispatch(fetchUserOutgoingRequests());
   };
 
-  const flipToggle = () => {
-    if (upComingEvents) {
-      setToggleSide("flex-end");
-    } else if (eventsAttended) {
-      setToggleSide("flex-start");
-    }
-    setUpComingEvents(!upComingEvents);
-    setEventsAttended(!eventsAttended);
-  };
-
   if (userDisplaying === null) {
     return <Text>Loading...</Text>;
   }
@@ -238,11 +169,13 @@ export const ProfileUser = ({ route }) => {
         {/* Toggle Button */}
         <TouchableOpacity
           style={[styles.toggleContainer, { justifyContent: toggleSide }]}
-          onPress={flipToggle}
+          onPress={() => {
+            toggleSide === "flex-start" ? setToggleSide("flex-end") : setToggleSide("flex-start");
+          }}
           activeOpacity="0.77"
         >
           {/* upcoming events pressed */}
-          {upComingEvents && (
+          {toggleSide === "flex-start" && (
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={styles.upcomingEventsContainer}>
                 <Text style={styles.toggleText}>Upcoming Events</Text>
@@ -254,7 +187,7 @@ export const ProfileUser = ({ route }) => {
           )}
 
           {/* events attended pressed */}
-          {eventsAttended && (
+          {toggleSide === "flex-end" && (
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={styles.upcomingEventsGreyTextContainer}>
                 <Text style={styles.upcomingEventsGreyText}>
@@ -269,31 +202,25 @@ export const ProfileUser = ({ route }) => {
         </TouchableOpacity>
 
         {/* List of events */}
-        {upComingEvents && (
-          <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
+        {toggleSide === "flex-start" && (
+          <View style={{ justifyContent: "center", margin: 15 }}>
             {events.length === 0 ? (
               <Text>Loading...</Text>
             ) : (
               <FlatList
                 data={events}
                 keyExtractor={(item, index) => item.ID}
-                // refreshControl={
-                //   <RefreshControl
-                //     refreshing={refreshing}
-                //     // onRefresh={onRefresh}
-                //   />
-                // }
                 renderItem={(event) => (
                   // when the card is pressed, we head to EventDetails page
                   <TouchableOpacity
-                    key={event.id}
+                    key={event.item.ID}
                     onPress={() =>
                       navigation.navigate("EventDetails", {
                         ID: event.item.ID,
                       })
                     }
                   >
-                    <Card key={event.item.ID} id={event.item.ID} />
+                    <Card key={event.item.ID} id={event.item.ID} loading={true}/>
                   </TouchableOpacity>
                 )}
                 showsVerticalScrollIndicator={false}
@@ -302,31 +229,25 @@ export const ProfileUser = ({ route }) => {
           </View>
         )}
 
-        {eventsAttended && (
-          <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
+        {toggleSide === "flex-end" && (
+          <View style={{ justifyContent: "center", margin: 15 }}>
             {events.length === 0 ? (
               <Text>Loading...</Text>
             ) : (
               <FlatList
                 data={attendedEvents}
                 keyExtractor={(item, index) => item.ID}
-                // refreshControl={
-                //   // <RefreshControl
-                //   //   refreshing={refreshing}
-                //   //   // onRefresh={onAttendedEventsRefresh}
-                //   // />
-                // }
                 renderItem={(event) => (
                   // when the card is pressed, we head to EventDetails page
                   <TouchableOpacity
-                    key={event.id}
+                    key={event.item.ID}
                     onPress={() =>
                       navigation.navigate("EventDetails", {
                         ID: event.item.ID,
                       })
                     }
                   >
-                    <Card key={event.item.ID} id={event.item.ID} />
+                    <Card key={event.item.ID} id={event.item.ID} loading={true}/>
                   </TouchableOpacity>
                 )}
                 showsVerticalScrollIndicator={false}

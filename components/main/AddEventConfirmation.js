@@ -60,7 +60,6 @@ const AddEventConfirmation = () => {
   const onSubmit = () => {
     const docRef = firebase.firestore().collection("events").doc();
     eventData.ID = docRef.id;
-    eventData.attendees.push(currentUserRef);
     docRef.set(eventData)
         .then(() => {
           console.log("Posted to firebase - " + eventData.ID);
