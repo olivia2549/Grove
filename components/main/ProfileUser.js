@@ -40,7 +40,7 @@ import { fetchFromFirebase } from "../../shared/HelperFunctions";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-//waiting for feed to refresh
+// Waiting for feed to refresh
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
@@ -163,9 +163,9 @@ export const ProfileUser = ({ route }) => {
     return (
       <View style={{ justifyContent: "center", marginTop: 20, flex: 1 }}>
         {/* Friends Button */}
-        {/* <TouchableOpacity style={styles.alreadyFriend}>
+        <TouchableOpacity style={styles.alreadyFriend}>
           <Text style={styles.alreadyFriendText}>Friends</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         {/* Toggle Button */}
         <TouchableOpacity
@@ -402,11 +402,6 @@ export const ProfileUser = ({ route }) => {
             <Text style={styles.userEmail}>{userDisplaying.bio}</Text>
           )}
         </View>
-        {friends.indexOf(userDisplayingID) > -1 && (
-          <TouchableOpacity style={styles.alreadyFriend}>
-            <Text style={styles.alreadyFriendText}>Friends</Text>
-          </TouchableOpacity>
-        )}
         {friends.indexOf(userDisplayingID) > -1 && <ProfileFollowing />}
         {outgoingRequests.indexOf(userDisplayingID) > -1 && (
           <ProfileNotFollowing requested={true} />
