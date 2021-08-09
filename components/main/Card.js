@@ -26,7 +26,6 @@ export const Card = (props) => {
     fetchFromFirebase(eventDisplayingID, "events").then((data) => {
       setEventDisplaying(data.data());
       setIsLoading(false);
-      console.log(eventDisplaying.name, eventDisplaying.attendees.length)
     });
     if (!isLoading) {
       setStartDateString(
