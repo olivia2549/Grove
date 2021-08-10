@@ -44,7 +44,6 @@ const UserImageName = (props) => {
     fetchFromFirebase(props.id, "users").then((data) => {
       if (data.data()) {
         setUser(data.data());
-        console.log(data.data());
         setIsLoading(false);
       }
     });

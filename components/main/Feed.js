@@ -18,8 +18,6 @@ import {
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FancyInput } from "../styling";
-
 import firebase from "firebase";
 
 import { Card } from "./Card";
