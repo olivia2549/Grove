@@ -99,7 +99,7 @@ const AddEventConfirmation = () => {
         <View style={styles.eventInfoContainer}>
           <View style={styles.infoContainers}>
             {eventData.tags.map((tag) => (
-                <View style={styles.eachTag}>
+                <View style={styles.eachTag} key={tag}>
                   <Text style={styles.tagText}>{tag}</Text>
                 </View>
             ))}

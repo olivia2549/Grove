@@ -5,7 +5,8 @@
  * User adds new event date
  */
 
-import React from "react";
+import React, { useEffect } from "react";
+
 import {View, Button, Text, Dimensions, StyleSheet, TouchableOpacity} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -32,6 +33,13 @@ const AddEventDate = () => {
     time: defaultDate.getTime(),
     date: defaultDate.getDate(),
   };
+
+  useEffect(() => {
+    dispatch(addStartDateTime(defaultDate, "date"));
+    dispatch(addStartDateTime(defaultDate, "time"));
+    dispatch(addEndDateTime(defaultDate, "date"));
+    dispatch(addEndDateTime(defaultDate, "time"));
+  }, [])
 
   const onChange = (ev, selectedDate, id, dateOrTime) => {
     const currentDate = selectedDate || defaultDate;

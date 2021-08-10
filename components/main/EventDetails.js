@@ -22,7 +22,6 @@ import {
   SafeAreaView,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { ProfileUser } from "./ProfileUser";
 import firebase from "firebase";
 import { useSelector } from "react-redux";
 import UserImageName from "./UserImageName";
@@ -235,6 +234,7 @@ export const EventDetails = ({ navigation, route }) => {
             <View style={styles.infoContainers}>
               {eventDisplaying.tags.map((tag) => (
                 <View
+                  key={tag}
                   style={[
                     styles.eachTag,
                     { backgroundColor: backgroundColorTags },

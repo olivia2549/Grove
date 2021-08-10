@@ -13,8 +13,9 @@ import firebase from "firebase";
 
 import { FancyInput, FancyButton } from '../styling';
 import { VerifyEmail } from "./VerifyEmail";
+import { validateEmail } from '../../shared/HelperFunctions';
 
-const VALID_DOMAINS = ["vanderbilt.edu"];
+
 
 export const Register = () => {
     const navigation = useNavigation();
@@ -28,23 +29,14 @@ export const Register = () => {
 
     // Saves the new user information to firebase
     const onSignUp = () => {
-        // Validates the email is from a valid domain
-        // TODO: send email to validate
-        try {
-            const domain = state.email.split("@")[1].toLowerCase();
-            if (VALID_DOMAINS.indexOf(domain) === -1) {
-                Alert.alert(
-                    "Invalid email",
-                    "Please use your school email to sign up.",
-                    [{text: "OK", onPress: () => console.log("OK pressed")}]
-                );
-                return;
-            }
+        if (!validateEmail(state.email)) return; 
+        if (state.name == "" || state.password == "") {
+            Alert.alert(
+                "Error", "Please fill in all fields", 
+                [{text: 'OK', onPress: () => console.log('OK Pressed')}]
+            );
+            return;
         }
-        catch (e) {
-            console.log(e);
-        }
-            // Store new user in users collection in firebase
         try {
             firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
                 .then((user) => {

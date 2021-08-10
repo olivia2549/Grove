@@ -51,6 +51,18 @@ export const AddEventInfo = () => {
   const locationRef = useRef(null);
 
   const onSubmit = () => {
+    if (name.length === 0) {
+      Alert.alert("Name is required");
+      return;
+    }
+    if (description.length === 0) {
+      Alert.alert("Description is required");
+      return;
+    }
+    if (location.length === 0) {
+      Alert.alert("Location is required");
+      return;
+    }
     dispatch(addEventName(name));
     dispatch(addEventLocation(location));
     dispatch(addEventDescription(description));

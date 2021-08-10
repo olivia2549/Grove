@@ -86,3 +86,18 @@ export const parseDate = (dateObject) => {
 		}),
 	};
 };
+
+export const validateEmail = (email) => {
+	const VALID_DOMAINS = ["vanderbilt.edu"];
+	const domain = state.email.split("@")[1].toLowerCase();
+
+	if (VALID_DOMAINS.indexOf(domain) === -1) {
+		Alert.alert(
+			"Invalid email",
+			"Please use your school email to sign up.",
+			[{text: "OK", onPress: () => console.log("OK pressed")}]
+		);
+		return false;
+	}
+	return true;
+}

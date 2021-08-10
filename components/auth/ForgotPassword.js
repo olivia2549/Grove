@@ -12,6 +12,13 @@ export const ForgotPassword = () => {
   const navigation = useNavigation();
 
   const resetPassword = () => {
+    if (state.email === "") {
+      Alert.alert(
+        "Error", "Please enter an email address",
+        [{ text: 'OK', onPress: () => {} }]
+      );
+      return;
+    }
     firebase.auth().sendPasswordResetEmail(state.email).catch((error) => {Alert.alert(error)});
     Alert.alert("Email sent", "Check your email to reset your password",
      [{ text: "OK", onPress: () =>  navigation.goBack()}]);
