@@ -33,19 +33,14 @@ export const AddEventTags = () => {
     "Academic",
     "Activism",
     "Arts",
-    "Business",
-    "Coding",
     "Cultural",
-    "Engineering",
-    "First years",
     "Free food",
     "Gaming",
-    "Parties",
-    "Prelaw",
-    "Premed",
-    "Religious life",
+    "Religious Life",
+    "Party",
     "Service",
     "Speakers",
+    "Sports",
   ];
 
   const selectedTags = [];
