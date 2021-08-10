@@ -87,7 +87,7 @@ export const EventDetails = ({ navigation, route }) => {
     if (!isLoading) {
       eventDisplaying.attendees.forEach((attendeeRef) => {
         if (attendeeRef.isEqual(currentUserRef)) {
-          setInterestedText("I'm interested");
+          // setInterestedText("interested"); text shouldn't change
           setInterestedColor("lightgray");
           setInterestedTextColor("black");
         }
