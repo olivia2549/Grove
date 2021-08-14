@@ -10,9 +10,7 @@ import {
     EVENT_NAME_STATE_CHANGE,
     EVENT_DESCRIPTION_STATE_CHANGE,
     EVENT_START_TIME_STATE_CHANGE,
-    EVENT_END_TIME_STATE_CHANGE,
     EVENT_START_DATE_STATE_CHANGE,
-    EVENT_END_DATE_STATE_CHANGE,
     EVENT_LOCATION_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
     USER_STATE_CHANGE,
@@ -62,19 +60,6 @@ export const addStartDateTime = (evTime, dateOrTime) => {
         })
     }
     
-}
-
-export const addEndDateTime = (evTime, dateOrTime) => {
-    if (dateOrTime === "date") {
-        return ((dispatch) => {
-            dispatch({type: EVENT_END_DATE_STATE_CHANGE, endDate: evTime});
-        })
-    }
-    else {
-        return ((dispatch) => {
-            dispatch({type: EVENT_END_TIME_STATE_CHANGE, endTime: evTime});
-        })
-    }
 }
 
 export const addEventLocation = (evLocation) => {

@@ -9,10 +9,8 @@ import {
     EVENT_NAME_STATE_CHANGE,
     EVENT_DESCRIPTION_STATE_CHANGE,
     EVENT_TAGS_STATE_CHANGE,
-    EVENT_END_TIME_STATE_CHANGE,
     EVENT_START_TIME_STATE_CHANGE,
     EVENT_START_DATE_STATE_CHANGE,
-    EVENT_END_DATE_STATE_CHANGE
 } from "../constants";
 
 const initialState = {
@@ -22,7 +20,6 @@ const initialState = {
     description: "",
     tags: [],
     startDateTime: new Date(),
-    endDateTime: new Date(),
     location: "",
     attendees: []
 }
@@ -72,22 +69,6 @@ export const eventReducer = (state = initialState, action) => {
                 ...state,
                 startDateTime: newDate,
             }
-        case 'EVENT_END_TIME_STATE_CHANGE':
-            newDate = new Date(
-                state.endDateTime.getFullYear(),
-                state.endDateTime.getMonth(),
-                state.endDateTime.getDate(),
-                action.endTime.getHours(),
-                action.endTime.getMinutes(),
-                action.endTime.getSeconds(),
-                action.endTime.getMilliseconds()
-            );
-            
-            const startDate = state.endDateTime.getDate();
-            return {
-                ...state,
-                endDateTime: newDate,
-            }
         case 'EVENT_START_DATE_STATE_CHANGE':
             newDate = new Date(
                 action.startDate.getFullYear(),
@@ -102,21 +83,6 @@ export const eventReducer = (state = initialState, action) => {
             return {
                 ...state,
                 startDateTime: newDate,
-            }
-        case 'EVENT_END_DATE_STATE_CHANGE':
-            newDate = new Date(
-                action.endDate.getFullYear(),
-                action.endDate.getMonth(),
-                action.endDate.getDate(),
-                state.endDateTime.getHours(),
-                state.endDateTime.getMinutes(),
-                state.endDateTime.getSeconds(),
-                state.endDateTime.getMilliseconds(),
-            );    
-
-            return {
-                ...state,
-                endDateTime: newDate
             }
         default:
             return state;

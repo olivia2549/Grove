@@ -47,14 +47,12 @@ const AddEventConfirmation = () => {
     description: useSelector((state) => state.event.description),
     tags: useSelector((state) => state.event.tags),
     startDateTime: useSelector((state) => state.event.startDateTime),
-    endDateTime: useSelector((state) => state.event.endDateTime),
     location: useSelector((state) => state.event.location),
     attendees: useSelector(state => state.event.attendees),
     creator: currentUserRef,
   };
 
   const start = parseDate(eventData.startDateTime);
-  const end = parseDate(eventData.endDateTime);
 
   // New event gets added to firebase
   const onSubmit = () => {
@@ -119,9 +117,6 @@ const AddEventConfirmation = () => {
               <View style={styles.whereWhenTitlesContainer}>
                 <Text style={styles.whereWhenTitles}>Starts</Text>
               </View>
-              <View style={styles.whereWhenTitlesContainer}>
-                <Text style={styles.whereWhenTitles}>Ends</Text>
-              </View>
             </View>
             <View style={styles.whereWhenContainer}>
               <View style={styles.locationRowContainer}>
@@ -140,18 +135,6 @@ const AddEventConfirmation = () => {
                 <View style={styles.timeView}>
                   <Text style={styles.locationText}>
                     {start.ampmTime}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.locationRowContainer}>
-                <View style={styles.dateView}>
-                  <Text style={styles.locationText}>
-                    {end.month.substr(0,3)} {end.date}
-                  </Text>
-                </View>
-                <View style={styles.timeView}>
-                  <Text style={styles.locationText}>
-                    {end.ampmTime}
                   </Text>
                 </View>
               </View>

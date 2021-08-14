@@ -11,7 +11,6 @@ import {View, Button, Text, Dimensions, StyleSheet, TouchableOpacity} from "reac
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import {
-  addEndDateTime,
   addEventLocation,
   addStartDateTime,
 } from "../../redux/actions";
@@ -37,22 +36,16 @@ const AddEventDate = () => {
   useEffect(() => {
     dispatch(addStartDateTime(defaultDate, "date"));
     dispatch(addStartDateTime(defaultDate, "time"));
-    dispatch(addEndDateTime(defaultDate, "date"));
-    dispatch(addEndDateTime(defaultDate, "time"));
   }, [])
 
   const onChange = (ev, selectedDate, id, dateOrTime) => {
     const currentDate = selectedDate || defaultDate;
-    if (id === "Starts") {
-      if (dateOrTime === "date") {
-        start.date = currentDate.getDate();
-      } else {
-        start.time = currentDate.getTime();
-      }
-      dispatch(addStartDateTime(currentDate, dateOrTime));
+    if (dateOrTime === "date") {
+      start.date = currentDate.getDate();
     } else {
-      dispatch(addEndDateTime(currentDate, dateOrTime));
+      start.time = currentDate.getTime();
     }
+    dispatch(addStartDateTime(currentDate, dateOrTime));
   };
 
   const DateTimePickerWithText = (props) => {
@@ -110,14 +103,6 @@ const AddEventDate = () => {
           <DateTimePickerWithText title="Starts" />
         </View>
 
-        {/* Ends date time picker */}
-        <View style={styles.textBox}>
-          <Text style={styles.textBoxText}>Ends</Text>
-        </View>
-        <View style={styles.underline} />
-        <View style={styles.datePickerContainer}>
-          <DateTimePickerWithText title="Ends" />
-        </View>
       </View>
       <View style={{ bottom: windowWidth * 0.1 }}>
         <FancyButtonButLower

@@ -58,8 +58,6 @@ export const Card = (props) => {
               </Text>
               <Text style={styles.eventTime}>{`${
                 parseDate(eventDisplaying.startDateTime.toDate()).ampmTime
-              } - ${
-                parseDate(eventDisplaying.endDateTime.toDate()).ampmTime
               }`}</Text>
             </View>
           </View>

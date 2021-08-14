@@ -17,10 +17,10 @@ import {
   Image,
   Dimensions,
   TouchableWithoutFeedback,
-  Keyboard,
+  Keyboard, SafeAreaView,
 } from "react-native";
-import { FancyInput } from "../styling";
-import { ProfileUser } from "./ProfileUser";
+import { SearchPeople } from "./SearchPeople";
+import { SearchEvents } from "./SearchEvents";
 
 import firebase from "firebase";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,94 +32,136 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export const Search = () => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [search, setSearch] = useState("");
-  const [usersToDisplay, setUsersToDisplay] = useState([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingSearch, setIsLoadingSearch] = useState(true);
+  const [toggleSide, setToggleSide] = useState("flex-start");
+  const [loadingPeople, setLoadingPeople] = useState(false);
+  const [loadingEvents, setLoadingEvents] = useState(false);
 
   useEffect(() => {
     // Fetch outgoingRequests
     dispatch(fetchUserOutgoingRequests());
   }, []);
 
-  useEffect(() => {
-    // Initially show all the users in the database sorted by name
-    // TODO: sort users using a suggestion algorithm
-    firebase
-      .firestore()
-      .collection("users")
-      .orderBy("nameLowercase")
-        .startAt(search)
-        .endAt(search + "\uf8ff")
-      .get()
-      .then((snapshot) => {
-        let usersArr = [];
-        snapshot.docs.forEach((doc) => {
-          const data = doc.data();
-          const id = doc.id;
-          if (id === firebase.auth().currentUser.uid) {
-            return;
-          }
-          usersArr.push(data); // the object to place in the users array
-        })
-        setUsersToDisplay(usersArr);
-        setIsLoading(false);
-        setIsLoadingSearch(false);
-      });
-    }, [isLoading, isLoadingSearch]);
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
-        <View style={styles.titleBox}>
-          <Text style={styles.titleText}>Add Friends</Text>
+      <SafeAreaView style={styles.container}>
+        <View style={{alignItems: "center"}}>
+          <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Search</Text>
         </View>
 
-        <View style={{ padding: 20 }}>
-          <FancyInput
-            placeholder="Search..."
-            onChangeText={(search) => {
-              const searchLower = search.toLowerCase();
-              setSearch(searchLower);
-              setIsLoadingSearch(true);
+        {/* Toggle Button */}
+        <TouchableOpacity
+            style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+            onPress={() => {
+              if (toggleSide === "flex-start") {
+                setToggleSide("flex-end");
+                setLoadingPeople(true);
+              } else {
+                setToggleSide("flex-start");
+                setLoadingEvents(true);
+              }
             }}
-            returnKeyType="search"
-          />
-        </View>
-
-        <FlatList
-          numColumns={1}
-          horizontal={false}
-          data={usersToDisplay}
-          keyExtractor={(item, index) => item.ID}
-          renderItem={(
-            { item } // Allows you to render a text item for each user
-          ) => (
-              <UserImageName id={item.ID}/>
+            activeOpacity="0.77"
+        >
+          {/* Upcoming pressed */}
+          {toggleSide === "flex-start" && (
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={styles.upcomingEventsContainer}>
+                  <Text style={styles.toggleText}>Events</Text>
+                </View>
+                <View style={styles.popularEventsGreyTextContainer}>
+                  <Text style={styles.popularEventsGreyText}>People</Text>
+                </View>
+              </View>
           )}
-        />
-      </View>
+
+          {/* Popular pressed */}
+          {toggleSide === "flex-end" && (
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={styles.upcomingEventsGreyTextContainer}>
+                  <Text style={styles.upcomingEventsGreyText}>Events</Text>
+                </View>
+                <View style={styles.popularEventsContainer}>
+                  <Text style={styles.toggleText}>People</Text>
+                </View>
+              </View>
+          )}
+        </TouchableOpacity>
+
+        {toggleSide === "flex-start" && (
+            <SearchEvents loading={loadingEvents}/>
+            )
+        }
+        {toggleSide === "flex-end" && (
+            <SearchPeople loading={loadingPeople}/>
+        )
+        }
+
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "white" },
-  titleBox: {
-    height: "25%",
+  container: {
+    flex: 1, backgroundColor: "white"
+  },
+  /* toggle button */
+  toggleContainer: {
+    // flex: 1 / 7,
+    flexDirection: "row",
+    marginHorizontal: windowWidth * 0.055,
+    marginTop: windowHeight * .03,
+    height: "7%",
+    backgroundColor: "#ededed",
+    borderRadius: 30,
+    borderWidth: 0.3,
+    borderColor: "grey",
+  },
+  upcomingEventsContainer: {
+    // when upcoming button is clicked
+    flex: 1,
     backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
     justifyContent: "center",
   },
-  titleText: {
+  popularEventsGreyTextContainer: {
+    flex: 1,
+    height: "97%",
+    justifyContent: "center",
+  },
+  popularEventsGreyText: {
+    color: "#BDBDBD",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.04,
     textAlign: "center",
-    fontSize: windowWidth * 0.088,
-    color: "black",
-    fontWeight: "700",
-    marginTop: windowHeight * 0.05,
+  },
+  // when events added button is clicked
+  popularEventsContainer: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: "97%",
+    justifyContent: "center",
+  },
+  upcomingEventsGreyTextContainer: {
+    flex: 1,
+    height: "97%",
+    justifyContent: "center",
+  },
+  upcomingEventsGreyText: {
+    color: "#BDBDBD",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.04,
+    textAlign: "center",
+  },
+  toggleText: {
+    textAlign: "center",
+    fontWeight: "500",
+    fontSize: windowWidth * 0.04,
+    color: "#5DB075",
   },
   profileComponentWithoutBorderline: {
     flexDirection: "row",
