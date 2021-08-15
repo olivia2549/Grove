@@ -92,7 +92,7 @@ export const ProfileUser = ({ route }) => {
             /// FOR EVENTS ATTENDED
             // add the event if and only if the event has ended and the displaying user's id is part of the event's attendees list
             data.attendees.forEach((person) => {
-              date >= data.endDateTime.toDate() &&
+              date >= data.startDateTime.toDate() &&
                 person.id === userDisplayingID &&
                 !tempEventsAttended.includes(data) &&
                 tempEventsAttended.push(data);
