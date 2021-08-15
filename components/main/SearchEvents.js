@@ -28,12 +28,13 @@ export const SearchEvents = (props) => {
     const navigation = useNavigation();
 
     const [isLoading, setIsLoading] = useState(false);
-
-    const [search, setSearch] = useState("");
     const [eventsToDisplay, setEventsToDisplay] = useState([]);
 
+    const [search, setSearch] = useState("");
     const [showSearch, setShowSearch] = useState("default");
+
     const [yPos, setYPos] = useState(0);
+
     const [selectedTags, setSelectedTags] = useState([]);
 
     useEffect(() => {
@@ -42,8 +43,6 @@ export const SearchEvents = (props) => {
     }, [props.loading]);
 
     useEffect(() => {
-        console.log(selectedTags);
-
         // Initially show all the events in the database sorted by name
         // TODO: sort using a suggestion algorithm
         firebase

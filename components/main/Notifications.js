@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Platform,
   Dimensions,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -90,20 +91,18 @@ export const Notifications = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={styles.container}>
       {/* Title */}
-      <View style={styles.titleBox}>
-        <Text style={styles.titleText}>Notifications</Text>
+      <View style={{alignItems: "center"}}>
+        <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Friend Requests</Text>
       </View>
 
-      <View>
-        <Text style={styles.friendRequestTitle}>Friend Requests</Text>
-      </View>
       <FlatList
         numColumns={1}
         horizontal={false}
         data={requestsToDisplay}
         keyExtractor={(item, index) => item.ID}
+        style={{marginTop: windowHeight*.03}}
         renderItem={(
           { item } // Allows you to render a text item for each user
         ) => (
@@ -112,14 +111,15 @@ export const Notifications = () => {
               onPress={() => {
                 navigation.navigate("ProfileUser", { uid: item.ID });
               }}
-              style={styles.profileComponentWithoutBorderline}
             >
-              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
                 <Image
                   source={require("../../assets/profileicon.jpg")}
                   style={styles.profilePic}
                 />
-                <Text style={styles.userName}>{item.name}</Text>
+                <View style={{flexDirection: "column", justifyContent: "center"}}>
+                  <Text style={styles.userName}>{item.name}</Text>
+                </View>
               </View>
 
               {/* <View style={{ flexDirection: "row" }}> */}
@@ -131,90 +131,37 @@ export const Notifications = () => {
               >
                 <Text style={styles.acceptRequestContainerText}>Accept</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity
-                  style={styles.acceptRequestContainer}
-                  onPress={() => console.log("I deny this person")}
-                >
-                  <Text style={styles.acceptRequestContainerText}>Deny</Text>
-                </TouchableOpacity>
-              </View> */}
-
-              {/* <Button
-                title="accept request"
-                onPress={() => {
-                  acceptRequest(item.ID);
-                }}
-              /> */}
             </TouchableOpacity>
 
             <View style={styles.underline} />
           </View>
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    margin: 5,
+    flex: 1,
+  },
   profilePic: {
-    width: 40,
-    height: 40,
+    width: 45,
+    height: 45,
     borderRadius: 400 / 2,
   },
   userName: {
     flexDirection: "column",
     justifyContent: "center",
     marginLeft: 5,
-  },
-
-  titleBox: {
-    height: "18%",
-    backgroundColor: "white",
-    justifyContent: "center",
-    width: "100%",
-  },
-  titleText: {
-    textAlign: "center",
-    fontSize: windowWidth * 0.088,
-    color: "black",
-    fontWeight: "700",
-    marginTop: windowHeight * 0.05,
-  },
-
-  friendRequestTitle: {
-    textAlign: "center",
-    fontSize: 24,
-    color: "black",
-    fontWeight: "700",
-    marginTop: 20,
-    marginBottom: 10,
-    marginLeft: 10,
-  },
-
-  // for each profile components
-  profileComponentWithoutBorderline: {
-    flexDirection: "row",
-    marginTop: 5,
-    flex: 1,
-    paddingHorizontal: 13,
-  },
-  addFriendButton: {
-    justifyContent: "center",
-    padding: 11,
-    height: 33,
-    backgroundColor: "#5DB075",
-    borderRadius: 10,
-    position: "absolute",
-    right: 10,
-  },
-  addFriendText: {
-    textAlign: "center",
-    color: "white",
+    fontWeight: "bold",
+    fontSize: windowWidth * 0.04,
   },
   acceptRequestContainer: {
     justifyContent: "center",
     padding: 11,
-    height: 33,
+    height: 40,
     backgroundColor: "#5DB075",
     borderRadius: 10,
     position: "absolute",
@@ -223,27 +170,12 @@ const styles = StyleSheet.create({
   acceptRequestContainerText: {
     textAlign: "center",
     color: "white",
+    fontWeight: "600",
   },
   userCellContainer: {
     margin: 5,
     flex: 1,
-    // paddingHorizontal: 10,
   },
-  // profilePic: {
-  //   width: 45,
-  //   height: 45,
-  //   borderRadius: 400 / 2,
-  // },
-  // userName: {
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   marginLeft: 10,
-  //   // marginTop: 10,
-  //   fontWeight: "bold",
-  //   // fontSize: windowWidth * 0.042,
-  //   fontSize: 20,
-  // },
-
   underline: {
     borderBottomWidth: 1,
     width: "92.5%",

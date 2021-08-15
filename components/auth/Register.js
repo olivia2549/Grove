@@ -30,7 +30,7 @@ export const Register = () => {
     // Saves the new user information to firebase
     const onSignUp = () => {
         if (!validateEmail(state.email)) return; 
-        if (state.name == "" || state.password == "") {
+        if (state.name === "" || state.password === "") {
             Alert.alert(
                 "Error", "Please fill in all fields", 
                 [{text: 'OK', onPress: () => console.log('OK Pressed')}]
