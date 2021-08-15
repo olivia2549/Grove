@@ -52,7 +52,6 @@ export const EventDetails = ({ navigation, route }) => {
   const eventDisplayingID = route.params.ID;
   const [eventDisplaying, setEventDisplaying] = useState({});
   const [startDateString, setStartDateString] = useState("");
-  const [endDateString, setEndDateString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   const [interestedText, setInterestedText] = useState("Interested");
@@ -96,11 +95,6 @@ export const EventDetails = ({ navigation, route }) => {
           parseDate(eventDisplaying.startDateTime.toDate()).day + ", " +
           parseDate(eventDisplaying.startDateTime.toDate()).month + " " +
           parseDate(eventDisplaying.startDateTime.toDate()).date
-      );
-      setEndDateString(
-          parseDate(eventDisplaying.endDateTime.toDate()).day + ", " +
-          parseDate(eventDisplaying.endDateTime.toDate()).month + " " +
-          parseDate(eventDisplaying.endDateTime.toDate()).date
       );
     }
   }, [isLoading]);
@@ -259,9 +253,6 @@ export const EventDetails = ({ navigation, route }) => {
                 <View style={styles.whereWhenTitlesContainer}>
                   <Text style={styles.whereWhenTitles}>Starts</Text>
                 </View>
-                <View style={styles.whereWhenTitlesContainer}>
-                  <Text style={styles.whereWhenTitles}>Ends</Text>
-                </View>
               </View>
               <View style={styles.whereWhenContainer}>
                 <View style={styles.locationRowContainer}>
@@ -295,28 +286,6 @@ export const EventDetails = ({ navigation, route }) => {
                   >
                     <Text style={styles.locationText}>
                       {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.locationRowContainer}>
-                  <View
-                    style={[
-                      styles.dateView,
-                      { backgroundColor: backgroundColorTags },
-                    ]}
-                  >
-                    <Text style={styles.locationText}>
-                      {endDateString}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.timeView,
-                      { backgroundColor: backgroundColorTags },
-                    ]}
-                  >
-                    <Text style={styles.locationText}>
-                      {parseDate(eventDisplaying.endDateTime.toDate()).ampmTime}
                     </Text>
                   </View>
                 </View>

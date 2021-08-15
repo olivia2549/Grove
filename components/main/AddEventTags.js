@@ -30,15 +30,15 @@ export const AddEventTags = () => {
   const dispatch = useDispatch();
 
   const allTags = [
-    "Academic",
     "Activism",
-    "Arts",
     "Cultural",
     "Free food",
-    "Gaming",
-    "Religious Life",
+    "Orgs",
     "Party",
+    "Performances",
+    "Professional",
     "Service",
+    "Social",
     "Speakers",
     "Sports",
   ];
