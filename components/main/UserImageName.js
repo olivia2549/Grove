@@ -85,7 +85,9 @@ const UserImageName = (props) => {
             source={require("../../assets/profileicon.jpg")}
             style={styles.profilePic}
           />
-          <Text style={styles.userName}>{user?.name}</Text>
+          <View style={{flexDirection: "column", justifyContent: "center"}}>
+            <Text style={styles.userName}>{user?.name}</Text>
+          </View>
         </View>
         {props.id === currentUser.ID && (
           <View style={styles.alreadyFriendsUntouchable}>
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 5,
     fontWeight: "bold",
-    fontSize: windowWidth * 0.042,
+    fontSize: windowWidth * 0.04,
   },
   addFriendButton: {
     justifyContent: "center",
@@ -149,6 +151,7 @@ const styles = StyleSheet.create({
   addFriendText: {
     textAlign: "center",
     color: "white",
+    fontWeight: "600",
   },
   alreadyFriendsUntouchable: {
     justifyContent: "center",
@@ -162,6 +165,7 @@ const styles = StyleSheet.create({
   alreadyFriendsText: {
     textAlign: "center",
     color: "black",
+    fontWeight: "600",
   },
   underline: {
     borderBottomWidth: 1,

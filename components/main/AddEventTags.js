@@ -13,6 +13,7 @@ import {
   View,
   Dimensions,
   StyleSheet,
+  Alert,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -53,13 +54,18 @@ export const AddEventTags = () => {
 
     const onPress = () => {
       const tagName = props.title;
-      color === grey ? setColor(green) : setColor(grey);
-      textColor === "black" ? setTextColor("white") : setTextColor("black");
       // push tagName to selectedTags if not already there, pop if already there
       if (selectedTags.indexOf(tagName) === -1) {
-        selectedTags.push(tagName);
+        if (selectedTags.length < 3) {
+          selectedTags.push(tagName);
+          setColor(green);
+          setTextColor("white");
+        }
+        else Alert.alert("Please only use up to 3 tags");
       } else {
         selectedTags.splice(selectedTags.indexOf(tagName), 1);
+        setColor(grey);
+        setTextColor("black");
       }
     };
 

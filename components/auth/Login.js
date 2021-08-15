@@ -31,7 +31,7 @@ export const Login = () => {
 
     // Use firebase to sign in an existing user
     const onSignUp = () => {
-        if (state.email == "" || state.password == "") {
+        if (state.email === "" || state.password === "") {
             Alert.alert(
                 "Error", "Please fill in all fields", 
                 [{text: 'OK', onPress: () => console.log('OK Pressed')}]
