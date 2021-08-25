@@ -29,8 +29,10 @@ export const Card = (props) => {
     });
     if (!isLoading) {
       setStartDateString(
-          parseDate(eventDisplaying.startDateTime.toDate()).day + ", " +
-          parseDate(eventDisplaying.startDateTime.toDate()).month + " " +
+        parseDate(eventDisplaying.startDateTime.toDate()).day +
+          ", " +
+          parseDate(eventDisplaying.startDateTime.toDate()).month +
+          " " +
           parseDate(eventDisplaying.startDateTime.toDate()).date
       );
     }
@@ -53,9 +55,7 @@ export const Card = (props) => {
           <View style={styles.eventDetails}>
             <Text style={styles.eventName}>{eventDisplaying.name}</Text>
             <View style={styles.eventDate}>
-              <Text style={styles.eventDay}>
-                {startDateString}
-              </Text>
+              <Text style={styles.eventDay}>{startDateString}</Text>
               <Text style={styles.eventTime}>{`${
                 parseDate(eventDisplaying.startDateTime.toDate()).ampmTime
               }`}</Text>
@@ -64,7 +64,7 @@ export const Card = (props) => {
           <View style={styles.peopleGoingAndTagsContainer}>
             <View style={styles.peopleGoingContainer}>
               <Text style={styles.peopleGoing}>
-                {eventDisplaying.attendees.length} people going
+                {eventDisplaying.attendees.length} people interested
               </Text>
             </View>
             <View style={styles.tagsContainer}>
