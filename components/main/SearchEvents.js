@@ -54,13 +54,23 @@ export const SearchEvents = (props) => {
             .get()
             .then((snapshot) => {
                 let eventsArr = [];
+                const date = new Date();
                 snapshot.docs.forEach((doc) => {
                     const data = doc.data();
-                    if (selectedTags.length === 0) eventsArr.push(data);
+                    if (selectedTags.length === 0 && date <= doc.data().startDateTime.toDate()) {
+                        eventsArr.push(data);
+                    }
                     selectedTags.forEach((tag) => {
-                        if (data.tags.indexOf(tag) !== -1) eventsArr.push(data);
+                        if (data.tags.indexOf(tag) !== -1 && date <= doc.data().startDateTime.toDate()) {
+                            eventsArr.push(data);
+                        }
                     });
-                })
+                });
+                if (eventsArr.length > 1) {
+                    props.upcoming ?
+                        eventsArr.sort((a, b) => a.startDateTime.toDate() - b.startDateTime.toDate())
+                        : eventsArr.sort((a, b) => b.attendees.length - a.attendees.length);
+                }
                 setEventsToDisplay(eventsArr);
                 setIsLoading(false);
             });

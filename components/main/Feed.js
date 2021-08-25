@@ -5,269 +5,220 @@
  * Displays main feed
  */
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  View,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  RefreshControl,
-  Button,
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
+    View,
+    Button,
+    TouchableOpacity,
+    Text,
+    FlatList,
+    StyleSheet,
+    Image,
+    Dimensions,
+    TouchableWithoutFeedback,
+    Keyboard, SafeAreaView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import firebase from "firebase";
+import { SearchEvents } from "./SearchEvents";
 
-import { Card } from "./Card";
-
-// Waiting for feed to refresh
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
+import { useDispatch } from "react-redux";
+import { fetchUserOutgoingRequests } from "../../redux/actions";
+require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-/**
- * Feed - filters the events
- *
- * @details There are clickable card components within the view, sorted by upcoming by default.
- *          Clicking a card component redirects user to the EventDetails page with the id passed down as a prop
- */
-const Feed = () => {
-  const navigation = useNavigation();
+export const Feed = () => {
+    const dispatch = useDispatch();
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [loadingPopular, setLoadingPopular] = useState(false);
-  const [loadingUpcoming, setLoadingUpcoming] = useState(true);
+    const [toggleSide, setToggleSide] = useState("flex-start");
+    const [loadingPopular, setLoadingPopular] = useState(false);
+    const [loadingUpcoming, setLoadingUpcoming] = useState(false);
 
-  const [eventsDisplaying, setEventsDisplaying] = useState([]);
-  const [toggleSide, setToggleSide] = useState("flex-start");
+    useEffect(() => {
+        // Fetch outgoingRequests
+        dispatch(fetchUserOutgoingRequests());
+    }, []);
 
-  // Refreshes feed if pulled up
-  const onRefresh = useCallback(() => {
-    toggleSide === "flex-start"
-      ? setLoadingUpcoming(true)
-      : setLoadingPopular(true);
-    setRefreshing(true);
-    wait(1000).then(() => setRefreshing(false));
-  }, []);
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <SafeAreaView style={styles.container}>
+                <View style={{alignItems: "center"}}>
+                    <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Grove</Text>
+                </View>
 
-  // Fetches each event in the database sorted by attendees count
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection("events")
-      .get()
-      .then((snapshot) => {
-        const temp = [];
-        const date = new Date();
-        snapshot.forEach((doc) => {
-          if (date <= doc.data().startDateTime.toDate()) {
-            temp.push(doc.data());
-          }
-        });
-        if (temp.length > 1) {
-          temp.sort((a, b) => b.attendees.length - a.attendees.length);
-        }
-        setEventsDisplaying(temp);
-        setLoadingPopular(false);
-      });
-  }, [loadingPopular]);
+                {/* Toggle Button */}
+                <TouchableOpacity
+                    style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+                    onPress={() => {
+                        if (toggleSide === "flex-start") {
+                            setToggleSide("flex-end");
+                            setLoadingPopular(true);
+                        } else {
+                            setToggleSide("flex-start");
+                            setLoadingUpcoming(true);
+                        }
+                    }}
+                    activeOpacity="0.77"
+                >
+                    {/* Upcoming pressed */}
+                    {toggleSide === "flex-start" && (
+                        <View style={{ flex: 1, flexDirection: "row" }}>
+                            <View style={styles.upcomingEventsContainer}>
+                                <Text style={styles.toggleText}>Upcoming</Text>
+                            </View>
+                            <View style={styles.popularEventsGreyTextContainer}>
+                                <Text style={styles.popularEventsGreyText}>Popular</Text>
+                            </View>
+                        </View>
+                    )}
 
-  // Fetches each event in the database sorted by upcoming
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection("events")
-      .get()
-      .then((snapshot) => {
-        const temp = [];
-        const date = new Date();
-        snapshot.forEach((doc) => {
-          if (date <= doc.data().startDateTime.toDate()) {
-            temp.push(doc.data());
-          }
-        });
-        if (temp.length > 1) {
-          temp.sort(
-            (a, b) => a.startDateTime.toDate() - b.startDateTime.toDate()
-          );
-        }
-        setEventsDisplaying(temp);
-        setLoadingUpcoming(false);
-      });
-  }, [loadingUpcoming]);
+                    {/* Popular pressed */}
+                    {toggleSide === "flex-end" && (
+                        <View style={{ flex: 1, flexDirection: "row" }}>
+                            <View style={styles.upcomingEventsGreyTextContainer}>
+                                <Text style={styles.upcomingEventsGreyText}>Upcoming</Text>
+                            </View>
+                            <View style={styles.popularEventsContainer}>
+                                <Text style={styles.toggleText}>Popular</Text>
+                            </View>
+                        </View>
+                    )}
+                </TouchableOpacity>
 
-  return (
-    <SafeAreaView style={{ backgroundColor: "#FFF", flex: 1 }}>
-      <View style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Grove</Text>
-      </View>
-
-      {/* Toggle Button */}
-      <TouchableOpacity
-        style={[styles.toggleContainer, { justifyContent: toggleSide }]}
-        onPress={() => {
-          if (toggleSide === "flex-start") {
-            setToggleSide("flex-end");
-            setLoadingPopular(true);
-          } else {
-            setToggleSide("flex-start");
-            setLoadingUpcoming(true);
-          }
-        }}
-        activeOpacity="0.77"
-      >
-        {/* Upcoming pressed */}
-        {toggleSide === "flex-start" && (
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={styles.upcomingEventsContainer}>
-              <Text style={styles.toggleText}>Upcoming</Text>
-            </View>
-            <View style={styles.popularEventsGreyTextContainer}>
-              <Text style={styles.popularEventsGreyText}>Popular</Text>
-            </View>
-          </View>
-        )}
-
-        {/* Popular pressed */}
-        {toggleSide === "flex-end" && (
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={styles.upcomingEventsGreyTextContainer}>
-              <Text style={styles.upcomingEventsGreyText}>Upcoming</Text>
-            </View>
-            <View style={styles.popularEventsContainer}>
-              <Text style={styles.toggleText}>Popular</Text>
-            </View>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
-        {eventsDisplaying.length === 0 ? (
-          <Text>Loading...</Text>
-        ) : (
-          <FlatList
-            data={eventsDisplaying}
-            keyExtractor={(item, index) => item.ID}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            renderItem={(event) => (
-              // when the card is pressed, we head to EventDetails page
-              <TouchableOpacity
-                key={event.item.ID}
-                onPress={() =>
-                  navigation.navigate("EventDetails", {
-                    ID: event.item.ID,
-                  })
+                {toggleSide === "flex-start" && (
+                    <SearchEvents loading={loadingUpcoming} upcoming={true}/>
+                )
                 }
-              >
-                {toggleSide === "flex-start" ? (
-                  <Card
-                    key={event.item.ID}
-                    id={event.item.ID}
-                    loading={loadingUpcoming}
-                  />
-                ) : (
-                  <Card
-                    key={event.item.ID}
-                    id={event.item.ID}
-                    loading={loadingPopular}
-                  />
-                )}
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
-      </View>
-    </SafeAreaView>
-  );
+                {toggleSide === "flex-end" && (
+                    <SearchEvents loading={loadingPopular} upcoming={false}/>
+                )
+                }
+
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
+    );
 };
 
 const styles = StyleSheet.create({
-  /* toggle button */
-  toggleContainer: {
-    // flex: 1 / 7,
-    flexDirection: "row",
-    marginHorizontal: windowWidth * 0.055,
-    marginTop: 22,
-    height: "7%",
-    backgroundColor: "#ededed",
-    borderRadius: 30,
-    borderWidth: 0.3,
-    borderColor: "grey",
-  },
-  upcomingEventsContainer: {
-    // when upcoming button is clicked
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 30,
-    height: "97%",
-    justifyContent: "center",
-  },
-  popularEventsGreyTextContainer: {
-    flex: 1,
-    height: "97%",
-    justifyContent: "center",
-  },
-  popularEventsGreyText: {
-    color: "#BDBDBD",
-    fontWeight: "500",
-    fontSize: windowWidth * 0.04,
-    textAlign: "center",
-  },
-  // when events added button is clicked
-  popularEventsContainer: {
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 30,
-    height: "97%",
-    justifyContent: "center",
-  },
-  upcomingEventsGreyTextContainer: {
-    flex: 1,
-    height: "97%",
-    justifyContent: "center",
-  },
-  upcomingEventsGreyText: {
-    color: "#BDBDBD",
-    fontWeight: "500",
-    fontSize: windowWidth * 0.04,
-    textAlign: "center",
-  },
+    container: {
+        flex: 1, backgroundColor: "white"
+    },
+    /* toggle button */
+    toggleContainer: {
+        // flex: 1 / 7,
+        flexDirection: "row",
+        marginHorizontal: windowWidth * 0.055,
+        marginTop: windowHeight * .03,
+        height: "7%",
+        backgroundColor: "#ededed",
+        borderRadius: 30,
+        borderWidth: 0.3,
+        borderColor: "grey",
+    },
+    upcomingEventsContainer: {
+        // when upcoming button is clicked
+        flex: 1,
+        backgroundColor: "white",
+        borderRadius: 30,
+        height: "97%",
+        justifyContent: "center",
+    },
+    popularEventsGreyTextContainer: {
+        flex: 1,
+        height: "97%",
+        justifyContent: "center",
+    },
+    popularEventsGreyText: {
+        color: "#BDBDBD",
+        fontWeight: "500",
+        fontSize: windowWidth * 0.04,
+        textAlign: "center",
+    },
+    // when events added button is clicked
+    popularEventsContainer: {
+        flex: 1,
+        backgroundColor: "white",
+        borderRadius: 30,
+        height: "97%",
+        justifyContent: "center",
+    },
+    upcomingEventsGreyTextContainer: {
+        flex: 1,
+        height: "97%",
+        justifyContent: "center",
+    },
+    upcomingEventsGreyText: {
+        color: "#BDBDBD",
+        fontWeight: "500",
+        fontSize: windowWidth * 0.04,
+        textAlign: "center",
+    },
+    toggleText: {
+        textAlign: "center",
+        fontWeight: "500",
+        fontSize: windowWidth * 0.04,
+        color: "#5DB075",
+    },
+    profileComponentWithoutBorderline: {
+        flexDirection: "row",
+        marginTop: 5,
+        flex: 1,
+        paddingHorizontal: 13,
+    },
+    addFriendButton: {
+        justifyContent: "center",
+        padding: 11,
+        height: 40,
+        backgroundColor: "#5DB075",
+        borderRadius: 10,
+        position: "absolute",
+        right: 10,
+    },
+    addFriendText: {
+        textAlign: "center",
+        color: "white",
+    },
+    alreadyFriendsUntouchable: {
+        justifyContent: "center",
+        padding: 11,
+        height: 40,
+        backgroundColor: "lightgray",
+        borderRadius: 10,
+        position: "absolute",
+        right: 10,
+    },
+    alreadyFriendsText: {
+        textAlign: "center",
+        color: "black",
+    },
+    userCellContainer: {
+        margin: 5,
+        flex: 1,
+        // paddingHorizontal: 10,
+    },
+    profilePic: {
+        width: 45,
 
-  toggleText: {
-    textAlign: "center",
-    fontWeight: "500",
-    fontSize: windowWidth * 0.04,
-    color: "#5DB075",
-  },
+        height: 45,
+        borderRadius: 400 / 2,
+    },
+    userName: {
+        flexDirection: "column",
+        justifyContent: "center",
+        marginLeft: 10,
+        // marginTop: 10,
+        fontWeight: "bold",
+        fontSize: windowWidth * 0.0412,
+        // fontSize:17 ,
+    },
+    underline: {
+        borderBottomWidth: 1,
+        width: "92.5%",
+        borderBottomColor: "#E8E8E8",
+        marginTop: 5,
+        alignItems: "center",
+        marginLeft: windowWidth * 0.028,
+    },
 });
 
 export default Feed;
-
-// //returns events user searched for
-// const searchEvents = (search) => {
-//     search = search.toLowerCase();
-//     firebase
-//         .firestore()
-//         .collection("events")
-//         .orderBy("nameLowercase")
-//         .startAt(search)
-//         .endAt(search + "\uf8ff")
-//         // .where('name', '>=', search) // username == search, or has search contents plus more chars
-//         .get()
-//         .then((snapshot) => {
-//             let eventsArr = snapshot.docs.map((doc) => {
-//                 const data = doc.data();
-//                 const id = doc.id;
-//                 return { id, ...data }; // the object to place in the users array
-//             });
-//             setEvents(eventsArr);
-//         });
-// };
