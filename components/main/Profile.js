@@ -207,9 +207,7 @@ export const Profile = () => {
                     <Text style={styles.toggleText}>Upcoming Events</Text>
                   </View>
                   <View style={styles.eventsAddedGreyTextContainer}>
-                    <Text style={styles.eventsAddedGreyText}>
-                      Events Attended
-                    </Text>
+                    <Text style={styles.eventsAddedGreyText}>Past Events</Text>
                   </View>
                 </View>
               )}
@@ -223,7 +221,7 @@ export const Profile = () => {
                     </Text>
                   </View>
                   <View style={styles.eventsAddedContainer}>
-                    <Text style={styles.toggleText}>Events Attended</Text>
+                    <Text style={styles.toggleText}>Past Events</Text>
                   </View>
                 </View>
               )}
