@@ -101,15 +101,13 @@ export const Notifications = () => {
 
       <View>
         {requestsToDisplay.length === 0 ? (
-          <Image
-            source={require("../../assets/grovetree.gif")}
-            style={{
-              width: 100,
-              height: 150,
-              top: windowHeight * 0.26,
-              left: windowWidth * 0.35,
-            }}
-          />
+          <View style={styles.treeContainer}>
+            <Image
+              source={require("../../assets/grovetree.gif")}
+              style={styles.treeDimension}
+            ></Image>
+            <Text style={styles.treeWord}>Go Find Events to Make Friends!</Text>
+          </View>
         ) : (
           <FlatList
             numColumns={1}
@@ -213,6 +211,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: windowWidth * 0.028,
   },
+
+  // tree and message
+  treeContainer: {
+    top: windowHeight * 0.26,
+    left: windowWidth * 0.35,
+  },
+  treeDimension: {
+    width: 100,
+    height: 150,
+  },
+  treeWord: { marginTop: 13, left: -60, fontSize: 17 },
 });
 
 export default Notifications;
