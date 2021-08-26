@@ -97,46 +97,57 @@ export const Notifications = () => {
         <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Friend Requests</Text>
       </View>
 
-      <FlatList
-        numColumns={1}
-        horizontal={false}
-        data={requestsToDisplay}
-        keyExtractor={(item, index) => item.ID}
-        style={{marginTop: windowHeight*.03}}
-        renderItem={(
-          { item } // Allows you to render a text item for each user
-        ) => (
-          <View style={styles.userCellContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ProfileUser", { uid: item.ID });
-              }}
-            >
-              <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <Image
-                  source={require("../../assets/profileicon.jpg")}
-                  style={styles.profilePic}
-                />
-                <View style={{flexDirection: "column", justifyContent: "center"}}>
-                  <Text style={styles.userName}>{item.name}</Text>
+      <View>
+
+        {
+          requestsToDisplay.length === 0 ? (
+            <Image source={require('../../assets/grovetree.gif')} style={{width: 100, height: 150}} />
+          ) : (
+            <FlatList
+              numColumns={1}
+              horizontal={false}
+              data={requestsToDisplay}
+              keyExtractor={(item, index) => item.ID}
+              style={{marginTop: windowHeight*.03}}
+              renderItem={(
+                { item } // Allows you to render a text item for each user
+              ) => (
+                <View style={styles.userCellContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ProfileUser", { uid: item.ID });
+                    }}
+                  >
+                    <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+                      <Image
+                        source={require("../../assets/profileicon.jpg")}
+                        style={styles.profilePic}
+                      />
+                      <View style={{flexDirection: "column", justifyContent: "center"}}>
+                        <Text style={styles.userName}>{item.name}</Text>
+                      </View>
+                    </View>
+      
+                    {/* <View style={{ flexDirection: "row" }}> */}
+                    <TouchableOpacity
+                      style={styles.acceptRequestContainer}
+                      onPress={() => {
+                        acceptRequest(item.ID);
+                      }}
+                    >
+                      <Text style={styles.acceptRequestContainerText}>Accept</Text>
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+      
+                  <View style={styles.underline} />
                 </View>
-              </View>
+              )}
+            />
+          )
+        }
+      </View>
 
-              {/* <View style={{ flexDirection: "row" }}> */}
-              <TouchableOpacity
-                style={styles.acceptRequestContainer}
-                onPress={() => {
-                  acceptRequest(item.ID);
-                }}
-              >
-                <Text style={styles.acceptRequestContainerText}>Accept</Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
 
-            <View style={styles.underline} />
-          </View>
-        )}
-      />
     </SafeAreaView>
   );
 };
