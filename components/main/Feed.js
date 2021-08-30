@@ -159,66 +159,6 @@ const styles = StyleSheet.create({
         fontSize: windowWidth * 0.04,
         color: "#5DB075",
     },
-    profileComponentWithoutBorderline: {
-        flexDirection: "row",
-        marginTop: 5,
-        flex: 1,
-        paddingHorizontal: 13,
-    },
-    addFriendButton: {
-        justifyContent: "center",
-        padding: 11,
-        height: 40,
-        backgroundColor: "#5DB075",
-        borderRadius: 10,
-        position: "absolute",
-        right: 10,
-    },
-    addFriendText: {
-        textAlign: "center",
-        color: "white",
-    },
-    alreadyFriendsUntouchable: {
-        justifyContent: "center",
-        padding: 11,
-        height: 40,
-        backgroundColor: "lightgray",
-        borderRadius: 10,
-        position: "absolute",
-        right: 10,
-    },
-    alreadyFriendsText: {
-        textAlign: "center",
-        color: "black",
-    },
-    userCellContainer: {
-        margin: 5,
-        flex: 1,
-        // paddingHorizontal: 10,
-    },
-    profilePic: {
-        width: 45,
-
-        height: 45,
-        borderRadius: 400 / 2,
-    },
-    userName: {
-        flexDirection: "column",
-        justifyContent: "center",
-        marginLeft: 10,
-        // marginTop: 10,
-        fontWeight: "bold",
-        fontSize: windowWidth * 0.0412,
-        // fontSize:17 ,
-    },
-    underline: {
-        borderBottomWidth: 1,
-        width: "92.5%",
-        borderBottomColor: "#E8E8E8",
-        marginTop: 5,
-        alignItems: "center",
-        marginLeft: windowWidth * 0.028,
-    },
 });
 
 export default Feed;

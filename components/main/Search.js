@@ -34,9 +34,7 @@ const windowWidth = Dimensions.get("window").width;
 export const Search = () => {
   const dispatch = useDispatch();
 
-  const [toggleSide, setToggleSide] = useState("flex-start");
   const [loadingPeople, setLoadingPeople] = useState(false);
-  const [loadingEvents, setLoadingEvents] = useState(false);
 
   useEffect(() => {
     // Fetch outgoingRequests
@@ -49,55 +47,7 @@ export const Search = () => {
         <View style={{alignItems: "center"}}>
           <Text style={{ fontSize: 32, fontWeight: "bold", top: 7 }}>Search</Text>
         </View>
-
-        {/* Toggle Button */}
-        <TouchableOpacity
-            style={[styles.toggleContainer, { justifyContent: toggleSide }]}
-            onPress={() => {
-              if (toggleSide === "flex-start") {
-                setToggleSide("flex-end");
-                setLoadingPeople(true);
-              } else {
-                setToggleSide("flex-start");
-                setLoadingEvents(true);
-              }
-            }}
-            activeOpacity="0.77"
-        >
-          {/* Upcoming pressed */}
-          {toggleSide === "flex-start" && (
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View style={styles.upcomingEventsContainer}>
-                  <Text style={styles.toggleText}>Events</Text>
-                </View>
-                <View style={styles.popularEventsGreyTextContainer}>
-                  <Text style={styles.popularEventsGreyText}>People</Text>
-                </View>
-              </View>
-          )}
-
-          {/* Popular pressed */}
-          {toggleSide === "flex-end" && (
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View style={styles.upcomingEventsGreyTextContainer}>
-                  <Text style={styles.upcomingEventsGreyText}>Events</Text>
-                </View>
-                <View style={styles.popularEventsContainer}>
-                  <Text style={styles.toggleText}>People</Text>
-                </View>
-              </View>
-          )}
-        </TouchableOpacity>
-
-        {toggleSide === "flex-start" && (
-            <SearchEvents loading={loadingEvents}/>
-            )
-        }
-        {toggleSide === "flex-end" && (
-            <SearchPeople loading={loadingPeople}/>
-        )
-        }
-
+        <SearchPeople loading={loadingPeople}/>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -106,62 +56,6 @@ export const Search = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1, backgroundColor: "white"
-  },
-  /* toggle button */
-  toggleContainer: {
-    // flex: 1 / 7,
-    flexDirection: "row",
-    marginHorizontal: windowWidth * 0.055,
-    marginTop: windowHeight * .03,
-    height: "7%",
-    backgroundColor: "#ededed",
-    borderRadius: 30,
-    borderWidth: 0.3,
-    borderColor: "grey",
-  },
-  upcomingEventsContainer: {
-    // when upcoming button is clicked
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 30,
-    height: "97%",
-    justifyContent: "center",
-  },
-  popularEventsGreyTextContainer: {
-    flex: 1,
-    height: "97%",
-    justifyContent: "center",
-  },
-  popularEventsGreyText: {
-    color: "#BDBDBD",
-    fontWeight: "500",
-    fontSize: windowWidth * 0.04,
-    textAlign: "center",
-  },
-  // when events added button is clicked
-  popularEventsContainer: {
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 30,
-    height: "97%",
-    justifyContent: "center",
-  },
-  upcomingEventsGreyTextContainer: {
-    flex: 1,
-    height: "97%",
-    justifyContent: "center",
-  },
-  upcomingEventsGreyText: {
-    color: "#BDBDBD",
-    fontWeight: "500",
-    fontSize: windowWidth * 0.04,
-    textAlign: "center",
-  },
-  toggleText: {
-    textAlign: "center",
-    fontWeight: "500",
-    fontSize: windowWidth * 0.04,
-    color: "#5DB075",
   },
   profileComponentWithoutBorderline: {
     flexDirection: "row",
