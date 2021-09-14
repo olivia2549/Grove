@@ -127,7 +127,7 @@ export const EventDetails = ({ navigation, route }) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `${currentUserName} is inviting you to ${eventDisplaying.name}. Check it out on Grove! *link*`,
+        message: `${currentUserName} is inviting you to ${eventDisplaying.name}. Check it out on Grove! https://testflight.apple.com/join/nPGf2WBL`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
