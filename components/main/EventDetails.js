@@ -46,7 +46,10 @@ const wait = (timeout) => {
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
   const currentUserID = firebase.auth().currentUser.uid;
-  const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
+  const currentUserRef = firebase
+    .firestore()
+    .collection("users")
+    .doc(currentUserID);
   const currentUserName = useSelector((state) => state.currentUser.name);
 
   const eventDisplayingID = route.params.ID;
@@ -92,8 +95,10 @@ export const EventDetails = ({ navigation, route }) => {
         }
       });
       setStartDateString(
-          parseDate(eventDisplaying.startDateTime.toDate()).day + ", " +
-          parseDate(eventDisplaying.startDateTime.toDate()).month + " " +
+        parseDate(eventDisplaying.startDateTime.toDate()).day +
+          ", " +
+          parseDate(eventDisplaying.startDateTime.toDate()).month +
+          " " +
           parseDate(eventDisplaying.startDateTime.toDate()).date
       );
     }
@@ -102,7 +107,10 @@ export const EventDetails = ({ navigation, route }) => {
   // When the "interested" button is pressed
   const onInterested = () => {
     // add current user to "attendees" array of eventDisplaying
-    const eventRef = firebase.firestore().collection("events").doc(eventDisplayingID);
+    const eventRef = firebase
+      .firestore()
+      .collection("events")
+      .doc(eventDisplayingID);
     eventRef.update({
       attendees: firebase.firestore.FieldValue.arrayUnion(currentUserRef),
     });
@@ -274,9 +282,7 @@ export const EventDetails = ({ navigation, route }) => {
                       { backgroundColor: backgroundColorTags },
                     ]}
                   >
-                    <Text style={styles.locationText}>
-                      {startDateString}
-                    </Text>
+                    <Text style={styles.locationText}>{startDateString}</Text>
                   </View>
                   <View
                     style={[
@@ -285,7 +291,10 @@ export const EventDetails = ({ navigation, route }) => {
                     ]}
                   >
                     <Text style={styles.locationText}>
-                      {parseDate(eventDisplaying.startDateTime.toDate()).ampmTime}
+                      {
+                        parseDate(eventDisplaying.startDateTime.toDate())
+                          .ampmTime
+                      }
                     </Text>
                   </View>
                 </View>
@@ -294,27 +303,33 @@ export const EventDetails = ({ navigation, route }) => {
 
             <View style={styles.shareAndInterestedButtons}>
               {/*Invite button*/}
-              <TouchableOpacity onPress={onShare} style={styles.fancyButtonContainer}>
+              <TouchableOpacity
+                onPress={onShare}
+                style={styles.fancyButtonContainer}
+              >
                 <Text style={styles.fancyButtonText}>Share</Text>
               </TouchableOpacity>
 
               {/*I'm Interested button*/}
               <TouchableOpacity
-                  onPress={onInterested}
-                  style={[
-                    styles.fancyButtonContainer,
-                    { backgroundColor: interestedColor, flex: 2 / 3 },
-                  ]}
+                onPress={onInterested}
+                style={[
+                  styles.fancyButtonContainer,
+                  { backgroundColor: interestedColor, flex: 2 / 3 },
+                ]}
               >
                 <Text
-                    style={[styles.fancyButtonText, { color: interestedTextColor }]}
+                  style={[
+                    styles.fancyButtonText,
+                    { color: interestedTextColor },
+                  ]}
                 >
                   {interestedText}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
-          )}
+        )}
       </GestureRecognizer>
 
       <GestureRecognizer
@@ -323,58 +338,57 @@ export const EventDetails = ({ navigation, route }) => {
         config={config}
         style={styles.peopleInterested}
       >
-          {
-            !viewingAttendees ?
-                  <View style={{flexDirection: "row"}}>
-                    <TouchableOpacity onPress={() => setViewingAttendees(true)}>
-                      <MaterialCommunityIcons
-                          name="chevron-up"
-                          color={"black"}
-                          size={35}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.peopleGoingText}>
-                      People Interested ({eventDisplaying.attendees.length})
-                    </Text>
-                  </View>
-                : <View style={{flexDirection: "row", marginTop: 15}}>
-                    <TouchableOpacity onPress={() => setViewingAttendees(false)}>
-                      <MaterialCommunityIcons
-                          name="chevron-down"
-                          color={"black"}
-                          size={35}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.peopleGoingText}>
-                      People Interested ({eventDisplaying.attendees.length})
-                    </Text>
-                  </View>
-          }
+        {!viewingAttendees ? (
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity onPress={() => setViewingAttendees(true)}>
+              <MaterialCommunityIcons
+                name="chevron-up"
+                color={"black"}
+                size={35}
+              />
+            </TouchableOpacity>
+            <Text style={styles.peopleGoingText}>
+              People Interested ({eventDisplaying.attendees.length})
+            </Text>
+          </View>
+        ) : (
+          <View style={{ flexDirection: "row", marginTop: 15 }}>
+            <TouchableOpacity onPress={() => setViewingAttendees(false)}>
+              <MaterialCommunityIcons
+                name="chevron-down"
+                color={"black"}
+                size={35}
+              />
+            </TouchableOpacity>
+            <Text style={styles.peopleGoingText}>
+              People Interested ({eventDisplaying.attendees.length})
+            </Text>
+          </View>
+        )}
 
         <View style={styles.peopleInterested}>
           <FlatList
-              numColumns={1}
-              horizontal={false}
-              data={eventDisplaying.attendees}
-              onScrollBeginDrag={() => setViewingAttendees(true)}
-              keyExtractor={(item, index) => item.id}
-              renderItem={(
-                  { item } // Allows you to render a text item for each user
-              ) => (
-                  <View style={styles.userCellContainer}>
-                    <TouchableOpacity
-                        key={item.id + "row"}
-                        onPress={() =>
-                            navigation.navigate("ProfileUser", { uid: item.id })
-                        }
-                    >
-                      <UserImageName id={item.id} />
-                    </TouchableOpacity>
-                  </View>
-              )}
+            numColumns={1}
+            horizontal={false}
+            data={eventDisplaying.attendees}
+            onScrollBeginDrag={() => setViewingAttendees(true)}
+            keyExtractor={(item, index) => item.id}
+            renderItem={(
+              { item } // Allows you to render a text item for each user
+            ) => (
+              <View style={styles.userCellContainer}>
+                <TouchableOpacity
+                  key={item.id + "row"}
+                  onPress={() =>
+                    navigation.navigate("ProfileUser", { uid: item.id })
+                  }
+                >
+                  <UserImageName id={item.id} />
+                </TouchableOpacity>
+              </View>
+            )}
           />
         </View>
-
       </GestureRecognizer>
 
       {/*Report modal*/}
@@ -517,7 +531,7 @@ const styles = StyleSheet.create({
   locationRowContainer: {
     marginLeft: 15,
     flexDirection: "row",
-    width: windowWidth * 0.7,
+    width: windowWidth * 0.67,
     justifyContent: "space-between",
   },
   locationView: {
@@ -530,16 +544,16 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   timeView: {
-    flex: 3/7,
+    flex: 3 / 7,
     borderRadius: 10,
     backgroundColor: "lightgray",
     paddingLeft: 15,
     justifyContent: "center",
+    alignContent: "center",
     height: 50,
-    marginBottom: 5,
   },
   dateView: {
-    flex: 4/7,
+    flex: 4 / 7,
     borderRadius: 10,
     backgroundColor: "lightgray",
     paddingLeft: 15,
@@ -558,7 +572,7 @@ const styles = StyleSheet.create({
   },
   peopleInterested: {
     marginLeft: 15,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   fancyButtonContainer: {
     elevation: 8,
