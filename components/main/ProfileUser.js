@@ -206,9 +206,16 @@ export const ProfileUser = ({ route }) => {
 
         {/* List of events */}
         {toggleSide === "flex-start" && (
-          <View style={{ justifyContent: "center", margin: 15 }}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "row",
+              margin: 15,
+            }}
+          >
             {events.length === 0 ? (
-              <Text>Loading...</Text>
+              <Text style={{ marginTop: 50 }}>Nothing To Show</Text>
             ) : (
               <FlatList
                 style={{ height: windowHeight * 0.44 }}
@@ -238,9 +245,16 @@ export const ProfileUser = ({ route }) => {
         )}
 
         {toggleSide === "flex-end" && (
-          <View style={{ justifyContent: "center", margin: 15 }}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "row",
+              margin: 15,
+            }}
+          >
             {events.length === 0 ? (
-              <Text>Loading...</Text>
+              <Text style={{ marginTop: 50 }}>Nothing To Show</Text>
             ) : (
               <FlatList
                 style={{ height: windowHeight * 0.44 }}
