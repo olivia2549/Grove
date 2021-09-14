@@ -229,9 +229,16 @@ export const Profile = () => {
 
             {/* List of events */}
             {toggleSide === "flex-start" && (
-              <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  margin: 15,
+                  flex: 1,
+                }}
+              >
                 {events.length === 0 ? (
-                  <Text>Loading...</Text>
+                  <Text style={{ marginTop: 20 }}>Loading...</Text>
                 ) : (
                   <FlatList
                     style={{ height: windowHeight * 0.44 }}
@@ -267,9 +274,16 @@ export const Profile = () => {
             )}
 
             {toggleSide === "flex-end" && (
-              <View style={{ justifyContent: "center", margin: 15, flex: 1 }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  margin: 15,
+                  flex: 1,
+                }}
+              >
                 {events.length === 0 ? (
-                  <Text>Loading...</Text>
+                  <Text style={{ marginTop: 20 }}>Nothing To Show</Text>
                 ) : (
                   <FlatList
                     style={{ height: windowHeight * 0.44 }}
