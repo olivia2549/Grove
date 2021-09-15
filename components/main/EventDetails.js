@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
   locationRowContainer: {
     marginLeft: 15,
     flexDirection: "row",
-    width: windowWidth * 0.32,
+    width: windowWidth * 0.71,
     justifyContent: "space-between",
   },
   locationView: {
