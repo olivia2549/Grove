@@ -21,6 +21,8 @@ import ProfileScreen from './main/Profile'
 import SearchScreen from './main/Search'
 import NotificationsScreen from "./main/Notifications";
 
+import {logEvent, setDebugModeEnabled} from "expo-firebase-analytics";
+
 // Dummy component to satisfy TabScreen and allow route to come from App.js instead
 const EmptyScreen = () => {
     return null;
@@ -28,6 +30,7 @@ const EmptyScreen = () => {
 
 export const Main = () => {
     const dispatch = useDispatch();
+    setDebugModeEnabled(true);
 
     // When the page first mounts, we have a newly registered user.
     // We need to grab this user and their events from firebase, and store in redux

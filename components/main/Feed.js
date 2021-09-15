@@ -22,6 +22,7 @@ import { SearchEvents } from "./SearchEvents";
 
 import { useDispatch } from "react-redux";
 import { fetchUserOutgoingRequests } from "../../redux/actions";
+import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -29,6 +30,8 @@ const windowWidth = Dimensions.get("window").width;
 
 export const Feed = () => {
     const dispatch = useDispatch();
+    setDebugModeEnabled(true);
+    setCurrentScreen("Feed");
 
     const [toggleSide, setToggleSide] = useState("flex-start");
     const [loadingPopular, setLoadingPopular] = useState(false);

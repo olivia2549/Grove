@@ -55,6 +55,7 @@ import InviteFriends from "./components/main/InviteFriends";
 import ProfileUser from "./components/main/ProfileUser";
 import EventDetails from './components/main/EventDetails';
 import Notifications from './components/main/Notifications';
+import {setDebugModeEnabled} from "expo-firebase-analytics";
 
 const Stack = createStackNavigator();
 
@@ -62,13 +63,14 @@ export const App = () => {
     let [loggedIn, setLoggedIn] = useState(false);
     let [isLoaded, setIsLoaded] = useState(false);
 
+    setDebugModeEnabled(true);
+
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (!user) {    // user not logged in
                 setLoggedIn(false);
                 setIsLoaded(true);
-            }
-            else {
+            } else {
                 setLoggedIn(true);
                 setIsLoaded(true);
             }
@@ -96,18 +98,18 @@ export const App = () => {
         );
     }
 
-    // if (!firebase.auth().currentUser.emailVerified) {
-    //     return (
-    //         <NavigationContainer>
-    //             <Stack.Navigator initialRouteName='VerifyEmail'>
-    //                 <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen}/>
-    //             </Stack.Navigator>
-    //         </NavigationContainer>
-    //     )
-    // }
+    if (!firebase.auth().currentUser.emailVerified) {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName='VerifyEmail'>
+                    <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        )
+    }
 
     const MainWithEvents = () => {
-        return(
+        return (
             <Stack.Navigator mode='modal' initialRouteName='Main' screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Main" component={MainScreen}/>
                 <Stack.Screen name="EventDetails" component={EventDetails}/>
@@ -122,7 +124,7 @@ export const App = () => {
             <NavigationContainer>
                 <Stack.Navigator mode='modal' initialRouteName='MainWithEvents' screenOptions={{
                     headerShown: false
-                }} >
+                }}>
                     <Stack.Screen name="MainWithEvents" component={MainWithEvents}/>
                     <Stack.Screen name="AddEventInfo" component={AddEventInfo}/>
                     <Stack.Screen name="AddEventTags" component={AddEventTags}/>

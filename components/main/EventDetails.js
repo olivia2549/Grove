@@ -31,6 +31,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { FancyButton, FancyButtonButLower, FancyInput } from "../styling";
+import {logEvent, setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 // import {SafeAreaView} from "react-native-web";
 
 // for sending an email
@@ -45,6 +46,9 @@ const wait = (timeout) => {
 
 // function to provide details about each event/card that is present in the feed page
 export const EventDetails = ({ navigation, route }) => {
+  setDebugModeEnabled(true);
+  setCurrentScreen("EventDetails");
+
   const currentUserID = firebase.auth().currentUser.uid;
   const currentUserRef = firebase
     .firestore()
@@ -57,7 +61,6 @@ export const EventDetails = ({ navigation, route }) => {
   const [startDateString, setStartDateString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const [interestedText, setInterestedText] = useState("Interested");
   const [interestedColor, setInterestedColor] = useState("#5DB075");
   const [interestedTextColor, setInterestedTextColor] = useState("#ffffff");
 
@@ -89,7 +92,6 @@ export const EventDetails = ({ navigation, route }) => {
     if (!isLoading) {
       eventDisplaying.attendees.forEach((attendeeRef) => {
         if (attendeeRef.isEqual(currentUserRef)) {
-          // setInterestedText("interested"); text shouldn't change
           setInterestedColor("lightgray");
           setInterestedTextColor("black");
         }
@@ -106,6 +108,7 @@ export const EventDetails = ({ navigation, route }) => {
 
   // When the "interested" button is pressed
   const onInterested = () => {
+    logEvent("InterestedPressed");
     // add current user to "attendees" array of eventDisplaying
     const eventRef = firebase
       .firestore()
@@ -118,13 +121,13 @@ export const EventDetails = ({ navigation, route }) => {
     userRef.update({
       eventsAttending: firebase.firestore.FieldValue.arrayUnion(eventRef),
     });
-    setInterestedText("I'm interested");
     setInterestedColor("lightgray");
     setInterestedTextColor("black");
   };
 
   // Send a message about the event to someone
   const onShare = async () => {
+    logEvent("SharePressed");
     try {
       const result = await Share.share({
         message: `${currentUserName} is inviting you to ${eventDisplaying.name}. Check it out on Grove! https://testflight.apple.com/join/nPGf2WBL`,
@@ -324,7 +327,7 @@ export const EventDetails = ({ navigation, route }) => {
                     { color: interestedTextColor },
                   ]}
                 >
-                  {interestedText}
+                  Interested
                 </Text>
               </TouchableOpacity>
             </View>
@@ -531,7 +534,7 @@ const styles = StyleSheet.create({
   locationRowContainer: {
     marginLeft: 15,
     flexDirection: "row",
-    width: windowWidth * 0.67,
+    width: windowWidth * 0.32,
     justifyContent: "space-between",
   },
   locationView: {

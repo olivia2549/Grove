@@ -31,6 +31,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import firebase from "firebase";
 import { FancyInput } from "../styling";
+import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -44,6 +45,8 @@ const wait = (timeout) => {
 export const Profile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  setDebugModeEnabled(true);
+  setCurrentScreen("Current User Profile");
 
   const currentUser = useSelector((state) => state.currentUser);
 
@@ -98,7 +101,7 @@ export const Profile = () => {
             /// FOR EVENTS ATTENDED
             // add the event if and only if the event has ended and the displaying user's id is part of the event's attendees list
             data.attendees.forEach((person) => {
-              date >= data.endDateTime.toDate() &&
+              date >= data.startDateTime.toDate() &&
                 person.id === currentUserID &&
                 !tempEventsAttended.includes(data) &&
                 tempEventsAttended.push(data);

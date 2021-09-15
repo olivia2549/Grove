@@ -30,12 +30,14 @@ import GestureRecognizer from "react-native-swipe-gestures";
 import {Tooltip} from "react-native-elements";
 import UserImageName from "./UserImageName";
 import RBSheet from "react-native-raw-bottom-sheet";
+import {logEvent, setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 const AddEventConfirmation = () => {
   const navigation = useNavigation();
+  setDebugModeEnabled(true);
 
   const currentUserID = firebase.auth().currentUser.uid;
   const currentUserRef = firebase.firestore().collection("users").doc(currentUserID);
@@ -56,6 +58,7 @@ const AddEventConfirmation = () => {
 
   // New event gets added to firebase
   const onSubmit = () => {
+    logEvent("PostEvent");
     const docRef = firebase.firestore().collection("events").doc();
     eventData.ID = docRef.id;
     docRef.set(eventData)

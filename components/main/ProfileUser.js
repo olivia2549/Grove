@@ -36,6 +36,7 @@ import { fetchUserOutgoingRequests } from "../../redux/actions";
 
 import { Card } from "./Card";
 import { fetchFromFirebase } from "../../shared/HelperFunctions";
+import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -48,6 +49,8 @@ const wait = (timeout) => {
 export const ProfileUser = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  setDebugModeEnabled(true);
+  setCurrentScreen("Other User Profile");
 
   const currentUserName = useSelector((state) => state.currentUser.name);
   const currentUserID = useSelector((state) => state.currentUser.ID);

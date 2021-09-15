@@ -2,7 +2,7 @@
   "expo": {
     "name": "Grove",
     "slug": "Grove",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,7 +17,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "buildNumber": "2",
+      "bundleIdentifier": "com.grovecollege.grove",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +28,13 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyBBf4Ee-D0Yp-xNgFwdxJVrXUaDbF69jRI",
+          "measurementId": "G-JJ71S54XW8"
+        }
+      }
     }
   }
 }

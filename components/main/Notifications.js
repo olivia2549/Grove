@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "firebase";
 import { fetchUserIncomingRequests } from "../../redux/actions";
+import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -22,6 +23,8 @@ const windowWidth = Dimensions.get("window").width;
 export const Notifications = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  setDebugModeEnabled(true);
+  setCurrentScreen("Notifications");
 
   const incomingRequests = useSelector(
     (state) => state.currentUser.incomingRequests

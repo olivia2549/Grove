@@ -26,6 +26,7 @@ import firebase from "firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserOutgoingRequests } from "../../redux/actions";
 import UserImageName from "./UserImageName";
+import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -33,6 +34,8 @@ const windowWidth = Dimensions.get("window").width;
 
 export const Search = () => {
   const dispatch = useDispatch();
+  setDebugModeEnabled(true);
+  setCurrentScreen("Search");
 
   const [loadingPeople, setLoadingPeople] = useState(false);
 

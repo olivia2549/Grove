@@ -15,11 +15,7 @@ import { FancyInput, FancyButton } from '../styling';
 import { VerifyEmail } from "./VerifyEmail";
 import { validateEmail } from '../../shared/HelperFunctions';
 
-
-
 export const Register = () => {
-    const navigation = useNavigation();
-
     // The information we need for user registration
     const [state, setState] = useState({
         email: "",
@@ -29,10 +25,17 @@ export const Register = () => {
 
     // Saves the new user information to firebase
     const onSignUp = () => {
-        if (!validateEmail(state.email)) return; 
+        if (!validateEmail(state.email)) return;
         if (state.name === "" || state.password === "") {
             Alert.alert(
-                "Error", "Please fill in all fields", 
+                "Error", "Please fill in all fields",
+                [{text: 'OK', onPress: () => console.log('OK Pressed')}]
+            );
+            return;
+        }
+        if (state.password.length < 6) {
+            Alert.alert(
+                "Error", "Password must be at least 6 characters",
                 [{text: 'OK', onPress: () => console.log('OK Pressed')}]
             );
             return;
