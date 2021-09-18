@@ -31,7 +31,11 @@ import RBSheet from "react-native-raw-bottom-sheet";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { FancyButton, FancyButtonButLower, FancyInput } from "../styling";
-import {logEvent, setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
+import {
+  logEvent,
+  setCurrentScreen,
+  setDebugModeEnabled,
+} from "expo-firebase-analytics";
 // import {SafeAreaView} from "react-native-web";
 
 // for sending an email
@@ -257,7 +261,7 @@ export const EventDetails = ({ navigation, route }) => {
 
             {/* WHERE */}
             <View style={styles.infoContainers}>
-              <View style={styles.whereWhenContainer}>
+              <View style={styles.whereWhenTextContainer}>
                 <View style={styles.whereWhenTitlesContainer}>
                   <Text style={styles.whereWhenTitles}>Where</Text>
                 </View>
@@ -265,7 +269,7 @@ export const EventDetails = ({ navigation, route }) => {
                   <Text style={styles.whereWhenTitles}>Starts</Text>
                 </View>
               </View>
-              <View style={styles.whereWhenContainer}>
+              <View style={styles.whereWhenBoxesContainer}>
                 <View style={styles.locationRowContainer}>
                   <View
                     style={[
@@ -458,6 +462,7 @@ export const EventDetails = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
+    flex: 1,
   },
   topBarContainer: {
     backgroundColor: "#5db075",
@@ -514,7 +519,13 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 20,
   },
-  whereWhenContainer: {
+  whereWhenTextContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  whereWhenBoxesContainer: {
+    flex: 4,
     flexDirection: "column",
     justifyContent: "center",
   },
@@ -534,7 +545,6 @@ const styles = StyleSheet.create({
   locationRowContainer: {
     marginLeft: 15,
     flexDirection: "row",
-    width: windowWidth * 0.71,
     justifyContent: "space-between",
   },
   locationView: {
