@@ -34,6 +34,7 @@ export const FancyInput = (props) => (
     <TextInput
       style={styles.TextInput}
       placeholder={props.placeholder}
+      defaultValue={props.defaultValue}
       placeholderTextColor="#003f5c"
       onChangeText={props.onChangeText}
       secureTextEntry={props.secureTextEntry}

@@ -64,8 +64,6 @@ export const Profile = () => {
     bio: currentUser.bio,
   });
 
-  const currentUserID = useSelector((state) => state.currentUser.ID);
-
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
@@ -102,7 +100,7 @@ export const Profile = () => {
             // add the event if and only if the event has ended and the displaying user's id is part of the event's attendees list
             data.attendees.forEach((person) => {
               date >= data.startDateTime.toDate() &&
-                person.id === currentUserID &&
+                person.id === currentUser.ID &&
                 !tempEventsAttended.includes(data) &&
                 tempEventsAttended.push(data);
             });
@@ -111,7 +109,7 @@ export const Profile = () => {
             // events from the current time and so on AND the user displaying is attending this event
             data.attendees.forEach((person) => {
               date <= data.startDateTime.toDate() &&
-                person.id === currentUserID &&
+                person.id === currentUser.ID &&
                 !tempUpcomingEvents.includes(doc.data()) &&
                 tempUpcomingEvents.push(doc.data());
             });
@@ -172,7 +170,7 @@ export const Profile = () => {
               </TouchableOpacity>
 
               <Text style={styles.userEmail}>{currentUser.name}</Text>
-              {currentUser.year === -1 ? (
+              {currentUser.year === "" ? (
                 <Text style={styles.userEmail}>Unknown class</Text>
               ) : (
                 <Text style={styles.userEmail}>
@@ -327,22 +325,26 @@ export const Profile = () => {
             <View style={styles.containerInfo}>
               <FancyInput
                 style={styles.userEmail}
-                placeholder={profile.name}
+                placeholder="name"
+                defaultValue={profile.name}
                 onChangeText={(text) => setProfile({ ...profile, name: text })}
               />
               <FancyInput
                 style={styles.userEmail}
-                placeholder={profile.year}
+                placeholder="year"
+                defaultValue={profile.year}
                 onChangeText={(text) => setProfile({ ...profile, year: text })}
               />
               <FancyInput
                 style={styles.userEmail}
-                placeholder={profile.major}
+                placeholder="major"
+                defaultValue={profile.major}
                 onChangeText={(text) => setProfile({ ...profile, major: text })}
               />
               <FancyInput
                 style={styles.userEmail}
-                placeholder={profile.bio}
+                placeholder="bio"
+                defaultValue={profile.bio}
                 onChangeText={(text) => setProfile({ ...profile, bio: text })}
               />
             </View>

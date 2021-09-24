@@ -19,6 +19,7 @@ import { FancyButton, FancyInput, } from "../styling";
 import { useNavigation } from "@react-navigation/native";
 
 import firebase from "firebase";
+import {changeProfile} from "../../redux/actions";
 
 export const Login = () => {
     // The information we need for user registration
@@ -33,7 +34,7 @@ export const Login = () => {
     const onSignUp = () => {
         if (state.email === "" || state.password === "") {
             Alert.alert(
-                "Error", "Please fill in all fields", 
+                "Error", "Please fill in all fields",
                 [{text: 'OK', onPress: () => console.log('OK Pressed')}]
             );
             return;
@@ -76,7 +77,7 @@ export const Login = () => {
                 type='clear'
             />
             </KeyboardAvoidingView>
-            
+
         </TouchableWithoutFeedback>
     );
 };

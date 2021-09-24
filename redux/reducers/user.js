@@ -19,7 +19,7 @@ const initialState = {
     name: "",
     nameLowercase: "",
     email: "",
-    year: -1,
+    year: "",
     major: "",
     bio: "",
     friends: [],

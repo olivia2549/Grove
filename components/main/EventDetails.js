@@ -131,7 +131,7 @@ export const EventDetails = ({ navigation, route }) => {
 
   // Send a message about the event to someone
   const onShare = async () => {
-    logEvent("SharePressed");
+    await logEvent("SharePressed");
     try {
       const result = await Share.share({
         message: `${currentUserName} is inviting you to ${eventDisplaying.name}. Check it out on Grove! https://testflight.apple.com/join/nPGf2WBL`,
@@ -312,7 +312,7 @@ export const EventDetails = ({ navigation, route }) => {
               {/*Invite button*/}
               <TouchableOpacity
                 onPress={onShare}
-                style={styles.fancyButtonContainer}
+                style={[styles.fancyButtonContainer, {flex:1/3}]}
               >
                 <Text style={styles.fancyButtonText}>Share</Text>
               </TouchableOpacity>
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#5db075",
     flexDirection: "column-reverse",
     justifyContent: "space-around",
-    height: 200,
+    height: windowHeight*0.22,
   },
   topBar: {
     flexDirection: "column",
@@ -499,8 +499,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   infoContainers: {
-    marginTop: 15,
-    marginBottom: 15,
+    marginTop: windowHeight*0.014,
+    marginBottom: windowHeight*0.014,
     width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -508,9 +508,9 @@ const styles = StyleSheet.create({
   eachTag: {
     backgroundColor: "lightgray",
     borderRadius: 20,
-    padding: 20,
+    padding: windowHeight*.02,
     marginRight: 10,
-    marginBottom: 5,
+    marginBottom: windowHeight*0.01,
   },
   tagText: {
     fontSize: 20,
@@ -520,12 +520,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   whereWhenTextContainer: {
-    flex: 1,
+    flex: 1/4,
     flexDirection: "column",
     justifyContent: "center",
   },
   whereWhenBoxesContainer: {
-    flex: 4,
+    flex: 3/4,
     flexDirection: "column",
     justifyContent: "center",
   },
@@ -594,8 +594,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 32,
     marginBottom: 20,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: windowWidth*0.02,
+    marginRight: windowWidth*0.02,
     flex: 1 / 3,
     justifyContent: "center",
   },

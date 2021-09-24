@@ -8,14 +8,18 @@
 import React, {useRef, useState} from 'react';
 import {StyleSheet, Alert, View, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard} from 'react-native'
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 import firebase from "firebase";
 
 import { FancyInput, FancyButton } from '../styling';
 import { VerifyEmail } from "./VerifyEmail";
 import { validateEmail } from '../../shared/HelperFunctions';
+import {changeProfile} from "../../redux/actions";
 
 export const Register = () => {
+    const dispatch = useDispatch();
+
     // The information we need for user registration
     const [state, setState] = useState({
         email: "",
@@ -44,6 +48,12 @@ export const Register = () => {
             firebase.auth().createUserWithEmailAndPassword(state.email, state.password)
                 .then((user) => {
                     let userID = firebase.auth().currentUser.uid;
+                    dispatch(changeProfile({
+                        name: state.name,
+                        bio: "",
+                        year: "",
+                        major: "",
+                    }));
                     firebase.firestore().collection("users")
                         .doc(userID)
                         .set({
@@ -52,7 +62,7 @@ export const Register = () => {
                             nameLowercase: state.name.toLowerCase(),
                             email: state.email,
                             bio: "",
-                            year: -1,
+                            year: "",
                             major: "",
                             eventsAttending: [],
                             eventsPosted: [],
