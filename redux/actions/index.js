@@ -59,7 +59,7 @@ export const addStartDateTime = (evTime, dateOrTime) => {
             dispatch({type: EVENT_START_TIME_STATE_CHANGE, startTime: evTime});
         })
     }
-    
+
 }
 
 export const addEventLocation = (evLocation) => {
@@ -91,7 +91,7 @@ export const fetchUser = () => {
                         email: user.email,
                         year: user.year,
                         major: user.major,
-                        bio: user.bio,
+                        involvements: user.involvements,
                         friends: user.friends,
                         eventsPosted: user.eventsPosted,
                         eventsAttending: user.eventsAttending,
@@ -156,7 +156,7 @@ export const changeProfile = (profile) => {
             name: profile.name,
             year: profile.year,
             major: profile.major,
-            bio: profile.bio,
+            involvements: profile.involvements,
         });
     return ((dispatch) => {
         dispatch({type: USER_PROFILE_STATE_CHANGE, profile: profile});
