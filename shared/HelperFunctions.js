@@ -35,7 +35,7 @@ export const getWeekDay = (dateObject) => {
     case 5:
       return "Fri";
     case 6:
-      return "Sun";
+      return "Sat";
   }
 };
 
