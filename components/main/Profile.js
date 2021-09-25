@@ -21,8 +21,6 @@ import {
   RefreshControl,
 } from "react-native";
 
-import GestureRecognizer from "react-native-swipe-gestures";
-
 import { Card } from "./Card";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -59,17 +57,11 @@ export const Profile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const [viewingEvents, setViewingEvents] = useState(false);
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
-
   const [profile, setProfile] = useState({
     name: currentUser.name,
     year: currentUser.year,
     major: currentUser.major,
-    involvements: currentUser.involvements,
+    bio: currentUser.bio,
   });
 
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -168,173 +160,164 @@ export const Profile = () => {
 
         {!isEditing && (
           <View style={styles.infoView}>
-            {
-              !viewingEvents &&
-              <View style={styles.containerInfo}>
-                <TouchableOpacity onPress={() => setIsEditing(true)}>
-                  <MaterialCommunityIcons
-                      name="pencil-circle"
-                      color="gray"
-                      size={26}
-                  />
-                </TouchableOpacity>
-
-                <Text style={styles.userEmail}>{currentUser.name}</Text>
-                {currentUser.year === "" || currentUser.year === "-1" ? (
-                    <Text style={styles.userEmail}>Unknown class</Text>
-                ) : (
-                    <Text style={styles.userEmail}>
-                      Class of {currentUser.year}
-                    </Text>
-                )}
-                {currentUser.major === "" ? (
-                    <Text style={styles.userEmail}>Undecided major</Text>
-                ) : (
-                    <Text style={styles.userEmail}>{currentUser.major}</Text>
-                )}
-                {currentUser.involvements !== "" && (
-                    <Text style={styles.userEmail}>{currentUser.involvements}</Text>
-                )}
-                <TouchableOpacity onPress={signOut} style={styles.signOut}>
-                  <Text style={styles.signOutText}>Sign Out</Text>
-                </TouchableOpacity>
-              </View>
-            }
-
-            <GestureRecognizer
-                onSwipeUp={() => setViewingEvents(true)}
-                onSwipeDown={() => setViewingEvents(false)}
-                config={config}
-                style={styles.peopleInterested}
-            >
-              {/* Toggle Button */}
-              <TouchableOpacity
-                style={[styles.toggleContainer, { justifyContent: toggleSide }]}
-                onPress={() => {
-                  toggleSide === "flex-start"
-                    ? setToggleSide("flex-end")
-                    : setToggleSide("flex-start");
-                }}
-                activeOpacity="0.77"
-              >
-                {/* upcoming events pressed */}
-                {toggleSide === "flex-start" && (
-                  <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={styles.upcomingEventsContainer}>
-                      <Text style={styles.toggleText}>Upcoming Events</Text>
-                    </View>
-                    <View style={styles.eventsAddedGreyTextContainer}>
-                      <Text style={styles.eventsAddedGreyText}>Past Events</Text>
-                    </View>
-                  </View>
-                )}
-
-                {/* events attended pressed */}
-                {toggleSide === "flex-end" && (
-                  <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={styles.upcomingEventsGreyTextContainer}>
-                      <Text style={styles.upcomingEventsGreyText}>
-                        Upcoming Events
-                      </Text>
-                    </View>
-                    <View style={styles.eventsAddedContainer}>
-                      <Text style={styles.toggleText}>Past Events</Text>
-                    </View>
-                  </View>
-                )}
+            <View style={styles.containerInfo}>
+              <TouchableOpacity onPress={() => setIsEditing(true)}>
+                <MaterialCommunityIcons
+                  name="pencil-circle"
+                  color="gray"
+                  size={26}
+                />
               </TouchableOpacity>
 
-              {/* List of events */}
+              <Text style={styles.userEmail}>{currentUser.name}</Text>
+              {currentUser.year === "" ? (
+                <Text style={styles.userEmail}>Unknown class</Text>
+              ) : (
+                <Text style={styles.userEmail}>
+                  Class of {currentUser.year}
+                </Text>
+              )}
+              {currentUser.major === "" ? (
+                <Text style={styles.userEmail}>Undecided major</Text>
+              ) : (
+                <Text style={styles.userEmail}>{currentUser.major}</Text>
+              )}
+              {currentUser.bio !== "" && (
+                <Text style={styles.userEmail}>{currentUser.bio}</Text>
+              )}
+            </View>
+
+            <TouchableOpacity onPress={signOut} style={styles.signOut}>
+              <Text style={styles.signOutText}>Sign Out</Text>
+            </TouchableOpacity>
+
+            {/* Toggle Button */}
+            <TouchableOpacity
+              style={[styles.toggleContainer, { justifyContent: toggleSide }]}
+              onPress={() => {
+                toggleSide === "flex-start"
+                  ? setToggleSide("flex-end")
+                  : setToggleSide("flex-start");
+              }}
+              activeOpacity="0.77"
+            >
+              {/* upcoming events pressed */}
               {toggleSide === "flex-start" && (
-                <View
-                  style={{
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    margin: 15,
-                    flex: 1,
-                  }}
-                >
-                  {events.length === 0 ? (
-                    <Text style={{ marginTop: 20 }}>Loading...</Text>
-                  ) : (
-                    <FlatList
-                      style={{ height: windowHeight * 0.44 }}
-                      data={events}
-                      keyExtractor={(item, index) => item.ID}
-                      refreshControl={
-                        <RefreshControl
-                          refreshing={refreshing}
-                          onRefresh={onRefresh}
-                        />
-                      }
-                      renderItem={(event) => (
-                        // when the card is pressed, we head to EventDetails page
-                        <TouchableOpacity
-                          key={event.item.ID}
-                          onPress={() =>
-                            navigation.navigate("EventDetails", {
-                              ID: event.item.ID,
-                            })
-                          }
-                        >
-                          <Card
-                            key={event.item.ID}
-                            id={event.item.ID}
-                            loading={true}
-                          />
-                        </TouchableOpacity>
-                      )}
-                      showsVerticalScrollIndicator={false}
-                    />
-                  )}
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                  <View style={styles.upcomingEventsContainer}>
+                    <Text style={styles.toggleText}>Upcoming Events</Text>
+                  </View>
+                  <View style={styles.eventsAddedGreyTextContainer}>
+                    <Text style={styles.eventsAddedGreyText}>Past Events</Text>
+                  </View>
                 </View>
               )}
 
+              {/* events attended pressed */}
               {toggleSide === "flex-end" && (
-                <View
-                  style={{
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    margin: 15,
-                    flex: 1,
-                  }}
-                >
-                  {events.length === 0 ? (
-                    <Text style={{ marginTop: 20 }}>Nothing To Show</Text>
-                  ) : (
-                    <FlatList
-                      style={{ height: windowHeight * 0.44 }}
-                      data={attendedEvents}
-                      keyExtractor={(item, index) => item.ID}
-                      refreshControl={
-                        <RefreshControl
-                          refreshing={refreshing}
-                          onRefresh={onRefresh}
-                        />
-                      }
-                      renderItem={(event) => (
-                        // when the card is pressed, we head to EventDetails page
-                        <TouchableOpacity
-                          key={event.item.ID}
-                          onPress={() =>
-                            navigation.navigate("EventDetails", {
-                              ID: event.item.ID,
-                            })
-                          }
-                        >
-                          <Card
-                            key={event.item.ID}
-                            id={event.item.ID}
-                            loading={true}
-                          />
-                        </TouchableOpacity>
-                      )}
-                      showsVerticalScrollIndicator={false}
-                    />
-                  )}
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                  <View style={styles.upcomingEventsGreyTextContainer}>
+                    <Text style={styles.upcomingEventsGreyText}>
+                      Upcoming Events
+                    </Text>
+                  </View>
+                  <View style={styles.eventsAddedContainer}>
+                    <Text style={styles.toggleText}>Past Events</Text>
+                  </View>
                 </View>
               )}
-            </GestureRecognizer>
+            </TouchableOpacity>
+
+            {/* List of events */}
+            {toggleSide === "flex-start" && (
+              <View
+                style={{
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  margin: 15,
+                  flex: 1,
+                }}
+              >
+                {events.length === 0 ? (
+                  <Text style={{ marginTop: 20 }}>Loading...</Text>
+                ) : (
+                  <FlatList
+                    style={{ height: windowHeight * 0.44 }}
+                    data={events}
+                    keyExtractor={(item, index) => item.ID}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                      />
+                    }
+                    renderItem={(event) => (
+                      // when the card is pressed, we head to EventDetails page
+                      <TouchableOpacity
+                        key={event.item.ID}
+                        onPress={() =>
+                          navigation.navigate("EventDetails", {
+                            ID: event.item.ID,
+                          })
+                        }
+                      >
+                        <Card
+                          key={event.item.ID}
+                          id={event.item.ID}
+                          loading={true}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    showsVerticalScrollIndicator={false}
+                  />
+                )}
+              </View>
+            )}
+
+            {toggleSide === "flex-end" && (
+              <View
+                style={{
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  margin: 15,
+                  flex: 1,
+                }}
+              >
+                {events.length === 0 ? (
+                  <Text style={{ marginTop: 20 }}>Nothing To Show</Text>
+                ) : (
+                  <FlatList
+                    style={{ height: windowHeight * 0.44 }}
+                    data={attendedEvents}
+                    keyExtractor={(item, index) => item.ID}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                      />
+                    }
+                    renderItem={(event) => (
+                      // when the card is pressed, we head to EventDetails page
+                      <TouchableOpacity
+                        key={event.item.ID}
+                        onPress={() =>
+                          navigation.navigate("EventDetails", {
+                            ID: event.item.ID,
+                          })
+                        }
+                      >
+                        <Card
+                          key={event.item.ID}
+                          id={event.item.ID}
+                          loading={true}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    showsVerticalScrollIndicator={false}
+                  />
+                )}
+              </View>
+            )}
           </View>
         )}
         {isEditing && (
@@ -360,9 +343,9 @@ export const Profile = () => {
               />
               <FancyInput
                 style={styles.userEmail}
-                placeholder="involvements"
-                defaultValue={profile.involvements}
-                onChangeText={(text) => setProfile({ ...profile, involvements: text })}
+                placeholder="bio"
+                defaultValue={profile.bio}
+                onChangeText={(text) => setProfile({ ...profile, bio: text })}
               />
             </View>
 

@@ -87,16 +87,14 @@ export const App = () => {
 
     if (!loggedIn) {
         return (
-            <Provider store={store}>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName='Back'>
-                        <Stack.Screen name="Back" component={LandingScreen} options={{headerShown: false}}/>
-                        <Stack.Screen name="Register" component={RegisterScreen}/>
-                        <Stack.Screen name="Login" component={LoginScreen}/>
-                        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen}/>
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </Provider>
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName='Back'>
+                    <Stack.Screen name="Back" component={LandingScreen} options={{headerShown: false}}/>
+                    <Stack.Screen name="Register" component={RegisterScreen}/>
+                    <Stack.Screen name="Login" component={LoginScreen}/>
+                    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen}/>
+                </Stack.Navigator>
+            </NavigationContainer>
         );
     }
 

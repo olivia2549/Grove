@@ -23,7 +23,7 @@ export const VerifyEmail = () => {
 
     return (
         <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={{fontSize: 26, textAlign: "center"}}>Please click the link we emailed you to verify you're a student.</Text>
+            <Text style={{fontSize: 26}}>Please click the link we emailed you to verify you're a student.</Text>
             <FancyButton title="Resend email" onPress={() => currentUser.sendEmailVerification()}/>
             <FancyButton title="Done" onPress={() => firebase.auth().signOut()}/>
             <Button color='red' title={emailString} onPress={() => firebase.auth().signOut()}/>

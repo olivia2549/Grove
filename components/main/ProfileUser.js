@@ -37,7 +37,6 @@ import { fetchUserOutgoingRequests } from "../../redux/actions";
 import { Card } from "./Card";
 import { fetchFromFirebase } from "../../shared/HelperFunctions";
 import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
-import GestureRecognizer from "react-native-swipe-gestures";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -72,12 +71,6 @@ export const ProfileUser = ({ route }) => {
 
   // for the switch
   const [toggleSide, setToggleSide] = useState("flex-start");
-
-  const [viewingEvents, setViewingEvents] = useState(false);
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
 
   useEffect(() => {
     fetchFromFirebase(userDisplayingID, "users").then((data) => {
@@ -171,7 +164,12 @@ export const ProfileUser = ({ route }) => {
 
   const ProfileFollowing = () => {
     return (
-      <View style={{ justifyContent: "center", flex: 5}}>
+      <View style={{ justifyContent: "center", marginTop: 20, flex: 1 }}>
+        {/* Friends Button */}
+        <TouchableOpacity style={styles.alreadyFriend}>
+          <Text style={styles.alreadyFriendText}>Friends</Text>
+        </TouchableOpacity>
+
         {/* Toggle Button */}
         <TouchableOpacity
           style={[styles.toggleContainer, { justifyContent: toggleSide }]}
@@ -293,7 +291,7 @@ export const ProfileUser = ({ route }) => {
 
   const ProfileNotFollowing = (props) => {
     return (
-      <View style={{flex:5}}>
+      <View>
         {props.requested ? (
           <TouchableOpacity style={styles.requested}>
             <Text style={styles.alreadyFriendText}>Requested</Text>
@@ -404,47 +402,32 @@ export const ProfileUser = ({ route }) => {
       </View>
 
       <View style={styles.infoView}>
-        {
-          !viewingEvents &&
-          /* User Info */
-          <View style={styles.containerInfo}>
-            <Text style={styles.userEmail}>{userDisplaying.name}</Text>
-            {userDisplaying.year === "" ? (
-              <Text style={styles.userEmail}>Unknown class</Text>
-              ) : (
-              <Text style={styles.userEmail}>Class of {userDisplaying.year}</Text>
-            )}
-            {userDisplaying.major === "" ? (
-              <Text style={styles.userEmail}>Undecided major</Text>
-              ) : (
-              <Text style={styles.userEmail}>{userDisplaying.major}</Text>
-            )}
-            {userDisplaying.involvements !== "" && (
-              <Text style={styles.userEmail}>{userDisplaying.involvements}</Text>
-            )}
-            {friends.indexOf(userDisplayingID) > -1 &&
-            <View style={{ justifyContent: "center"}}>
-              {/* Friends Button */}
-              <TouchableOpacity style={styles.alreadyFriend}>
-                <Text style={styles.alreadyFriendText}>Friends</Text>
-              </TouchableOpacity>
-            </View>
-            }
-          </View>
-        }
-      </View>
-
-        {friends.indexOf(userDisplayingID) > -1 &&
-          <ProfileFollowing/>
-        }
-
-      {outgoingRequests.indexOf(userDisplayingID) > -1 && (
+        {/* User Info */}
+        <View style={styles.containerInfo}>
+          <Text style={styles.userEmail}>{userDisplaying.name}</Text>
+          {userDisplaying.year === -1 ? (
+            <Text style={styles.userEmail}>Unknown class</Text>
+          ) : (
+            <Text style={styles.userEmail}>Class of {userDisplaying.year}</Text>
+          )}
+          {userDisplaying.major === "" ? (
+            <Text style={styles.userEmail}>Undecided major</Text>
+          ) : (
+            <Text style={styles.userEmail}>{userDisplaying.major}</Text>
+          )}
+          {userDisplaying.bio !== "" && (
+            <Text style={styles.userEmail}>{userDisplaying.bio}</Text>
+          )}
+        </View>
+        {friends.indexOf(userDisplayingID) > -1 && <ProfileFollowing />}
+        {outgoingRequests.indexOf(userDisplayingID) > -1 && (
           <ProfileNotFollowing requested={true} />
-      )}
-      {friends.indexOf(userDisplayingID) === -1 &&
-      outgoingRequests.indexOf(userDisplayingID) === -1 && (
-          <ProfileNotFollowing requested={false} />
-      )}
+        )}
+        {friends.indexOf(userDisplayingID) === -1 &&
+          outgoingRequests.indexOf(userDisplayingID) === -1 && (
+            <ProfileNotFollowing requested={false} />
+          )}
+      </View>
 
       {/*Report modal*/}
       <RBSheet
@@ -519,13 +502,13 @@ const styles = StyleSheet.create({
 
   // view
   infoView: {
-    // flex: Platform.OS === "ios" ? 5 : 6,
+    flex: Platform.OS === "ios" ? 5 : 6,
     backgroundColor: "white",
   },
 
   // user's name
   userNameContainer: {
-    height: windowHeight*0.22,
+    flex: 2,
     backgroundColor: "#5DB075",
     justifyContent: "center",
   },

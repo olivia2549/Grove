@@ -112,7 +112,7 @@ const AddEventConfirmation = ( {route} ) => {
 
           {/* WHERE */}
           <View style={styles.infoContainers}>
-            <View style={styles.whereWhenBoxesContainer}>
+            <View style={styles.whereWhenContainer}>
               <View style={styles.whereWhenTitlesContainer}>
                 <Text style={styles.whereWhenTitles}>Where</Text>
               </View>
@@ -120,7 +120,7 @@ const AddEventConfirmation = ( {route} ) => {
                 <Text style={styles.whereWhenTitles}>Starts</Text>
               </View>
             </View>
-            <View style={styles.whereWhenBoxesContainer}>
+            <View style={styles.whereWhenContainer}>
               <View style={styles.locationRowContainer}>
                 <View style={styles.locationView}>
                   <Text style={styles.locationText}>
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#5db075",
     flexDirection: "column-reverse",
     justifyContent: "space-around",
-    height: windowHeight*0.22,
+    height: 200,
   },
   topBar: {
     flexDirection: "column",
@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   infoContainers: {
-    marginTop: windowHeight*0.014,
-    marginBottom: windowHeight*0.014,
+    marginTop: 15,
+    marginBottom: 15,
     width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -192,9 +192,9 @@ const styles = StyleSheet.create({
   eachTag: {
     backgroundColor: "lightgray",
     borderRadius: 20,
-    padding: windowHeight*.02,
+    padding: 20,
     marginRight: 10,
-    marginBottom: windowHeight*0.01,
+    marginBottom: 5,
   },
   tagText: {
     fontSize: 20,
@@ -203,13 +203,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 20,
   },
-  whereWhenTextContainer: {
-    flex: 1/4,
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  whereWhenBoxesContainer: {
-    flex: 3/4,
+  whereWhenContainer: {
     flexDirection: "column",
     justifyContent: "center",
   },
@@ -229,6 +223,7 @@ const styles = StyleSheet.create({
   locationRowContainer: {
     marginLeft: 15,
     flexDirection: "row",
+    width: windowWidth * 0.7,
     justifyContent: "space-between",
   },
   locationView: {
@@ -246,8 +241,8 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
     paddingLeft: 15,
     justifyContent: "center",
-    alignContent: "center",
     height: 50,
+    marginBottom: 5,
   },
   dateView: {
     flex: 4 / 7,

@@ -21,7 +21,7 @@ const initialState = {
     email: "",
     year: "",
     major: "",
-    involvements: "",
+    bio: "",
     friends: [],
     incomingRequests: [],
     outgoingRequests: [],
@@ -48,7 +48,7 @@ export const userReducer = (state = initialState, action) => {
                 email: action.email,
                 year: action.year,
                 major: action.major,
-                involvements: action.involvements,
+                bio: action.bio,
                 eventsPosted: action.eventsPosted,
                 eventsAttending: action.eventsAttending,
             }
@@ -58,7 +58,7 @@ export const userReducer = (state = initialState, action) => {
                 name: action.profile.name,
                 year: action.profile.year,
                 major: action.profile.major,
-                involvements: action.profile.involvements,
+                bio: action.profile.bio,
             }
         case 'USER_FRIENDS_STATE_CHANGE':
             return {
