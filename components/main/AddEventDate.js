@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import { FancyButtonButLower } from "../styling";
+import { InviteFriends } from "./InviteFriends";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const windowHeight = Dimensions.get("window").height;
@@ -108,7 +109,7 @@ const AddEventDate = () => {
         <FancyButtonButLower
           title="Next"
           onPress={() => {
-            navigation.navigate("AddEventConfirmation");
+            navigation.navigate("InviteFriends");
           }}
         />
       </View>

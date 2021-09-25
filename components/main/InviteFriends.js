@@ -14,7 +14,7 @@ import {
   Dimensions,
   Platform,
   FlatList, Image, Button, Share,
-    TextInput
+  TextInput, Keyboard, TouchableWithoutFeedback, SafeAreaView
 } from "react-native";
 
 import { useSelector } from "react-redux";
@@ -24,235 +24,219 @@ import firebase from "firebase";
 
 import Main from "../Main";
 import { FancyButtonButLower, FancyInput } from "../styling";
+import { AddEventConfirmation } from "./AddEventConfirmation";
+
 import {fetchFromFirebase} from "../../shared/HelperFunctions";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import UserImageName from "./UserImageName";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const InviteFriends = ( { route } ) => {
-  const navigation = useNavigation();
+export const InviteFriends = () => {
+    const navigation = useNavigation();
+    const [isLoading, setIsLoading] = useState(true);
 
-  const [isLoading, setIsLoading] = useState(true);
+    const [search, setSearch] = useState("");
+    const [usersToDisplay, setUsersToDisplay] = useState([]);
 
-  const userName = useSelector(state => state.currentUser.name);
+    const [friendsToInvite, setFriendsToInvite] = useState([]);
 
-  const friends = useSelector(state => state.currentUser.friends);
-  const [friendsToDisplay, setFriendsToDisplay] = useState([]);
-  const [search, setSearch] = useState("");
+    const [fancyBtnText, setFancyBtnText] = useState("Open To All");
 
-  const eventID = route.params.ID;
-  const [event, setEvent] = useState({});
+    useEffect(() => {
+        // Initially show all the users in the database sorted by name
+        // TODO: sort users using a suggestion algorithm
+        firebase
+            .firestore()
+            .collection("users")
+            .orderBy("nameLowercase")
+            .startAt(search)
+            .endAt(search + "\uf8ff")
+            .get()
+            .then((snapshot) => {
+                let usersArr = [];
+                snapshot.docs.forEach((doc) => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    if (id === firebase.auth().currentUser.uid) return;
+                    if (friendsToInvite.indexOf(id) !== -1) return;
+                    usersArr.push(data); // the object to place in the users array
+                })
+                setUsersToDisplay(usersArr);
+                setIsLoading(false);
+            });
+    }, [isLoading, friendsToInvite]);
 
-  // Fetch event, and set eventDisplaying
-  useEffect(() => {
-    if (isLoading) {
-      fetchFromFirebase(eventID, "events").then((data) => {
-        setEvent(data.data());
-        setIsLoading(false);
-      });
-    }
-  }, [isLoading]);
+    const invite = (id) => {
+        setFancyBtnText("Next");
+        setFriendsToInvite(friendsToInvite => [...friendsToInvite, id]);
+    };
 
-  // Get the user data for each friend to display
-  useEffect(() => {
-    const fetchFriends = async () => {
-      const docs = await firebase.firestore().collection("users")
-          .orderBy("name")
-          .startAt(search)
-          .endAt(search + "\uf8ff") // last letter; includes everything in search so far
-          .get();
-
-      let friendsArr = [];
-      docs.forEach(doc => {
-        const id = doc.id;
-        if (friends.indexOf(id) > -1) friendsArr.push(doc.data());
-      });
-      setFriendsToDisplay(friendsArr);
-    }
-    fetchFriends();
-  }, [search]);
-
-  // const inviteFriend = (friend) => {
-  //   // add the event to the friend's incoming invites
-  //   firebase.firestore().collection("users")
-  //       .doc(friend)
-  //       .set({
-  //         incomingInvites: { currentUserID: eventID }
-  //       })
-  // };
-
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message:
-            `${userName} is inviting you to ${event.name}. Check it out on Grove! *link*`,
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.topBar}>
-        <Text style={styles.titleText}>Invite Friends</Text>
-      </View>
-
-      <View style={styles.content}>
-        <View style={{ paddingHorizontal: 10 }}>
-          <FancyInput
-            placeholder="Search..."
-            returnKeyType="search"
-            onChangeText={search => {setSearch(search)}}
-          />
+    return (
+      <View style={styles.container}>
+        {/*Top bar*/}
+        <View
+            style={styles.topBarContainer}
+        >
+          <View style={styles.topBar}>
+            <View style={styles.topBarButtons}>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <MaterialCommunityIcons
+                    name="chevron-down"
+                    color={"white"}
+                    size={35}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.eventNameContainer}>
+              <Text adjustsFontSizeToFit style={styles.eventNameText}>Private Event?</Text>
+            </View>
+          </View>
         </View>
-        <View style={{ paddingHorizontal: 10 }}>
-          <Text style={{ fontSize: windowWidth * 0.07, fontWeight: "bold" }}>
-            Suggested
-          </Text>
-        </View>
-        <FlatList
-            numColumns={1}
-            horizontal={false}
-            data={friendsToDisplay}
-            keyExtractor={(item, index) => item.ID}
-            renderItem={({ item }) => (
-                <View style={styles.userCellContainer}>
-                  <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("ProfileUser", { uid: item.ID });
-                      }}
-                      style={styles.profileComponentWithoutBorderline}
-                  >
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                      <Image
-                          source={require("../../assets/profileicon.jpg")}
-                          style={styles.profilePic}
-                      />
-                      <Text style={styles.userName}>{item.name}</Text>
-                    </View>
-
-                    {/* <View style={{ flexDirection: "row" }}> */}
-                    <TouchableOpacity
-                        style={styles.acceptRequestContainer}
-                        onPress={() => {
-                          inviteFriend(item.ID);
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View>
+                <View style={{ padding: 20 }}>
+                    <FancyInput
+                        placeholder="Search..."
+                        onChangeText={(search) => {
+                            const searchLower = search.toLowerCase();
+                            setSearch(searchLower);
+                            setIsLoading(true);
                         }}
-                    >
-                      <Text style={styles.acceptRequestContainerText}>Invite</Text>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                  <View style={styles.underline} />
+                        returnKeyType="search"
+                    />
                 </View>
-            )}
-        />
-      </View>
 
-      <View style={{flex: 1, justifyContent: 'flex-end'}}>
-        <FancyButtonButLower title="share" onPress={onShare} />
+                <FlatList
+                    numColumns={1}
+                    horizontal={false}
+                    data={usersToDisplay}
+                    keyExtractor={(item, index) => item.ID}
+                    style={{ marginTop: windowHeight * 0.03 }}
+                    renderItem={(
+                        { item } // Allows you to render a text item for each user
+                    ) => (
+                        <View style={styles.userCellContainer}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ProfileUser", { uid: item.ID });
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "flex-start",
+                                    }}
+                                >
+                                    <Image
+                                        source={require("../../assets/profileicon.jpg")}
+                                        style={styles.profilePic}
+                                    />
+                                    <View
+                                        style={{
+                                            flexDirection: "column",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <Text style={styles.userName}>{item.name}</Text>
+                                    </View>
+                                </View>
+
+                                {/* <View style={{ flexDirection: "row" }}> */}
+                                <TouchableOpacity
+                                    style={styles.acceptRequestContainer}
+                                    onPress={() => {
+                                        invite(item.ID);
+                                    }}
+                                >
+                                    <Text style={styles.acceptRequestContainerText}>
+                                        Invite
+                                    </Text>
+                                </TouchableOpacity>
+                            </TouchableOpacity>
+
+                            <View style={styles.underline} />
+                        </View>
+                    )}
+                />
+            </View>
+        </TouchableWithoutFeedback>
+          <FancyButtonButLower
+              onPress={() => navigation.navigate("AddEventConfirmation", {friendsToInvite})}
+              title={fancyBtnText}
+          />
       </View>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: "column",
   },
-  content: {
-    flex: Platform.OS === "ios" ? 0 : 7,
-    marginTop: windowHeight * 0.24,
-    justifyContent: "flex-start",
+  topBarContainer: {
+    backgroundColor: "#5db075",
+    flexDirection: "column-reverse",
+    justifyContent: "space-around",
+    height: windowHeight*0.22,
   },
   topBar: {
-    backgroundColor: "#5DB075",
-    height: "20%",
-    width: "100%",
-    position: "absolute",
-    top: 0,
-    justifyContent: "center",
-    flex: 1,
-  },
-  titleText: {
-    color: "#ffffff",
-    fontWeight: "600",
-    top: "20%",
-    padding: 25,
-    fontSize: windowWidth * 0.12,
-  },
-  profilePic: {
-    width: 40,
-    height: 40,
-    borderRadius: 400 / 2,
-  },
-  userName: {
     flexDirection: "column",
     justifyContent: "center",
-    marginLeft: 5,
-  },
-  friendRequestTitle: {
-    textAlign: "center",
-    fontSize: 24,
-    color: "black",
-    fontWeight: "700",
+    margin: 10,
     marginTop: 20,
-    marginBottom: 10,
-    marginLeft: 10,
   },
-  // for each profile components
-  profileComponentWithoutBorderline: {
+  topBarButtons: {
     flexDirection: "row",
-    marginTop: 5,
-    flex: 1,
-    paddingHorizontal: 13,
+    justifyContent: "space-between",
   },
-  addFriendButton: {
-    justifyContent: "center",
-    padding: 11,
-    height: 33,
-    backgroundColor: "#5DB075",
-    borderRadius: 10,
-    position: "absolute",
-    right: 10,
+  eventNameContainer: {
+    alignContent: "flex-end",
   },
-  addFriendText: {
-    textAlign: "center",
+  eventNameText: {
     color: "white",
-  },
-  acceptRequestContainer: {
-    justifyContent: "center",
-    padding: 11,
-    height: 33,
-    backgroundColor: "#5DB075",
-    borderRadius: 10,
-    position: "absolute",
-    right: 10,
-  },
-  acceptRequestContainerText: {
+    fontWeight: "500",
+    fontSize: 36,
     textAlign: "center",
-    color: "white",
   },
-  userCellContainer: {
-    margin: 5,
-    flex: 1,
-  },
-  underline: {
-    borderBottomWidth: 1,
-    width: "92.5%",
-    borderBottomColor: "#E8E8E8",
-    marginTop: 5,
-    alignItems: "center",
-    marginLeft: windowWidth * 0.028,
-  },
+    profilePic: {
+        width: 45,
+        height: 45,
+        borderRadius: 400 / 2,
+    },
+    userName: {
+        flexDirection: "column",
+        justifyContent: "center",
+        marginLeft: 5,
+        fontWeight: "bold",
+        fontSize: windowWidth * 0.04,
+    },
+    acceptRequestContainer: {
+        justifyContent: "center",
+        padding: 11,
+        height: 40,
+        backgroundColor: "#5DB075",
+        borderRadius: 10,
+        position: "absolute",
+        right: 10,
+    },
+    acceptRequestContainerText: {
+        textAlign: "center",
+        color: "white",
+        fontWeight: "600",
+    },
+    userCellContainer: {
+        margin: 5,
+        flex: 1,
+    },
+    underline: {
+        borderBottomWidth: 1,
+        width: "92.5%",
+        borderBottomColor: "#E8E8E8",
+        marginTop: 5,
+        alignItems: "center",
+        marginLeft: windowWidth * 0.028,
+    },
 });
 
 export default InviteFriends;

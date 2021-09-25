@@ -19,8 +19,6 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
-import { InviteFriends } from "./InviteFriends";
-
 import {FancyButtonButLower, FancyInput} from "../styling";
 import {parseDate, getMonthName, getWeekDay } from "../../shared/HelperFunctions";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -35,7 +33,7 @@ import {logEvent, setCurrentScreen, setDebugModeEnabled} from "expo-firebase-ana
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const AddEventConfirmation = () => {
+const AddEventConfirmation = ( {route} ) => {
   const navigation = useNavigation();
   setDebugModeEnabled(true);
 
@@ -51,6 +49,7 @@ const AddEventConfirmation = () => {
     startDateTime: useSelector((state) => state.event.startDateTime),
     location: useSelector((state) => state.event.location),
     attendees: useSelector(state => state.event.attendees),
+    peopleInvited: route.params.friendsToInvite,
     creator: currentUserRef,
   };
 

@@ -158,14 +158,7 @@ export const AddEventInfo = () => {
               }}
               returnKeyType="done"
               blurOnSubmit={false}
-              onSubmitEditing={() => {
-                if (description === "") {
-                  Alert.alert("Please add a description for this event.");
-                  descriptionRef.current.focus();
-                } else {
-                  onSubmit();
-                }
-              }}
+              onSubmitEditing={() => {onSubmit();}}
               value={description}
               multiline={true}
               allowFontScaling={true}

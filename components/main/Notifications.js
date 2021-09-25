@@ -105,10 +105,7 @@ export const Notifications = () => {
       <View>
         {requestsToDisplay.length === 0 ? (
           <View style={styles.treeContainer}>
-            <Image
-              source={require("../../assets/grovetree.gif")}
-              style={styles.treeDimension}
-            ></Image>
+            <Image source={require("../../assets/grovetree.gif")} style={styles.treeDimension}/>
             <Text style={styles.treeWord}>Go Find Events to Make Friends!</Text>
           </View>
         ) : (

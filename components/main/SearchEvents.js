@@ -57,6 +57,9 @@ export const SearchEvents = (props) => {
                 const date = new Date();
                 snapshot.docs.forEach((doc) => {
                     const data = doc.data();
+                    // if the peopleInvited collections to this event doesn't contain the current user, return;
+                    if (data.peopleInvited.indexOf(firebase.auth().currentUser.uid) === -1
+                    && data.peopleInvited.length !== 0) return;
                     if (selectedTags.length === 0 && date <= doc.data().startDateTime.toDate()) {
                         eventsArr.push(data);
                     }
