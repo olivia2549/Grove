@@ -33,7 +33,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import firebase from "firebase";
 import { FancyInput } from "../styling";
-import {setCurrentScreen, setDebugModeEnabled} from "expo-firebase-analytics";
+import { setCurrentScreen, setDebugModeEnabled } from "expo-firebase-analytics";
 require("firebase/firestore");
 
 const windowHeight = Dimensions.get("window").height;
@@ -168,44 +168,53 @@ export const Profile = () => {
 
         {!isEditing && (
           <View style={styles.infoView}>
-            {
-              !viewingEvents &&
+            {!viewingEvents && (
               <View style={styles.containerInfo}>
-                <TouchableOpacity onPress={() => setIsEditing(true)}>
+                <TouchableOpacity
+                  style={{
+                    marginLeft: windowWidth * 0.83,
+                    marginTop: -windowHeight * 0.033,
+                  }}
+                  onPress={() => setIsEditing(true)}
+                >
                   <MaterialCommunityIcons
-                      name="pencil-circle"
-                      color="gray"
-                      size={26}
+                    name="pencil-circle"
+                    color="gray"
+                    size={26}
                   />
                 </TouchableOpacity>
 
-                <Text style={styles.userEmail}>{currentUser.name}</Text>
-                {currentUser.year === "" || currentUser.year === "-1" ? (
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={styles.userEmail}>{currentUser.name}</Text>
+                  {currentUser.year === "" || currentUser.year === "-1" ? (
                     <Text style={styles.userEmail}>Unknown class</Text>
-                ) : (
+                  ) : (
                     <Text style={styles.userEmail}>
                       Class of {currentUser.year}
                     </Text>
-                )}
-                {currentUser.major === "" ? (
+                  )}
+                  {currentUser.major === "" ? (
                     <Text style={styles.userEmail}>Undecided major</Text>
-                ) : (
+                  ) : (
                     <Text style={styles.userEmail}>{currentUser.major}</Text>
-                )}
-                {currentUser.involvements !== "" && (
-                    <Text style={styles.userEmail}>{currentUser.involvements}</Text>
-                )}
+                  )}
+                  {currentUser.involvements !== "" && (
+                    <Text style={styles.userEmail}>
+                      {currentUser.involvements}
+                    </Text>
+                  )}
+                </View>
                 <TouchableOpacity onPress={signOut} style={styles.signOut}>
                   <Text style={styles.signOutText}>Sign Out</Text>
                 </TouchableOpacity>
               </View>
-            }
+            )}
 
             <GestureRecognizer
-                onSwipeUp={() => setViewingEvents(true)}
-                onSwipeDown={() => setViewingEvents(false)}
-                config={config}
-                style={styles.peopleInterested}
+              onSwipeUp={() => setViewingEvents(true)}
+              onSwipeDown={() => setViewingEvents(false)}
+              config={config}
+              style={styles.peopleInterested}
             >
               {/* Toggle Button */}
               <TouchableOpacity
@@ -224,7 +233,9 @@ export const Profile = () => {
                       <Text style={styles.toggleText}>Upcoming Events</Text>
                     </View>
                     <View style={styles.eventsAddedGreyTextContainer}>
-                      <Text style={styles.eventsAddedGreyText}>Past Events</Text>
+                      <Text style={styles.eventsAddedGreyText}>
+                        Past Events
+                      </Text>
                     </View>
                   </View>
                 )}
@@ -362,7 +373,9 @@ export const Profile = () => {
                 style={styles.userEmail}
                 placeholder="involvements"
                 defaultValue={profile.involvements}
-                onChangeText={(text) => setProfile({ ...profile, involvements: text })}
+                onChangeText={(text) =>
+                  setProfile({ ...profile, involvements: text })
+                }
               />
             </View>
 
@@ -378,7 +391,7 @@ export const Profile = () => {
 
 const styles = StyleSheet.create({
   containerInfo: {
-    margin: 20,
+    margin: 14,
   },
   containerGallery: {
     flex: 1,
@@ -475,6 +488,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     marginLeft: 18,
     marginBottom: 6,
+    marginTop: 10,
     backgroundColor: "#5DB075",
     borderRadius: 10,
     justifyContent: "center",
